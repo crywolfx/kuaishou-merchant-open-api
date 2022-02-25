@@ -1,6 +1,8 @@
 import { signMethods } from "@/common/sign";
 import { isFunction, pathReplace, sortParams } from "@/common/utils";
 import request from "@/common/request";
+// import classDecorator from "./decorator/classDecorator";
+// import { ClientConstructor } from "./dto";
 
 type SignMethod = 'MD5' | 'HMAC_SHA256';
 
@@ -16,6 +18,8 @@ type SystemParams = {
   version: number,
   access_token: string,
 }
+
+// @classDecorator(ClientConstructor)
 class KsMerchantClient {
   appKey: string;
   signSecret: string;
@@ -34,7 +38,7 @@ class KsMerchantClient {
     const data = `access_token=${access_token}&appkey=${appkey}&method=${method}&param=${paramString}&signMethod=${signMethod}&timestamp=${timestamp}&version=${version}&signSecret=${signSecret}`;
     const signMethodFunction = signMethods[signMethod];
     if (!isFunction(signMethodFunction)) throw Error(`signMethod [${signMethod}] is not support`);
-    return signMethods[signMethod](data);
+    return signMethods[signMethod](data, signSecret);
   }
 
   public execute(api: string, method: 'GET' | 'POST', systemParams: SystemParams, params?: Record<string, unknown>) {
@@ -55,12 +59,11 @@ class KsMerchantClient {
   }
 }
 
-const client = new KsMerchantClient({ appKey: 'ks698057945834178647', signSecret: '0999d6ce9182b1b3f2cc454a6558096b', url: 'https://gw-merchant-staging.test.gifshow.com' });
+const client = new KsMerchantClient({ appKey: 'ks698057945834178647', signSecret: '0999d6ce9182b1b3f2cc454a6558096b', url: 'https://gw-merchant-staging.test.gifshow.com', signMethod: 'HMAC_SHA256' });
 client.execute('open.item.get', 'GET', 
     { 
       version: 1, 
       access_token: 'ChFvYXV0aC5hY2Nlc3NUb2tlbhJg_j2pGQV4IuvBRHiBVdK63ZNgDASeJpMbx4kqlc3ZYEpyiD0XpVKLYO37iEp37tzE4VvvOPRL3yVrvIXcrVEB5ltl-KraiuwNpQjq0c8L0hwKuLUlT-IK7ZWQZrfZxwq8GhJV6KqXoNxmcUNkWZ68zhbiC44iILsvxZo2sWzOQH68Fz8J-3JMMFUHIF04wdDwvNBSeCAZKAUwAQ' 
-    }, { kwaiItemId: 403521383905 }).then((res) => {
-  console.log(res);
-});
+    }, { kwaiItemId: 403521383905 });
+    
 export default KsMerchantClient;
