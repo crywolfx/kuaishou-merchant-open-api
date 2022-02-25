@@ -30,5 +30,12 @@
     "tslib": "^2.3.1",
     "typescript": "^4.5.5",
     "typescript-transform-paths": "^3.3.1"
+  },
+  "dependencies": {
+    "@types/crypto-js": "^4.1.1",
+    "axios": "^0.26.0",
+    "class-validator": "^0.13.2",
+    "crypto-js": "^4.1.1",
+    "node-fetch": "^3.2.0"
   }
 }

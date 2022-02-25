@@ -6,7 +6,6 @@ import commonjs from '@rollup/plugin-commonjs';
 export default {
   input: {
     index: './packages/index.ts',
-    dd: './packages/dd.ts'
   },
   output: {
     exports: 'auto',
