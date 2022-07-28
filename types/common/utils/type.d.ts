@@ -10,3 +10,4 @@ export declare function isFormData(val: unknown): val is FormData;
 export declare function isUndefined(val: unknown): val is undefined;
 export declare function isNull(val: unknown): val is null;
 export declare function isDef(val: unknown): boolean;
+export declare function objectKeys<T, K extends keyof T>(object: T): K[];

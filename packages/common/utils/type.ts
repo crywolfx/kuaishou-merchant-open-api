@@ -19,7 +19,7 @@ export function isNumber(val: unknown): val is number {
 export function isRegExp(val: unknown): val is RegExp {
   return Object.prototype.toString.call(val) === '[object RegExp]';
 }
-export function isObject(val: unknown): val is Record<string, unknown> {
+export function isObject<T>(val: unknown): val is Record<string, T> {
   return Object.prototype.toString.call(val) === '[object Object]';
 }
 export function isFormData(val: unknown): val is FormData {

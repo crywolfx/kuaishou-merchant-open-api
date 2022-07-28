@@ -19,8 +19,11 @@
     /* Advanced Options */
     "skipLibCheck": true, /* Skip type checking of declaration files. */
     "forceConsistentCasingInFileNames": true, /* Disallow inconsistently-cased references to the same file. */
+    "strictNullChecks": false,
+    "experimentalDecorators": true,
     "declaration": true,
     "emitDeclarationOnly": false,
+    "emitDecoratorMetadata": true,
     "declarationDir": "./types",
     "baseUrl": "./",
     "paths": {
