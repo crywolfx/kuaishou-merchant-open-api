@@ -2,16 +2,13 @@ import axios from 'axios';
 
 const request = axios.create({
   headers: {
-    'Content-Type': 'application/x-www-form-urlencoded'
+    'request-source': 'kuaishou-merchant-node-open-api'
   },
-  paramsSerializer (params) {
-    return new URLSearchParams(params).toString();
-  }
+  // paramsSerializer (params) {
+  //   return new URLSearchParams(params).toString();
+  // },
 });
 
-request.interceptors.response.use(function (res) {
-  return res.data;
-});
-
+request.interceptors.response.use(res => res.data, res => res?.response?.data);
 
 export default request;

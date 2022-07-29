@@ -10,7 +10,7 @@ export function EqualsList(comparison: any[], validationOptions?: ValidationOpti
       validator: {
         validate: (value: any) => comparison.includes(value),
         defaultMessage: buildMessage(
-          (eachPrefix) => `${eachPrefix} must be equal to ${comparison.join(',')}`,
+          (eachPrefix) => eachPrefix + '$property must be ' + comparison.join(','),
           validationOptions,
         ),
       },

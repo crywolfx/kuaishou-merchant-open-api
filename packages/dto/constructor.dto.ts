@@ -1,4 +1,4 @@
-import { SignMethod } from '@/common/Interface';
+import { SignMethod } from '@/common/interface';
 import { urlReg } from '@/common/regExp';
 import { EqualsList } from '@/decorator/validate.check.decorator';
 import {

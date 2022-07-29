@@ -5,7 +5,7 @@ export declare function isString(val: unknown): val is string;
 export declare function isBoolean(val: unknown): val is boolean;
 export declare function isNumber(val: unknown): val is number;
 export declare function isRegExp(val: unknown): val is RegExp;
-export declare function isObject(val: unknown): val is Record<string, unknown>;
+export declare function isObject<T>(val: unknown): val is Record<string, T>;
 export declare function isFormData(val: unknown): val is FormData;
 export declare function isUndefined(val: unknown): val is undefined;
 export declare function isNull(val: unknown): val is null;

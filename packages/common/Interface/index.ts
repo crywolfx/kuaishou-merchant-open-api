@@ -2,7 +2,6 @@ export enum SignMethod {
   HMAC_SHA256 = 'HMAC_SHA256',
   MD5 = 'MD5'
 }
-
 export interface CommonParams {
   appKey: string;
   signSecret: string;
@@ -22,8 +21,4 @@ export interface SignParams {
   param: string;
 }
 
-export interface BaseParams {
-  api: string;
-  method?: 'GET' | 'POST';
-  version?: number;
-}
+export type Method = 'GET' | 'POST'

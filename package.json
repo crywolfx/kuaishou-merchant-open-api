@@ -5,9 +5,12 @@
   "main": "lib/index.js",
   "scripts": {
     "prepare": "ts-patch install -s",
-    "build": "rollup -c",
     "watch": "rollup -c -w",
-    "test": "tsc"
+    "build": "yarn build:umd && yarn build:cjs && yarn build:esm",
+    "build:types": "tsc --declaration --emitDeclarationOnly --noEmit false --outDir types",
+    "build:umd": "rimraf ./dist && NODE_ENV=production BABEL_ENV=umd rollup -c && yarn build:types",
+    "build:cjs": "rimraf ./lib && NODE_ENV=production BABEL_ENV=cjs rollup -c && yarn build:types --outDir lib",
+    "build:esm": "rimraf ./es && NODE_ENV=production BABEL_ENV=esm rollup -c && yarn build:types --outDir es"
   },
   "repository": {
     "type": "git",
@@ -16,7 +19,13 @@
   "author": "wangxin20",
   "license": "ISC",
   "devDependencies": {
+    "@babel/core": "^7.18.9",
+    "@babel/plugin-transform-runtime": "^7.18.9",
+    "@babel/preset-env": "^7.18.9",
+    "@rollup/plugin-babel": "^5.3.1",
     "@rollup/plugin-commonjs": "^21.0.2",
+    "@rollup/plugin-json": "^4.1.0",
+    "@rollup/plugin-node-resolve": "^13.3.0",
     "@rollup/plugin-typescript": "^8.3.1",
     "@types/lodash.flatten": "^4.4.7",
     "@typescript-eslint/eslint-plugin": "^5.12.1",
@@ -24,6 +33,7 @@
     "eslint": "^8.9.0",
     "rollup": "^2.68.0",
     "rollup-plugin-node-resolve": "^5.2.0",
+    "rollup-plugin-terser": "^7.0.2",
     "rollup-plugin-typescript2": "^0.31.2",
     "ts-node": "^10.5.0",
     "ts-patch": "^2.0.1",
@@ -37,8 +47,8 @@
     "axios": "^0.26.0",
     "class-validator": "^0.13.2",
     "crypto-js": "^4.1.1",
+    "form-data": "^4.0.0",
     "lodash.flatten": "^4.4.0",
-    "node-fetch": "^3.2.0",
     "reflect-metadata": "^0.1.13"
   }
 }
