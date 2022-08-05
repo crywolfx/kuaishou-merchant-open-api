@@ -16,11 +16,11 @@ class KsMerchantClient {
   accessToken: string;
 
   constructor(@Required commonParams: ClientConstructorDTO) {
-    this.appKey = commonParams.appKey;
-    this.signSecret = commonParams.signSecret;
-    this.signMethod = commonParams.signMethod || SignMethod.MD5;
-    this.url = commonParams.url || 'https://openapi.kwaixiaodian.com';
-    this.accessToken = commonParams.accessToken;
+    this.appKey = commonParams?.appKey;
+    this.signSecret = commonParams?.signSecret;
+    this.signMethod = commonParams?.signMethod || SignMethod.MD5;
+    this.url = commonParams?.url || 'https://openapi.kwaixiaodian.com';
+    this.accessToken = commonParams?.accessToken;
   }
 
   public generateApiUrl(api: string) {
@@ -39,7 +39,7 @@ class KsMerchantClient {
 
   @Validate()
   public execute(@Required { api, method = 'GET', version = 1 }: ExecuteBaseDTO, orgParams?: Record<string, unknown>) {
-    const { params, file } = formatParams(orgParams);
+    const { params = {}, file = {} } = formatParams(orgParams) || {};
     const isUpload = Object.keys(file).length > 0;
     const sortedParams = sortParams(params);
     const paramsString = JSON.stringify(sortedParams);
@@ -75,3 +75,9 @@ class KsMerchantClient {
 }
 
 export default KsMerchantClient;
+
+// const client = new KsMerchantClient({ appKey: 'ks698057945834178647', signSecret: '0999d6ce9182b1b3f2cc454a6558096b', url: 'https://gw-merchant-staging.test.gifshow.com/', accessToken: 'ChFvYXV0aC5hY2Nlc3NUb2tlbhIw2X_PNucU_x8_XydoTYOKBkQ8YVDTQQC3vWfBdHUF35OhtM-FQu8vI0yNU-LJiNCEGhKxiMDMw-rDsMoxRnwv4VUtch8iIOH2BN5flsOI5BruC-6ROqBEMELI_fuZgUrfkJAu87l3KA8wAQ' });
+
+// client.execute({ api: 'open.user.sub.account.list' }).then((res) => {
+//   console.log(res);
+// })

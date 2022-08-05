@@ -17,7 +17,7 @@ export const throwError = (param: string, index: number, message?: string) => {
   throw Error(msg)
 }
 
-export const handlerValidate = (params: any[], requiredParameters: number[], designParamTypes: any) => {
+export const handlerValidate = (params: any[] = [], requiredParameters: number[], designParamTypes: any) => {
   if (requiredParameters?.length) {
     for (const index of requiredParameters) {
       const paramType = designParamTypes[index];

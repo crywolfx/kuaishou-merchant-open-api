@@ -22,11 +22,11 @@ export class ClientConstructorDTO {
   })
   @IsString()
   @IsOptional()
-  readonly url: string;
+  readonly url?: string;
 
   @EqualsList([SignMethod.HMAC_SHA256, SignMethod.MD5])
   @IsOptional()
-  readonly signMethod: SignMethod;
+  readonly signMethod?: SignMethod;
 
   @IsNotEmpty()
   @IsString()

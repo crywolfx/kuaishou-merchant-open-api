@@ -1,5 +1,5 @@
 import FormData from 'form-data';
-import { isObject } from ".";
+import { isObject } from "./type";
 import { Buffer } from 'buffer';
 import { Stream } from 'stream';
 
