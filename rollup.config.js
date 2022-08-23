@@ -7,6 +7,7 @@ import nodePolyfills from 'rollup-plugin-polyfill-node';
 import { terser } from 'rollup-plugin-terser';
 
 const BABEL_ENV = process.env.BABEL_ENV || 'esm';
+console.log(BABEL_ENV);
 
 const entry = 'packages/index.ts';
 
