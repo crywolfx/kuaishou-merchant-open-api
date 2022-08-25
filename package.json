@@ -3,9 +3,12 @@
   "version": "1.0.0",
   "description": "电商开放平台openApi",
   "main": "lib/index.js",
+  "module": "es/index.js",
+  "unpkg": "dist/open-lib.production.min.js",
   "scripts": {
     "prepare": "ts-patch install -s",
     "watch": "rollup -c -w",
+    "build:npm": "BUILD_NPM=true yarn build",
     "build": "yarn build:umd && yarn build:cjs && yarn build:esm",
     "build:types": "tsc --declaration --emitDeclarationOnly --noEmit false --outDir types",
     "build:umd": "rimraf ./dist && NODE_ENV=production BABEL_ENV=umd rollup -c && yarn build:types",
@@ -17,8 +20,21 @@
     "type": "git",
     "url": "git@git.corp.kuaishou.com:plateco-dev-fe/kuaishou-merchant-open-api.git"
   },
-  "author": "wangxin20",
+  "keywords": [
+    "kuaishou",
+    "kwaishop",
+    "kwaishop-open",
+    "kuaishou-merchant",
+    "open-api"
+  ],
+  "author": "wrongThing",
   "license": "ISC",
+  "files": [
+    "dist",
+    "lib",
+    "es",
+    "types"
+  ],
   "devDependencies": {
     "@babel/core": "^7.18.9",
     "@babel/plugin-transform-runtime": "^7.18.9",
@@ -31,6 +47,7 @@
     "@types/lodash.flatten": "^4.4.7",
     "@typescript-eslint/eslint-plugin": "^5.12.1",
     "@typescript-eslint/parser": "^5.12.1",
+    "@types/crypto-js": "^4.1.1",
     "eslint": "^8.9.0",
     "rollup": "^2.68.0",
     "rollup-plugin-node-resolve": "^5.2.0",
@@ -45,7 +62,6 @@
     "typescript-transform-paths": "^3.3.1"
   },
   "dependencies": {
-    "@types/crypto-js": "^4.1.1",
     "axios": "0.27.2",
     "class-validator": "^0.13.2",
     "crypto-js": "^4.1.1",

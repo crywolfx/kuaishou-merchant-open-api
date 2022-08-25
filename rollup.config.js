@@ -6,15 +6,16 @@ import json from '@rollup/plugin-json';
 import nodePolyfills from 'rollup-plugin-polyfill-node';
 import { terser } from 'rollup-plugin-terser';
 
+const buildNpm = process.env.BUILD_NPM === 'true';
 const BABEL_ENV = process.env.BABEL_ENV || 'esm';
-console.log(BABEL_ENV);
+const IS_UMD = BABEL_ENV === 'umd';
 
 const entry = 'packages/index.ts';
 
 const extensions = ['.js', '.jsx', '.ts', '.tsx'];
 const globals = {};
-const externalPkg = [];
-BABEL_ENV !== 'umd' && externalPkg.push('@babel/runtime');
+const externalPkg = buildNpm && !IS_UMD ? ['axios', 'class-validator', 'crypto-js', 'form-data', 'lodash', 'reflect-metadata', '@babel/runtime'] : [];
+
 const external = id => externalPkg.some(e => id.indexOf(e) === 0);
 
 const commonPlugins = [
@@ -33,14 +34,14 @@ const commonPlugins = [
   }),
   json(),
   commonjs(),
-  BABEL_ENV === 'umd' && nodePolyfills(),
+  IS_UMD && nodePolyfills()
 ].filter(Boolean);
 
 
 
 const umdOutput = {
   format: 'umd',
-  name: 'VisionLib',
+  name: 'KuaishouMerchantOpenAPI',
   globals,
   assetFileNames: '[name].[ext]',
   exports: 'named',
@@ -70,13 +71,13 @@ export default () => {
     case 'umd':
       return [{
         input: entry,
-        output: { ...umdOutput, file: 'dist/visible-lib.development.js' },
+        output: { ...umdOutput, file: 'dist/kuaishou-merchant-open-api.development.js' },
         external,
         plugins: [...commonPlugins],
         moduleContext,
       }, {
         input: entry,
-        output: { ...umdOutput, file: 'dist/visible-lib.production.min.js', plugins: [terser()] },
+        output: { ...umdOutput, file: 'dist/kuaishou-merchant-open-api.production.min.js', plugins: [terser()] },
         external,
         plugins: [...commonPlugins],
         moduleContext,

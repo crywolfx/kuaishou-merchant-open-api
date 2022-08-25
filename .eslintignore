@@ -1,4 +1,6 @@
 test/**
 lib/**
 types/**
+dist/**
+es/**
 .*.js
