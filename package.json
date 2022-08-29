@@ -1,18 +1,16 @@
 {
   "name": "kuaishou-merchant-open-api",
-  "version": "0.0.1-beta",
-  "description": "电商开放平台openApi",
+  "version": "0.0.1-alpha",
+  "description": "快手电商开放平台openApi",
   "main": "lib/index.js",
   "module": "es/index.js",
-  "unpkg": "dist/open-lib.production.min.js",
   "types": "types",
   "scripts": {
     "prepare": "ts-patch install -s",
     "watch": "rollup -c -w",
     "build:npm": "BUILD_NPM=true yarn build",
-    "build": "yarn build:umd && yarn build:cjs && yarn build:esm",
+    "build": "yarn build:cjs && yarn build:esm",
     "build:types": "tsc --declaration --emitDeclarationOnly --noEmit false --outDir types",
-    "build:umd": "rimraf ./dist && NODE_ENV=production BABEL_ENV=umd rollup -c && yarn build:types",
     "build:cjs": "rimraf ./lib && NODE_ENV=production BABEL_ENV=cjs rollup -c && yarn build:types --outDir lib",
     "build:esm": "rimraf ./es && NODE_ENV=production BABEL_ENV=esm rollup -c && yarn build:types --outDir es",
     "test": "node ./test.js"
@@ -68,6 +66,7 @@
     "crypto-js": "^4.1.1",
     "form-data": "^4.0.0",
     "lodash.flatten": "^4.4.0",
-    "reflect-metadata": "^0.1.13"
+    "reflect-metadata": "^0.1.13",
+    "@babel/runtime": "^7.18.3"
   }
 }

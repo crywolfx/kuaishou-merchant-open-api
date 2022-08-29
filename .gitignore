@@ -13,8 +13,8 @@
 /build
 /types
 /dist
-/lib
-/es
+/lib*
+/es*
 
 # misc
 .DS_Store

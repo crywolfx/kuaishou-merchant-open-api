@@ -4,21 +4,20 @@ import commonjs from '@rollup/plugin-commonjs';
 import babel from '@rollup/plugin-babel';
 import json from '@rollup/plugin-json';
 import nodePolyfills from 'rollup-plugin-polyfill-node';
-import { terser } from 'rollup-plugin-terser';
 
 const buildNpm = process.env.BUILD_NPM === 'true';
 const BABEL_ENV = process.env.BABEL_ENV || 'esm';
-const IS_UMD = BABEL_ENV === 'umd';
 
 const entry = 'packages/index.ts';
 
 const extensions = ['.js', '.jsx', '.ts', '.tsx'];
 const globals = {};
-const externalPkg = buildNpm && !IS_UMD ? ['axios', 'class-validator', 'crypto-js', 'form-data', 'lodash', 'reflect-metadata', '@babel/runtime'] : [];
+const externalPkg = buildNpm ? ['axios', 'class-validator', 'crypto-js', 'form-data', 'lodash', 'reflect-metadata', '@babel/runtime'] : [];
 
 const external = id => externalPkg.some(e => id.indexOf(e) === 0);
 
 const commonPlugins = [
+  // nodePolyfills(),
   resolve({ extensions }),
   typescript({ useTsconfigDeclarationDir: true }),
   babel({
@@ -34,7 +33,6 @@ const commonPlugins = [
   }),
   json(),
   commonjs(),
-  IS_UMD && nodePolyfills()
 ].filter(Boolean);
 
 
@@ -68,25 +66,11 @@ const moduleContext = (id) => {
 
 export default () => {
   switch (BABEL_ENV) {
-    case 'umd':
-      return [{
-        input: entry,
-        output: { ...umdOutput, file: 'dist/kuaishou-merchant-open-api.development.js' },
-        external,
-        plugins: [...commonPlugins],
-        moduleContext,
-      }, {
-        input: entry,
-        output: { ...umdOutput, file: 'dist/kuaishou-merchant-open-api.production.min.js', plugins: [terser()] },
-        external,
-        plugins: [...commonPlugins],
-        moduleContext,
-      }];
     case 'esm':
       return {
         input: [entry],
         preserveModules: true,
-        output: { ...esOutput, dir: 'es/', format: 'es' },
+        output: { ...esOutput, dir: buildNpm ? 'es/' : 'esDist/', format: 'es' },
         external,
         plugins: [...commonPlugins],
         moduleContext,
@@ -95,7 +79,7 @@ export default () => {
       return {
         input: [entry],
         preserveModules: true,
-        output: { ...esOutput, dir: 'lib/', format: 'cjs' },
+        output: { ...esOutput, dir: buildNpm ? 'lib/' : 'libDist/', format: 'cjs' },
         external,
         plugins: [...commonPlugins],
         moduleContext,
