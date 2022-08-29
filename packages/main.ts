@@ -38,9 +38,10 @@ class KsMerchantClient {
   }
 
   @Validate()
-  public execute(@Required { api, method = 'GET', version = 1 }: ExecuteBaseDTO, orgParams?: Record<string, unknown>) {
+  public execute(@Required { api, method, version = 1 }: ExecuteBaseDTO, orgParams?: Record<string, unknown>) {
     const { params = {}, file = {} } = formatParams(orgParams) || {};
     const isUpload = Object.keys(file).length > 0;
+    method = method || (isUpload ? 'POST' : 'GET');
     const sortedParams = sortParams(params);
     const paramsString = JSON.stringify(sortedParams);
     const requestUrl = this.generateApiUrl(api);

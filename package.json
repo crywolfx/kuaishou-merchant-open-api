@@ -8,8 +8,8 @@
   "scripts": {
     "prepare": "ts-patch install -s",
     "watch": "rollup -c -w",
-    "build:npm": "BUILD_NPM=true yarn build",
     "build": "yarn build:cjs && yarn build:esm",
+    "build:npm": "BUILD_NPM=true yarn build",
     "build:types": "tsc --declaration --emitDeclarationOnly --noEmit false --outDir types",
     "build:cjs": "rimraf ./lib && NODE_ENV=production BABEL_ENV=cjs rollup -c && yarn build:types --outDir lib",
     "build:esm": "rimraf ./es && NODE_ENV=production BABEL_ENV=esm rollup -c && yarn build:types --outDir es",
