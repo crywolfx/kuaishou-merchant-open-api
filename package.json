@@ -8,11 +8,14 @@
   "scripts": {
     "prepare": "ts-patch install -s",
     "watch": "rollup -c -w",
-    "build": "yarn build:cjs && yarn build:esm",
-    "build:npm": "BUILD_NPM=true yarn build",
+    "build": "yarn build:npm && yarn build:dist",
+    "build:npm": "BUILD_NPM=true yarn build:cjs && BUILD_NPM=true yarn build:esm && yarn build:types",
+    "build:dist": "BUILD_NPM=false yarn build:cjs-dist && BUILD_NPM=false yarn build:esm-dist",
     "build:types": "tsc --declaration --emitDeclarationOnly --noEmit false --outDir types",
-    "build:cjs": "rimraf ./lib && NODE_ENV=production BABEL_ENV=cjs rollup -c && yarn build:types --outDir lib",
-    "build:esm": "rimraf ./es && NODE_ENV=production BABEL_ENV=esm rollup -c && yarn build:types --outDir es",
+    "build:cjs": "rimraf ./lib && NODE_ENV=production BABEL_ENV=cjs rollup -c",
+    "build:esm": "rimraf ./es && NODE_ENV=production BABEL_ENV=esm rollup -c",
+    "build:cjs-dist": "rimraf ./libDist && NODE_ENV=production BABEL_ENV=cjs rollup -c && yarn build:types --outDir libDist",
+    "build:esm-dist": "rimraf ./esDist && NODE_ENV=production BABEL_ENV=esm rollup -c && yarn build:types --outDir esDist",
     "test": "node ./test.js"
   },
   "repository": {
@@ -43,11 +46,12 @@
     "@rollup/plugin-json": "^4.1.0",
     "@rollup/plugin-node-resolve": "^13.3.0",
     "@rollup/plugin-typescript": "^8.3.1",
+    "@types/crypto-js": "^4.1.1",
     "@types/lodash.flatten": "^4.4.7",
     "@typescript-eslint/eslint-plugin": "^5.12.1",
     "@typescript-eslint/parser": "^5.12.1",
-    "@types/crypto-js": "^4.1.1",
     "eslint": "^8.9.0",
+    "rimraf": "^3.0.2",
     "rollup": "^2.68.0",
     "rollup-plugin-node-resolve": "^5.2.0",
     "rollup-plugin-polyfill-node": "^0.10.2",
@@ -61,12 +65,12 @@
     "typescript-transform-paths": "^3.3.1"
   },
   "dependencies": {
+    "@babel/runtime": "^7.18.3",
     "axios": "0.27.2",
     "class-validator": "^0.13.2",
     "crypto-js": "^4.1.1",
     "form-data": "^4.0.0",
     "lodash.flatten": "^4.4.0",
-    "reflect-metadata": "^0.1.13",
-    "@babel/runtime": "^7.18.3"
+    "reflect-metadata": "^0.1.13"
   }
 }

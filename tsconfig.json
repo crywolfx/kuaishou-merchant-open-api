@@ -21,10 +21,9 @@
     "forceConsistentCasingInFileNames": true, /* Disallow inconsistently-cased references to the same file. */
     "strictNullChecks": false,
     "experimentalDecorators": true,
-    "declaration": true,
+    "declaration": false,
     "emitDeclarationOnly": false,
     "emitDecoratorMetadata": true,
-    "declarationDir": "./types",
     "baseUrl": "./",
     "paths": {
       "@/*": [
