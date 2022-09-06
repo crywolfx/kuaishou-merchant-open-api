@@ -6,7 +6,7 @@ const client = new KsMerchantClient({
   appKey: 'ks683702719562282620',
   signSecret: '7482bac6555ee7a3184bcc48f4ef05cd',
   url: 'https://gw-merchant-staging.test.gifshow.com/',
-  accessToken: 'ChFvYXV0aC5hY2Nlc3NUb2tlbhKAAfUu2zk0RoossjIFwNiBgM69yXS0i1IkubirqE8gN_1rA-4kw2edRD5nVo1q3mluO6qVuU7e8iJkATeIA_Q7jyXy0l77hkpDwSMnTPATN-n_lX-8DBzEA8ul0ig12EMMz0x8q3ki8UCYQ2qMOmvS_pIhsvIwwd-whssU-vB4ABqiGhJlNxcp8KRotP1YGpX0lD9hTzMiIDhtp2VaJZ6yynkldVksNU9lTHbibnEMZ8fhjK8Yye_zKA8wAQ'
+  accessToken: 'ChFvYXV0aC5hY2Nlc3NUb2tlbhJQvR5J47YI8jOtjpJ45Fxr581ivbbEMwD_6p9LyetQTrV__nn7twczdU26Nj0_Vg1yJNikxGwybVJtopFWoIDWLY1TA-n-SWqpAPTbhN5OiHoaEmGCxNN-dgGEGt2EnlHtDE6c8CIg5OuMg-N5AE3gsKKM4oNegNc7kqkhGIIQggL5fl0hGc0oDzAB'
 });
 
 // 商品详情获取

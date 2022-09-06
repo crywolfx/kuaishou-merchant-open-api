@@ -2,9 +2,9 @@ import { Method } from "@/common/interface";
 import { EqualsList } from "@/decorator/validate.check.decorator";
 import { IsNumber, IsOptional, IsString } from "class-validator";
 
-export class ExecuteBaseDTO {
+export class ExecuteBaseDTO<T> {
   @IsString()
-  readonly api: string;
+  readonly api: T;
 
   @EqualsList(['GET', 'POST'])
   @IsOptional()

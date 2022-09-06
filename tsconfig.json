@@ -24,6 +24,7 @@
     "declaration": false,
     "emitDeclarationOnly": false,
     "emitDecoratorMetadata": true,
+    "lib": ["ESNext"],
     "baseUrl": "./",
     "paths": {
       "@/*": [

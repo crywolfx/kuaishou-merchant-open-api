@@ -1,3 +1,5 @@
+export * from './api.declaration';
+
 export enum SignMethod {
   HMAC_SHA256 = 'HMAC_SHA256',
   MD5 = 'MD5'
@@ -21,4 +23,11 @@ export interface SignParams {
   param: string;
 }
 
-export type Method = 'GET' | 'POST'
+export type Method = 'GET' | 'POST';
+
+export interface ApiResponse<T = any> {
+  result: number;
+  error_msg: string;
+  requestId: string;
+  data: T;
+}

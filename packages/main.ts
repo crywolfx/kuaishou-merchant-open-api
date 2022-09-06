@@ -1,8 +1,8 @@
 import { signMethods } from "@/common/sign";
 import { formatParams, isFunction, params2FormData, pathReplace, sortParams } from "@/common/utils";
-import request from "@/common/request";
+import service from "@/common/request";
 import { ClientConstructorDTO } from "@/dto/constructor.dto";
-import { SignMethod } from "@/common/interface";
+import { ApiResponse, SignMethod, ApiDeclaration } from "@/common/interface";
 import { ValidateClass, Required, Validate } from "@/decorator/validate.decorator";
 import { ExecuteBaseDTO } from '@/dto/execute.dto';
 import { SignDTO } from "@/dto/sign.dto";
@@ -38,7 +38,7 @@ class KsMerchantClient {
   }
 
   @Validate()
-  public execute(@Required { api, method, version = 1 }: ExecuteBaseDTO, orgParams?: Record<string, unknown>) {
+  public execute<T extends keyof ApiDeclaration>(@Required { api, method, version = 1 }: ExecuteBaseDTO<T>, orgParams?: ApiDeclaration[T]['request']) {
     const { params = {}, file = {} } = formatParams(orgParams) || {};
     const isUpload = Object.keys(file).length > 0;
     method = method || (isUpload ? 'POST' : 'GET');
@@ -71,8 +71,9 @@ class KsMerchantClient {
     } else {
       _params = { param: paramsString, ...baseParams }
     }
-    return request({ url: requestUrl, method: method, params: _params, data: _data, headers: header })
+    return service.request<unknown, ApiResponse<ApiDeclaration[T]['response']>>({ url: requestUrl, method: method, params: _params, data: _data, headers: header });
   }
 }
 
 export default KsMerchantClient;
+
