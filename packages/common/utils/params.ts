@@ -1,6 +1,5 @@
 import FormData from 'form-data';
 import { isObject } from "./type";
-import { Buffer } from 'buffer';
 import { Stream } from 'stream';
 
 export const sortParams = (params: Record<string, unknown> | undefined) => {

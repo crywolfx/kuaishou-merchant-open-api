@@ -42,6 +42,10 @@ const basicTypeConvert = (type = '') => {
     newBasicType === 'object';
     tsType = 'Date|number';
   }
+  if (lowerCaseType === 'bytes') {
+    newBasicType === 'object';
+    tsType = 'NodeJS.ReadableStream|Buffer'
+  }
   const data = {
     type: newBasicType,
   };
@@ -75,6 +79,37 @@ const getSturcture = (params) => {
     return data.params || [];
   })
 }
+
+const getSturcturePool = (() => {
+  const asyncList = [];
+  let currentList = [];
+  const max = 10;
+  const waitTime = 3000;
+  const flush = () => {
+    if (currentList.length) {
+      asyncList.push(currentList);
+      currentList = [];
+    }
+  }
+  let timer = null;
+  const countDown = (callback) => {
+    timer && clearTimeout(timer);
+    timer = setTimeout(() => {
+      callback();
+      clearTimeout(timer);
+      timer = null;
+    }, waitTime)
+  }
+
+  return (params) => {  
+    return new Promise((resolve) => {
+      if (currentList.length < max) {
+        currentList.push(params);
+      } 
+      countDown(flush)
+    })
+  }
+})()
 
 const formatParams = (params = []) => {
   return Promise.resolve(params).then((paramsList) => {
@@ -160,7 +195,7 @@ const asyncPoolAll = async (...args) => {
 const getApiInfoList = async () => {
   const apiList = await getApiList();
   const params = apiList.map((item) => ({ name: item.name, version: item.version }));
-  return await asyncPoolAll(10, params, getApiInfo);
+  return asyncPoolAll(10, params, getApiInfo);
 }
 
 const declaration = async (apiListInfo = []) => {
