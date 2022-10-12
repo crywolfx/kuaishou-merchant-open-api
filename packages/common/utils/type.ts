@@ -1,3 +1,5 @@
+import FormData from "form-data";
+
 export function isFunction(val: unknown): val is (...args: unknown[]) => unknown {
   return Object.prototype.toString.call(val) === '[object Function]';
 }

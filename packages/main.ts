@@ -88,3 +88,4 @@ const client = new KsMerchantClient({
 client.execute({ api: 'open.item.detail.images.update' }, { kwaiItemId: 123 }).then((res) => {
   console.log(res);
 });
+

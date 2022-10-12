@@ -3,6 +3,7 @@ const path = require('path');
 const asyncPool = require('tiny-async-pool');
 const axios = require('axios').default;
 const { compile } = require('json-schema-to-typescript');
+const colors = require('colors/safe');
 const log = require('./log');
 
 const service = axios.create({
@@ -80,38 +81,7 @@ const getSturcture = (params) => {
   })
 }
 
-const getSturcturePool = (() => {
-  const asyncList = [];
-  let currentList = [];
-  const max = 10;
-  const waitTime = 3000;
-  const flush = () => {
-    if (currentList.length) {
-      asyncList.push(currentList);
-      currentList = [];
-    }
-  }
-  let timer = null;
-  const countDown = (callback) => {
-    timer && clearTimeout(timer);
-    timer = setTimeout(() => {
-      callback();
-      clearTimeout(timer);
-      timer = null;
-    }, waitTime)
-  }
-
-  return (params) => {  
-    return new Promise((resolve) => {
-      if (currentList.length < max) {
-        currentList.push(params);
-      } 
-      countDown(flush)
-    })
-  }
-})()
-
-const formatParams = (params = []) => {
+const formatParams = (params = [], parentStructureId) => {
   return Promise.resolve(params).then((paramsList) => {
     return paramsList.reduce((pre, current = {}) => {
       const { paramName, paramType, description, structureId, required } = current;
@@ -142,10 +112,18 @@ const formatParams = (params = []) => {
             items: { ...basicTypeConvert(paramTypeWithoutArray) }
           }
         } else {
-          const properties = await formatParams(getSturcture({ id: current.structureId }).catch(() => {
-            log.error(`结构体${paramType}获取失败`);
-            return Promise.resolve([]);
-          }));
+          log.info(`开始获取结构体${paramTypeWithoutArray}`);
+          let properties;
+          if (parentStructureId === structureId) {
+            res.properties[paramName] = res.properties;
+            properties = { properties: res.properties, required: res.required }
+          } else {
+            properties = await formatParams(getSturcture({ id: structureId }).catch(() => {
+              log.error(`结构体${paramTypeWithoutArray}获取失败`);
+              return Promise.resolve([]);
+            }), structureId);
+            log.success(`结构体${paramTypeWithoutArray}获取成功`);
+          }
           childrenSchema = isArray ? {
             items: {
               type: 'object',
@@ -171,7 +149,12 @@ const formatParams = (params = []) => {
   });
 }
 
+let count = 0;
+let current = 0;
 const getApiInfo = (params) => {
+  const percent = parseInt((++current / count) * 10000) / 100;
+  console.log('生成进度:', colors.yellow(`${percent}%`));
+  console.log('当前参数:', params)
   return service.request({
     url: '/rest/open/platform/doc/api/name/detail',
     method: 'GET',
@@ -195,10 +178,13 @@ const asyncPoolAll = async (...args) => {
 const getApiInfoList = async () => {
   const apiList = await getApiList();
   const params = apiList.map((item) => ({ name: item.name, version: item.version }));
-  return asyncPoolAll(10, params, getApiInfo);
+  count = params.length;
+  log.success(`共${count}个API`);
+  return asyncPoolAll(4, params, getApiInfo);
 }
 
 const declaration = async (apiListInfo = []) => {
+  log.success('开始生成declaration');
   const schema = apiListInfo.reduce((pre, current) => {
     const { name, cnName, hasInput, hasOutput, inputParams, outputParams } = current || {};
     pre.required.push(name);
@@ -228,7 +214,9 @@ const declaration = async (apiListInfo = []) => {
     ...schema
   };
   const declaration = await compile(ApiDeclaration);
+  log.success('开始写入declaration');
   writeFileSync(path.join(__dirname, '../packages/common/interface/api.declaration.ts'), declaration);
+  log.success('declaration写入成功');
 }
 
 (async () => {

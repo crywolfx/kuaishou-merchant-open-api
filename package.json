@@ -1,6 +1,6 @@
 {
   "name": "kuaishou-merchant-open-api",
-  "version": "0.0.1-alpha",
+  "version": "0.0.2-alpha",
   "description": "快手电商开放平台openApi",
   "main": "lib/index.js",
   "module": "es/index.js",

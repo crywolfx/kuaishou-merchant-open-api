@@ -85,7 +85,7 @@ const checkReadLine = (answer, defaultValue, yesCallback, noCallback, otherCallb
   }
 };
 
-const install = () => runSpawn('yarn install');
+const install = () => runSpawn('yarn', ['install']);
 const buildNpm = () => runSpawn('yarn', ['build:npm']);
 const npmPublish = () => runSpawn('npm', ['publish']);
 const buildDist = () => runSpawn('yarn', ['build:dist']);
