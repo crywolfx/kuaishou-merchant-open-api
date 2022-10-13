@@ -1,6 +1,6 @@
 {
   "name": "kuaishou-merchant-open-api",
-  "version": "0.0.2-alpha",
+  "version": "0.0.2",
   "description": "快手电商开放平台openApi",
   "main": "lib/index.js",
   "module": "es/index.js",
@@ -16,7 +16,8 @@
     "build:esm": "rimraf ./es && NODE_ENV=production BABEL_ENV=esm rollup -c",
     "build:cjs-dist": "rimraf ./libDist && NODE_ENV=production BABEL_ENV=cjs rollup -c && yarn build:types --outDir libDist",
     "build:esm-dist": "rimraf ./esDist && NODE_ENV=production BABEL_ENV=esm rollup -c && yarn build:types --outDir esDist",
-    "test": "node ./test.js"
+    "release": "node ./script/release.js",
+    "test": "node ./test/index.js"
   },
   "repository": {
     "type": "git",

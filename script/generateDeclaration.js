@@ -70,16 +70,24 @@ const getApiList = () => {
   })
 }
 
-const getSturcture = (params) => {
-  return service.request({
-    url: '/rest/open/platform/doc/structure/detail',
-    method: 'GET',
-    params
-  }).then((data) => {
-    if (data.errorMsg && !data.params) return Promise.reject(data);
-    return data.params || [];
-  })
-}
+const getSturcture = (() => {
+  const map = {};
+  const get = (params) => {
+    const id = params.id;
+    if (map[id]) return Promise.resolve(map[id]);
+    return service.request({
+      url: '/rest/open/platform/doc/structure/detail',
+      method: 'GET',
+      params
+    }).then((data) => {
+      if (data.errorMsg && !data.params) return Promise.reject(data);
+      const structureParams = data.params || [];
+      map[id] = structureParams
+      return structureParams;
+    })
+  }
+  return get;
+})()
 
 const formatParams = (params = [], parentStructureId) => {
   return Promise.resolve(params).then((paramsList) => {
@@ -219,6 +227,4 @@ const declaration = async (apiListInfo = []) => {
   log.success('declaration写入成功');
 }
 
-(async () => {
-  declaration(await getApiInfoList());
-})();
+module.exports = async () => declaration(await getApiInfoList());

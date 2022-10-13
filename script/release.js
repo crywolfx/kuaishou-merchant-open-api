@@ -9,6 +9,7 @@ const path = require('path');
 const package = require('../package.json');
 const Uploader = require('./upload');
 const log = require('./log');
+const generateDeclaration = require('./generateDeclaration');
 
 const version = package.version;
 
@@ -41,37 +42,77 @@ const runSpawn = (...command) => {
   });
 };
 
-const createReadLine = (questionList = []) => {
-  const readLineInterface = readline.createInterface({
-    input: process.stdin,
-    output: process.stdout,
-  });
-  readLineInterface.on('close', () => {
+const createReadLine = (questionList = [], {
+  readLineInterface,
+  isSub = false, 
+  resolve,
+  onFallback,
+} = {}) => {
+  questionList = questionList.filter(Boolean);
+  const _readLineInterface =
+    readLineInterface ||
+    readline.createInterface({
+      input: process.stdin,
+      output: process.stdout,
+    });
+  _readLineInterface.on('close', () => {
     process.exit(0);
   });
-  const setQuestion = (i = 0) => {
+  const setQuestion = (i = 0, lastResult) => {
     const item = questionList[i];
     if (item.question && item.callback) {
-      readLineInterface.question(item.question, (answer) => {
+      _readLineInterface.question(item.question, (answer) => {
         item.callback(answer, {
-          done: () => {
+          readLineInterface: _readLineInterface,
+          lastResult,
+          done: (nextResult) => {
             if (i === questionList.length - 1) {
-              return readLineInterface.close();
+              if (!isSub) {
+                return _readLineInterface.close();
+              } else {
+                return resolve && resolve();
+              }
             }
-            if (i < questionList.length) return setQuestion(++i);
+            if (i < questionList.length) return setQuestion(++i, nextResult);
+          },
+          go: (targetIndex, nextResult) => {
+            setQuestion(targetIndex, nextResult);
           },
           close: () => {
-            return readLineInterface.close();
+            return _readLineInterface.close();
           },
           retry: () => {
             return setQuestion(i);
           },
+          createSubQuestion: (subQuestionList = []) => {
+            if (subQuestionList.length) {
+              return new Promise((resolve) => {
+                createReadLine(subQuestionList, {
+                  readLineInterface: _readLineInterface,
+                  isSub: true,
+                  resolve
+                });
+              });
+            }
+            return Promise.resolve();
+          },
+          backTop: () => {
+            if (isSub) {
+              resolve && resolve();
+            }
+          },
+          fallback: (callback) => {
+            callback && callback();
+            onFallback && onFallback();
+            return _readLineInterface.close();
+          }
         });
       });
     }
   };
   setQuestion();
 };
+
 
 const checkReadLine = (answer, defaultValue, yesCallback, noCallback, otherCallback) => {
   answer = answer || defaultValue;
@@ -111,10 +152,7 @@ const uploadFile = (version) => {
 
 let newVersion = version;
 const start = async (newVersion) => {
-  writeVersion(newVersion);
-  log.success(`version: ${newVersion}`);
-  await install();
-  log.success('依赖安装完成');
+  log.success('开始打包');
   await buildDist();
   log.success('打包完成');
   buildRelease(getReleasePath(newVersion));
@@ -135,9 +173,37 @@ createReadLine([
         return retry();
       }
       newVersion = currentVersion;
-      await Promise.resolve(start(currentVersion));
+      writeVersion(newVersion);
+      log.success(`version: ${newVersion}`);
+      await install();
+      log.success('依赖安装完成');
       done();
     },
+  },
+  {
+    question: colors.yellow('是否重新创建API declaration? [y]: '),
+    callback: (needCreate = 'y', { done, retry, fallback }) => {
+      checkReadLine(
+        needCreate,
+        'y',
+        () => {
+          generateDeclaration().then(() => {
+            start(newVersion).then(done).catch(fallback)
+          }).catch(() => {
+            log.error('declaration生成失败');
+            fallback();
+          })
+        },
+        () => {
+          log.info('跳过生成declaration');
+          start(newVersion).then(done).catch(fallback)
+        },
+        () => {
+          log.warn('输入不正确');
+          retry();
+        },
+      );
+    }
   },
   {
     question: colors.yellow('是否上传cdn? [y]: '),
@@ -190,7 +256,7 @@ createReadLine([
     },
   },
   {
-    question: colors.yellow('是否发布npm? [y]'),
+    question: colors.yellow('是否发布npm? [y]: '),
     callback: (needPublish, { done, close, retry }) => {
       checkReadLine(
         needPublish,
@@ -211,4 +277,9 @@ createReadLine([
       );
     },
   },
-]);
+], {
+  onFallback: () => {
+    writeVersion(version);
+    log.success(`版本号已回滚至${version}`);
+  }
+});

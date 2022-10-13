@@ -15,6 +15,7 @@
 /dist
 /lib*
 /es*
+/release/*
 
 # misc
 .DS_Store

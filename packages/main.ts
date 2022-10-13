@@ -76,16 +76,3 @@ class KsMerchantClient {
 }
 
 export default KsMerchantClient;
-
-
-const client = new KsMerchantClient({
-  appKey: 'ks683702719562282620',
-  signSecret: '7482bac6555ee7a3184bcc48f4ef05cd',
-  url: 'https://gw-merchant-staging.test.gifshow.com/',
-  accessToken: 'ChFvYXV0aC5hY2Nlc3NUb2tlbhJQvR5J47YI8jOtjpJ45Fxr581ivbbEMwD_6p9LyetQTrV__nn7twczdU26Nj0_Vg1yJNikxGwybVJtopFWoIDWLY1TA-n-SWqpAPTbhN5OiHoaEmGCxNN-dgGEGt2EnlHtDE6c8CIg5OuMg-N5AE3gsKKM4oNegNc7kqkhGIIQggL5fl0hGc0oDzAB'
-});
-
-client.execute({ api: 'open.item.detail.images.update' }, { kwaiItemId: 123 }).then((res) => {
-  console.log(res);
-});
-
