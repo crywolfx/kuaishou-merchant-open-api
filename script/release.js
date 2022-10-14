@@ -134,19 +134,26 @@ const writeVersion = (version) => {
   package.version = version;
   writeFileSync(path.join(__dirname, '../package.json'), JSON.stringify(package, null, 2));
 };
-const getReleasePath = (version) => path.join(__dirname, `../release/v${version}.zip`);
-const buildRelease = (releasePath) => {
+const getReleasePath = (version, type = 'cjs') => path.join(__dirname, `../release/v${version}_${type}.zip`);
+const buildRelease = (version, type = 'cjs') => {
   const zip = new AdmZip();
-  zip.addLocalFolder(path.join(__dirname, '../esDist'));
-  zip.addLocalFolder(path.join(__dirname, '../libDist'));
+  const releasePath = getReleasePath(version, type);
+  const dir = type === 'cjs' ? '../libDist' : '../esDist';
+  zip.addLocalFolder(path.join(__dirname, dir));
   zip.writeZip(releasePath);
 };
+const buildAllRelease = (newVersion) => {
+  buildRelease(newVersion, 'cjs');
+  buildRelease(newVersion, 'esm');
+}
 
 const uploadFile = (version) => {
-  const file = createReadStream(getReleasePath(version));
-  if (!file) return Promise.reject();
-  const dirName = `openApi_v${version}.zip`;
-  return uploader.upload({ file, dirName });
+  const cjsFile = createReadStream(getReleasePath(version, 'cjs'));
+  const esmFile = createReadStream(getReleasePath(version, 'esm'));
+  if (!cjsFile || !esmFile) return Promise.reject();
+  const cjsDirName = `openApi_v${version}_cjs.zip`;
+  const esmDirName = `openApi_v${version}_esm.zip`;
+  return Promise.all([uploader.upload({ file: cjsFile, dirName: cjsDirName }), uploader.upload({ file: esmFile, dirName: esmDirName })]);
 };
 
 
@@ -155,10 +162,9 @@ const start = async (newVersion) => {
   log.success('开始打包');
   await buildDist();
   log.success('打包完成');
-  buildRelease(getReleasePath(newVersion));
-  log.success(`release包压缩完成: ${getReleasePath(newVersion)}`);
+  buildAllRelease(newVersion);
+  log.success(`release包压缩完成: \n ${getReleasePath(newVersion)} \n ${getReleasePath(newVersion, 'esm')}`);
 };
-
 
 createReadLine([
   {
@@ -213,11 +219,12 @@ createReadLine([
         'y',
         () => {
           uploadFile(newVersion)
-            .then((r) => {
-              if (r.cdnUrl) {
-                log.success(`上传成功: ${r.cdnUrl}`);
+            .then((res) => {
+              const [r1, r2] = res || [];
+              if (r1.cdnUrl && r2.cdnUrl) {
+                log.success(`上传成功: \n cjs: ${r1.cdnUrl} \n esm: ${r2.cdnUrl}`);
               } else {
-                log.error(`上传失败: ${JSON.stringify(r)}`);
+                log.error(`上传失败: ${JSON.stringify(res)}`);
               }
             })
             .finally(done);
