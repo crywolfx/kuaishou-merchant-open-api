@@ -25,9 +25,8 @@ export interface SignParams {
 
 export type Method = 'GET' | 'POST';
 
-export interface ApiResponse<T = any> {
+export type ApiResponse<T = any> = {
   result: number;
   error_msg: string;
   requestId: string;
-  data: T;
-}
+} & T;
