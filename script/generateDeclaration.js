@@ -17,6 +17,18 @@ const service = axios.create({
   },
 });
 
+const API_DEFAULT_METHOD = {};
+
+const MethodEnum = {
+  GET: 1,
+  POST: 2,
+  PUT: 3,
+  DELETE: 4,
+  HEAD: 5,
+  PATCH: 6,
+  OPTIONS: 7,
+};
+
 const isArrayType = (paramType = '') => {
   const listMatch = /^List<.+>$/i;
   const listMatch2 = /.+\[\]$/;
@@ -157,10 +169,10 @@ const formatParams = (params = [], parentStructureId) => {
   });
 }
 
-let count = 0;
-let current = 0;
+let total = 0;
+let currentCount = 0;
 const getApiInfo = (params) => {
-  const percent = parseInt((++current / count) * 10000) / 100;
+  const percent = parseInt((++currentCount / total) * 10000) / 100;
   console.log('生成进度:', colors.yellow(`${percent}%`));
   console.log('当前参数:', params)
   return service.request({
@@ -168,9 +180,15 @@ const getApiInfo = (params) => {
     method: 'GET',
     params
   }).then(async (data) => {
-    const { name, inputParams = [], outputParams = [], cnName, description } = data || {};
+    const { name, inputParams = [], outputParams = [], cnName, description, method = 1 } = data || {};
     const hasInput = inputParams.length > 0;
     const hasOutput = outputParams.length > 0;
+    for (let methodString of Object.keys(MethodEnum)) {
+      const methodValue = MethodEnum[methodString];
+      if (methodValue === method) {
+        API_DEFAULT_METHOD[name] = methodString;
+      }
+    }
     return { name, inputParams: await formatParams(inputParams), outputParams: await formatParams(outputParams), cnName, description, hasInput, hasOutput };
   })
 }
@@ -186,8 +204,8 @@ const asyncPoolAll = async (...args) => {
 const getApiInfoList = async () => {
   const apiList = await getApiList();
   const params = apiList.map((item) => ({ name: item.name, version: item.version }));
-  count = params.length;
-  log.success(`共${count}个API`);
+  total = params.length;
+  log.success(`共${total}个API`);
   return asyncPoolAll(4, params, getApiInfo);
 }
 
@@ -224,7 +242,9 @@ const declaration = async (apiListInfo = []) => {
   const declaration = await compile(ApiDeclaration);
   log.success('开始写入declaration');
   writeFileSync(path.join(__dirname, '../packages/common/interface/api.declaration.ts'), declaration);
+  writeFileSync(path.join(__dirname, '../packages/common/constant/api.default.method.ts'), `export default ${JSON.stringify(API_DEFAULT_METHOD)}`);
   log.success('declaration写入成功');
+  console.log(`一共${colors.yellow(total + '')}个API, 成功${colors.green(currentCount)}个, 失败${colors.red(total - currentCount)}`);
 }
 
 module.exports = async () => declaration(await getApiInfoList());

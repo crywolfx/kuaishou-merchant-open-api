@@ -7,6 +7,66 @@
 
 export interface ApiDeclaration {
   /**
+   * 获取商品类目列表
+   */
+  "open.item.category": {
+    /**
+     * API入参
+     */
+    request?: {
+      [k: string]: unknown;
+    };
+    /**
+     * API出参
+     */
+    response: {
+      /**
+       * 主返回码
+       */
+      code?: string;
+      /**
+       * 主返回信息
+       */
+      msg?: string;
+      /**
+       * 子返回码
+       */
+      sub_code?: string;
+      /**
+       * 子返回信息
+       */
+      sub_msg?: string;
+      /**
+       * 返回码，1：成功
+       */
+      result?: number;
+      /**
+       * 类目列表
+       */
+      data?: {
+        /**
+         * 类目id
+         */
+        categoryId: number;
+        /**
+         * 类目名称
+         */
+        categoryName: string;
+        /**
+         * 父级类目id
+         */
+        categoryPid: number;
+        [k: string]: unknown;
+      }[];
+      /**
+       * 错误描述
+       */
+      error_msg?: string;
+      [k: string]: unknown;
+    };
+    [k: string]: unknown;
+  };
+  /**
    * 获取品牌列表
    */
   "open.item.brand.list.get": {
@@ -92,6 +152,56 @@ export interface ApiDeclaration {
         }[];
         [k: string]: unknown;
       };
+      [k: string]: unknown;
+    };
+    [k: string]: unknown;
+  };
+  /**
+   * 删除商品
+   */
+  "open.item.delete": {
+    /**
+     * API入参
+     */
+    request: {
+      /**
+       * 快手商品id
+       */
+      kwaiItemId: number;
+      /**
+       * 外部商品id，仅供记录外部商品和快手商品对应关系
+       */
+      relItemId?: number;
+      [k: string]: unknown;
+    };
+    /**
+     * API出参
+     */
+    response: {
+      /**
+       * 主返回码
+       */
+      code?: string;
+      /**
+       * 主返回信息
+       */
+      msg?: string;
+      /**
+       * 子返回码
+       */
+      sub_code?: string;
+      /**
+       * 子返回信息
+       */
+      sub_msg?: string;
+      /**
+       * 返回码 1成功
+       */
+      result?: number;
+      /**
+       * 商品正在售卖中不允许删除
+       */
+      error_msg?: string;
       [k: string]: unknown;
     };
     [k: string]: unknown;
@@ -187,67 +297,25 @@ export interface ApiDeclaration {
     [k: string]: unknown;
   };
   /**
-   * 删除商品
+   * 更新商品详情图片
    */
-  "open.item.delete": {
+  "open.item.detail.images.update": {
     /**
      * API入参
      */
     request: {
       /**
-       * 快手商品id
+       * 快手商品 Id
        */
       kwaiItemId: number;
       /**
-       * 外部商品id，仅供记录外部商品和快手商品对应关系
+       * 1. 请勿出现其它平台的信息水印查看图示；
+       * 2. 最多上传20张图片；
+       * 3. 单张图片大小不超过2M，支持png/jpeg/webp/bmp格式；
+       *
+       * 注意：会把传过来的图片信息更新到数据库，不填就相当于删除所有图片
        */
-      relItemId?: number;
-      [k: string]: unknown;
-    };
-    /**
-     * API出参
-     */
-    response: {
-      /**
-       * 主返回码
-       */
-      code?: string;
-      /**
-       * 主返回信息
-       */
-      msg?: string;
-      /**
-       * 子返回码
-       */
-      sub_code?: string;
-      /**
-       * 子返回信息
-       */
-      sub_msg?: string;
-      /**
-       * 返回码 1成功
-       */
-      result?: number;
-      /**
-       * 商品正在售卖中不允许删除
-       */
-      error_msg?: string;
-      [k: string]: unknown;
-    };
-    [k: string]: unknown;
-  };
-  /**
-   * 获取类目相关配置信息
-   */
-  "open.item.category.config": {
-    /**
-     * API入参
-     */
-    request: {
-      /**
-       * 类目id
-       */
-      categoryId: number;
+      detailImageUrls?: string[];
       [k: string]: unknown;
     };
     /**
@@ -278,187 +346,6 @@ export interface ApiDeclaration {
        * 返回码描述
        */
       error_msg?: string;
-      /**
-       * 返回数据
-       */
-      data?: {
-        /**
-         * 类目配置
-         */
-        categoryConfig: {
-          /**
-           * 类目退款规则列表：  1：支持7天无理由退货，4：不支持7天无理由退货，5：支持7天无理由退货(拆封后不支持)，6：支持7天无理由退货(激活后不支持)，7：支持7天无理由退货(安装后不支持)，8：支持7天无理由退货(定制类不支持)，9：支持7天无理由退货(使用后不支持)， 10：支持7天无理由退货(开窗后不支持)， 11：随时退过期退，12：
-           * 过期自动退，13：不可退
-           */
-          refundRuleList: number[];
-          /**
-           * 最长预售时间
-           */
-          preSaleTime?: number;
-          /**
-           * 过敏包退，0-不可选 1-可选 2-必选
-           */
-          allergyRefund?: string;
-          /**
-           * 坏了包退，0-不可选 1-可选 2-必选
-           */
-          freshRotRefund?: string;
-          /**
-           * 破损包退，0-不可选 1-可选 2-必选
-           */
-          brokenRefund?: string;
-          [k: string]: unknown;
-        };
-        /**
-         * 是否开启类目属性
-         */
-        categoryPropSwitch: boolean;
-        /**
-         * 属性配置列表
-         */
-        propConfigs: {
-          /**
-           * 属性id
-           */
-          propId: number;
-          /**
-           * 属性名称
-           */
-          propName: string;
-          /**
-           * 是否有前置条件
-           */
-          preConstraint: boolean;
-          /**
-           * 前置条件信息列表
-           */
-          prePropValues: {
-            /**
-             * 属性id
-             */
-            propId: number;
-            /**
-             * 属性值列表
-             */
-            propValues: {
-              /**
-               * 属性值id
-               */
-              propValueId: number;
-              /**
-               * 属性值
-               */
-              propValue: string;
-              [k: string]: unknown;
-            }[];
-            [k: string]: unknown;
-          }[];
-          /**
-           * 是否必填
-           */
-          required: boolean;
-          /**
-           * 最大可选数量
-           */
-          propValueMaximum: number;
-          /**
-           * 排序顺序
-           */
-          sortNum: number;
-          /**
-           * 输入规则
-           */
-          propInputConfig: {
-            /**
-             * 日期类型输入规则
-             */
-            dateInputConfig?: {
-              /**
-               * 日期类型，决定rangeList里日期的格式，daterange："yyyy-MM-dd"；monthrange："yyyy-MM"；yearrange："yyyy"
-               */
-              type: string;
-              /**
-               * 日期字符串，下标为0代表起始时间，下标为1结束时间
-               */
-              rangeList: string[];
-              [k: string]: unknown;
-            };
-            /**
-             * 文本输入配置
-             */
-            inputFormatConfig?: {
-              /**
-               * 字符串匹配模式，正则语法
-               */
-              patternList?: string[];
-              /**
-               * 是否有长度限制
-               */
-              useLimit: boolean;
-              /**
-               * 长度最大值
-               */
-              max?: number;
-              /**
-               * 长度最小值
-               */
-              min?: number;
-              /**
-               * 错误信息
-               */
-              message?: string;
-              [k: string]: unknown;
-            };
-            /**
-             * 图片输入配置
-             */
-            imageInputConfig?: {
-              /**
-               * 最小上传图片数量
-               */
-              minCount?: number;
-              /**
-               * 最大上传图片数量
-               */
-              maxCount?: number;
-              /**
-               * 最小宽度，单位：像素
-               */
-              minWidth?: number;
-              /**
-               * 最小高度，单位：像素
-               */
-              minHeight?: number;
-              [k: string]: unknown;
-            };
-            [k: string]: unknown;
-          };
-          /**
-           * 输入类型。TEXT：文本，CHECKBOX：多选，NUMBER：数字，EMAIL：email，DATETIME：时间，URL：链接，DATETIMERANGE：时间段，RADIO：单选，IMAGE：图片，INVALID_PROP_INPUT_TYPE：无效值
-           */
-          propInputType: string;
-          /**
-           * 单位属性结构体
-           */
-          unitProp: {
-            /**
-             * 单位属性id
-             */
-            unitPropValueId?: number;
-            /**
-             * 单位属性名称
-             */
-            unitPropValueName?: string;
-            [k: string]: unknown;
-          }[];
-          /**
-           * 是否支持自定义属性输入
-           */
-          customInput: boolean;
-          [k: string]: unknown;
-        }[];
-        [k: string]: unknown;
-      };
       [k: string]: unknown;
     };
     [k: string]: unknown;
@@ -804,60 +691,6 @@ export interface ApiDeclaration {
     [k: string]: unknown;
   };
   /**
-   * 更新商品详情图片
-   */
-  "open.item.detail.images.update": {
-    /**
-     * API入参
-     */
-    request: {
-      /**
-       * 快手商品 Id
-       */
-      kwaiItemId: number;
-      /**
-       * 1. 请勿出现其它平台的信息水印查看图示；
-       * 2. 最多上传20张图片；
-       * 3. 单张图片大小不超过2M，支持png/jpeg/webp/bmp格式；
-       *
-       * 注意：会把传过来的图片信息更新到数据库，不填就相当于删除所有图片
-       */
-      detailImageUrls?: string[];
-      [k: string]: unknown;
-    };
-    /**
-     * API出参
-     */
-    response: {
-      /**
-       * 主返回码
-       */
-      code?: string;
-      /**
-       * 主返回信息
-       */
-      msg?: string;
-      /**
-       * 子返回码
-       */
-      sub_code?: string;
-      /**
-       * 子返回信息
-       */
-      sub_msg?: string;
-      /**
-       * 返回码，1：成功
-       */
-      result?: number;
-      /**
-       * 返回码描述
-       */
-      error_msg?: string;
-      [k: string]: unknown;
-    };
-    [k: string]: unknown;
-  };
-  /**
    * 获取商品详情页跳转链接
    */
   "open.item.detail.page.link": {
@@ -929,6 +762,233 @@ export interface ApiDeclaration {
          * kwai://merchant/selfdetail?itemId=1905543305297
          */
         kwaiUrl: string;
+        [k: string]: unknown;
+      };
+      [k: string]: unknown;
+    };
+    [k: string]: unknown;
+  };
+  /**
+   * 获取类目相关配置信息
+   */
+  "open.item.category.config": {
+    /**
+     * API入参
+     */
+    request: {
+      /**
+       * 类目id
+       */
+      categoryId: number;
+      [k: string]: unknown;
+    };
+    /**
+     * API出参
+     */
+    response: {
+      /**
+       * 主返回码
+       */
+      code?: string;
+      /**
+       * 主返回信息
+       */
+      msg?: string;
+      /**
+       * 子返回码
+       */
+      sub_code?: string;
+      /**
+       * 子返回信息
+       */
+      sub_msg?: string;
+      /**
+       * 返回码，1：成功
+       */
+      result?: number;
+      /**
+       * 返回码描述
+       */
+      error_msg?: string;
+      /**
+       * 返回数据
+       */
+      data?: {
+        /**
+         * 类目配置
+         */
+        categoryConfig: {
+          /**
+           * 类目退款规则列表：  1：支持7天无理由退货，4：不支持7天无理由退货，5：支持7天无理由退货(拆封后不支持)，6：支持7天无理由退货(激活后不支持)，7：支持7天无理由退货(安装后不支持)，8：支持7天无理由退货(定制类不支持)，9：支持7天无理由退货(使用后不支持)， 10：支持7天无理由退货(开窗后不支持)， 11：随时退过期退，12：
+           * 过期自动退，13：不可退
+           */
+          refundRuleList: number[];
+          /**
+           * 最长预售时间
+           */
+          preSaleTime?: number;
+          /**
+           * 过敏包退，0-不可选 1-可选 2-必选
+           */
+          allergyRefund?: string;
+          /**
+           * 坏了包退，0-不可选 1-可选 2-必选
+           */
+          freshRotRefund?: string;
+          /**
+           * 破损包退，0-不可选 1-可选 2-必选
+           */
+          brokenRefund?: string;
+          [k: string]: unknown;
+        };
+        /**
+         * 是否开启类目属性
+         */
+        categoryPropSwitch: boolean;
+        /**
+         * 属性配置列表
+         */
+        propConfigs: {
+          /**
+           * 属性id
+           */
+          propId: number;
+          /**
+           * 属性名称
+           */
+          propName: string;
+          /**
+           * 是否有前置条件
+           */
+          preConstraint: boolean;
+          /**
+           * 前置条件信息列表
+           */
+          prePropValues: {
+            /**
+             * 属性id
+             */
+            propId: number;
+            /**
+             * 属性值列表
+             */
+            propValues: {
+              /**
+               * 属性值id
+               */
+              propValueId: number;
+              /**
+               * 属性值
+               */
+              propValue: string;
+              [k: string]: unknown;
+            }[];
+            [k: string]: unknown;
+          }[];
+          /**
+           * 是否必填
+           */
+          required: boolean;
+          /**
+           * 最大可选数量
+           */
+          propValueMaximum: number;
+          /**
+           * 排序顺序
+           */
+          sortNum: number;
+          /**
+           * 输入规则
+           */
+          propInputConfig: {
+            /**
+             * 日期类型输入规则
+             */
+            dateInputConfig?: {
+              /**
+               * 日期类型，决定rangeList里日期的格式，daterange："yyyy-MM-dd"；monthrange："yyyy-MM"；yearrange："yyyy"
+               */
+              type: string;
+              /**
+               * 日期字符串，下标为0代表起始时间，下标为1结束时间
+               */
+              rangeList: string[];
+              [k: string]: unknown;
+            };
+            /**
+             * 文本输入配置
+             */
+            inputFormatConfig?: {
+              /**
+               * 字符串匹配模式，正则语法
+               */
+              patternList?: string[];
+              /**
+               * 是否有长度限制
+               */
+              useLimit: boolean;
+              /**
+               * 长度最大值
+               */
+              max?: number;
+              /**
+               * 长度最小值
+               */
+              min?: number;
+              /**
+               * 错误信息
+               */
+              message?: string;
+              [k: string]: unknown;
+            };
+            /**
+             * 图片输入配置
+             */
+            imageInputConfig?: {
+              /**
+               * 最小上传图片数量
+               */
+              minCount?: number;
+              /**
+               * 最大上传图片数量
+               */
+              maxCount?: number;
+              /**
+               * 最小宽度，单位：像素
+               */
+              minWidth?: number;
+              /**
+               * 最小高度，单位：像素
+               */
+              minHeight?: number;
+              [k: string]: unknown;
+            };
+            [k: string]: unknown;
+          };
+          /**
+           * 输入类型。TEXT：文本，CHECKBOX：多选，NUMBER：数字，EMAIL：email，DATETIME：时间，URL：链接，DATETIMERANGE：时间段，RADIO：单选，IMAGE：图片，INVALID_PROP_INPUT_TYPE：无效值
+           */
+          propInputType: string;
+          /**
+           * 单位属性结构体
+           */
+          unitProp: {
+            /**
+             * 单位属性id
+             */
+            unitPropValueId?: number;
+            /**
+             * 单位属性名称
+             */
+            unitPropValueName?: string;
+            [k: string]: unknown;
+          }[];
+          /**
+           * 是否支持自定义属性输入
+           */
+          customInput: boolean;
+          [k: string]: unknown;
+        }[];
         [k: string]: unknown;
       };
       [k: string]: unknown;
@@ -1009,592 +1069,6 @@ export interface ApiDeclaration {
            * 问题建议
            */
           content?: string;
-          [k: string]: unknown;
-        }[];
-        [k: string]: unknown;
-      };
-      [k: string]: unknown;
-    };
-    [k: string]: unknown;
-  };
-  /**
-   * 编辑商品（新）
-   */
-  "open.item.edit": {
-    /**
-     * API入参
-     */
-    request: {
-      /**
-       * 商品唯一Id
-       */
-      itemId: number;
-      /**
-       * 商品名称
-       */
-      title?: string;
-      /**
-       * 三方商品id
-       */
-      relItemId?: number;
-      /**
-       * 类目Id
-       */
-      categoryId?: number;
-      /**
-       * 类目名称
-       */
-      categoryName?: string;
-      /**
-       * 商品主图，1. 最多上传9张图片
-       * 2. 单张图片大小不超过2M，支持png/jpeg/webp/bmp格式
-       */
-      imageUrls?: string[];
-      /**
-       * sku信息列表。0 < 数量 <= 600
-       */
-      skuList?: {
-        /**
-         * 商品sku唯一id
-         */
-        skuId: number;
-        /**
-         * 三方商品skuId
-         */
-        relSkuId?: number;
-        /**
-         * Sku 价格，单位为分。1 <= 数值 <=类目配置价格上限
-         */
-        skuSalePrice: number;
-        /**
-         * sku编码,分仓商品不能为空，SKU编码仅支持中英文、数字以及特殊字符
-         */
-        skuNick?: string;
-        /**
-         * 商品规格多属性规格参数。目前支持三级属性，并且需要传三级属性的完整笛卡尔积。录入多规格商品时，需要包含所有规格的组合
-         */
-        skuProps?: {
-          /**
-           * 规格名称
-           */
-          propName: string;
-          /**
-           * 规格值名称
-           */
-          propValueName: string;
-          /**
-           * 图片url, 如果是主属性图片必传，图片url。0 < 长度 <= 2000，图片大小不超过2M，支持png/jpeg/webp/bmp格式
-           */
-          imageUrl?: string;
-          /**
-           * 1是 0 否 ，是否是主属性，主属性标记为关联sku规格图片
-           */
-          isMainProp: number;
-          /**
-           * 规格值分组id
-           */
-          propValueGroupId?: number;
-          /**
-           * 销售属性版本 自定义1，使用类目模板传2
-           */
-          propVersion: number;
-          [k: string]: unknown;
-        }[];
-        /**
-         * 质检参数
-         */
-        skuCertificate?: {
-          /**
-           * 成色
-           */
-          condition?: string;
-          /**
-           * 购买渠道
-           */
-          purchasingChannels?: string;
-          /**
-           * 电池效率
-           */
-          batteryEfficiency?: string;
-          /**
-           * 主板维修
-           */
-          mainBoard?: string;
-          /**
-           * 电池情况
-           */
-          batteryCondition?: string;
-          /**
-           * 屏幕情况
-           */
-          screenCondition?: string;
-          /**
-           * 外壳磕碰
-           */
-          shellCollision?: string;
-          /**
-           * 质检报告url
-           */
-          reportUrl?: string;
-          /**
-           * 质检编号
-           */
-          qualityInspectionNo?: string;
-          /**
-           * SN
-           */
-          sn?: string;
-          /**
-           * 外壳划痕
-           */
-          shellScratch?: string;
-          /**
-           * 外壳掉漆
-           */
-          shellPaint?: string;
-          /**
-           * 系统设备
-           */
-          deviceSystem?: string;
-          [k: string]: unknown;
-        };
-        /**
-         * 1 增加库存 2 减少库存 3 设置库存  免审编辑只支持 1 和 2
-         */
-        skuStockChangeType: number;
-        /**
-         * 变更的库存数量
-         */
-        skuChangeStock: number;
-        /**
-         * 商品划线价
-         * 注意：划线价必须大于当前商品的最高单价，并且
-         * 划线价不可超过单价的10倍
-         *
-         */
-        skuMarketPrice?: number;
-        /**
-         * sku条形码
-         */
-        gtinCode?: string;
-        /**
-         * 套餐详情，商品类型为团购时，才可使用该字段，非必传
-         */
-        mealDetail?: {
-          /**
-           * 套餐分组，最多定义10个分组
-           */
-          mealGroupDTOList: {
-            /**
-             * 套餐分组名称（限制10个字符）
-             *
-             */
-            title: string;
-            /**
-             * 套餐分组，最多50组
-             */
-            mealContentDTOList: {
-              /**
-               * 内容项标题（20字符以内）
-               */
-              title: string;
-              /**
-               * 内容项数量（输入数字不超过4位）
-               */
-              count: number;
-              /**
-               * 内容项单价（单位分），最大值9999900
-               */
-              price: number;
-              [k: string]: unknown;
-            }[];
-            /**
-             * 套餐内容项 几选几（第一个几），最小值1，最大值套餐分组数量
-             */
-            fromNum: number;
-            /**
-             * 套餐内容项 几选几（第二个几），最小值1，最大值套餐分组数量
-             */
-            selectNum: number;
-            [k: string]: unknown;
-          }[];
-          /**
-           * 最低用餐人数，最小值1，非必填
-           */
-          lowestPeopleNum?: number;
-          /**
-           * 最高用餐人数，最大值20，非必填
-           */
-          highestPeopleNum?: number;
-          /**
-           * 备注，非必填，最多2000字符
-           */
-          remark?: string;
-          [k: string]: unknown;
-        };
-        [k: string]: unknown;
-      }[];
-      /**
-       * 商品关联的视频id
-       */
-      itemVideoId?: number;
-      /**
-       * 商品是否限购；true:限购，false:不限购
-       */
-      purchaseLimit?: boolean;
-      /**
-       * 商品限购数量，当purchaseLimit为ture时，必填
-       */
-      limitCount?: number;
-      /**
-       * 商品类目属性，商品类目属性有必填项，必传。（注意：商品类目属性不允许重复）
-       */
-      itemPropValues?: {
-        /**
-         * 属性id（规格数量上限200，规格值数量上限500）
-         */
-        propId: number;
-        /**
-         * 单选属性 (根据open.item.category.config中propInputType和required判断是否必填)
-         */
-        radioPropValue?: {
-          /**
-           * 属性值id
-           */
-          propValueId: number;
-          /**
-           * 属性值
-           */
-          propValue: string;
-          [k: string]: unknown;
-        };
-        /**
-         * 多选属性 (根据open.item.category.config中propInputType和required判断是否必填)
-         */
-        checkBoxPropValuesList?: {
-          /**
-           * 属性值id
-           */
-          propValueId: number;
-          /**
-           * 属性值
-           */
-          propValue: string;
-          [k: string]: unknown;
-        }[];
-        /**
-         * 文本属性值 (根据open.item.category.config中propInputType和required判断是否必填，不允许传空字符串)
-         */
-        textPropValue?: string;
-        /**
-         * 时间戳属性 (根据open.item.category.config中propInputType和required判断是否必填)
-         */
-        datetimeTimestamp?: number;
-        /**
-         * 时间范围属性 (根据open.item.category.config中propInputType和required判断是否必填)
-         */
-        dateRange?: {
-          /**
-           * 起始时间（毫秒）
-           */
-          startTimeTimestamp?: number;
-          /**
-           * 结束时间（毫秒）
-           */
-          endTimeTimestamp?: number;
-          [k: string]: unknown;
-        };
-        /**
-         * 序号，open.item.category.config返回
-         */
-        sortNum: number;
-        /**
-         * 图片属性列表 (根据open.item.category.config中propInputType和required判断是否必填)
-         */
-        imagePropValues?: string[];
-        /**
-         * 属性名称
-         */
-        propName?: string;
-        /**
-         * 属性别名
-         */
-        propAlias?: string;
-        /**
-         * 1-文本 2-checkbox 3-数字 4-邮箱 5-日期 6-url地址 7-时间范围 8-单选框 9-图片
-         */
-        inputType?: number;
-        /**
-         * 1-sku属性 2-商品属性
-         */
-        propType?: number;
-        /**
-         *   单位属性值Id，open.item.category.config返回
-         */
-        unitPropValueId?: number;
-        /**
-         * 单位属性值名称
-         */
-        unitPropValueName?: string;
-        [k: string]: unknown;
-      }[];
-      /**
-       * 商品详情。0 < 长度 <= 1000
-       */
-      details?: string;
-      /**
-       * 商品详情图 1. 最多上传20张图片
-       * 2. 单张图片大小不超过2M，支持png/jpeg/webp/bmp格式
-       */
-      detailImageUrls?: string[];
-      /**
-       * 是否更新商品详情图，detailImageUrls传[]，并且updateItemPropValues 传true 会清空商品详情图，（如果需要改商品详情图的话需要传true）
-       */
-      updateDetailImageUrls?: boolean;
-      /**
-       * 是否分仓，true为分仓模式商品，false不为分仓商品
-       */
-      stockPartner?: boolean;
-      /**
-       * 商品备注最多支持8个字符，只支持中文、英文、数字
-       */
-      itemRemark?: string;
-      /**
-       * 服务规则
-       */
-      serviceRule?: {
-        /**
-         * 退款规则，请求内容为枚举数值，非后面文案： 1:支持7天无理由退货 4:不支持7天无理由退货 5:支持7天无理由退货(拆封后不支持) 6:支持7天无理由退货(激活后不支持) 7:支持7天无理由退货(安装后不支持) 8:支持7天无理由退货(定制类不支持) 9:支持7天无理由退货(使用后不支持) ，由open.item.category.config获得（退款规则会根据类目变化而变化）
-         */
-        refundRule: string;
-        /**
-         * 发货间隔时间，单位：秒，范围在[3,15天] 需要转换为秒 259200 为3天，deliverGoodsInteralTime和promiseDeliveryTime至少填一个且不能都填。填deliverGoodsInteralTime代码预售商品，填promiseDeliveryTime代表非预售商品。（如果需要取消请传 0 或 -1），需要注意具体预售时长会根据具体类目不同
-         */
-        deliverGoodsInteralTime?: number;
-        /**
-         * 非预售商品承诺发货时间，单位：秒，取值86400,172800,分别代表24、48小时，deliverGoodsInteralTime和promiseDeliveryTime至少填一个且不能都填。填deliverGoodsInteralTime代码预售商品，填promiseDeliveryTime代表非预售商品。（如果需要取消请传 0 或 -1）
-         */
-        promiseDeliveryTime?: number;
-        /**
-         * 是否立即上架  ,0立即上架，1不立即上架
-         */
-        immediatelyOnOfflineFlag?: number;
-        /**
-         * 发货方式 logistics：物流配送（默认） certificate：电子凭证
-         */
-        deliveryMethod?: string;
-        /**
-         * 服务承诺：freshRotRefund：坏了包退
-         * brokenRefund：破损包退
-         * allergyRefund：过敏包退
-         */
-        servicePromise: {
-          /**
-           * 坏了包退
-           */
-          freshRotRefund?: boolean;
-          /**
-           * 破损包退
-           */
-          brokenRefund?: boolean;
-          /**
-           * 过敏包退
-           */
-          allergyRefund?: boolean;
-          [k: string]: unknown;
-        };
-        /**
-         * 电子凭证不可用时间
-         */
-        unavailableTimeRule?: {
-          /**
-           * 不可用星期
-           * 1:周一、2:周二、3:周三、4:周四、5:周五、6:周六、7:周
-           */
-          weeks?: number[];
-          /**
-           * 不可用节假日
-           * 1:元旦、2:春节、3:清明节、4:劳动节、5:端午节、6:国庆节、7:中秋节
-           */
-          holidays?: number[];
-          /**
-           * 不可用时间范围，最多三组，单位毫秒，每组时间起止相互互斥
-           */
-          timeRanges?: {
-            /**
-             * 开始时间时间戳
-             * 时间为00:00:00
-             */
-            startTime: number;
-            /**
-             * 结束时间时间戳
-             * 时间为 23:59:59
-             */
-            endTime: number;
-            [k: string]: unknown;
-          }[];
-          [k: string]: unknown;
-        };
-        /**
-         *  码商，仅有deliveryMethod 为certificate：电子凭证时，此字段才有值，且需校验
-         * ks：快手平台发码 merchant：商家发码  couponLibrary:券码库发码
-         */
-        certMerchantCode?: string;
-        /**
-         * 电子凭证有效期类型，仅有deliveryMethod 为certificate：电子凭证时，此字段才有值
-         * 1：日期范围；2：仅有截止日期；3：有效天数
-         */
-        certExpireType?: number;
-        /**
-         * 开始时间，仅有deliveryMethod 为certificate：电子凭证时，certExpireType为1或2时此字段才有值
-         */
-        certStartTime?: number;
-        /**
-         * 截止时间，仅有deliveryMethod 为certificate：电子凭证时，certExpireType为1或2时此字段才有值
-         */
-        certEndTime?: number;
-        /**
-         * 有效天数，仅有deliveryMethod 为certificate：电子凭证时，certExpireType为3时此字段才有值
-         */
-        certExpDays?: number;
-        /**
-         * 订单限购类型0：未设置；1:已设置最少购买件数；2:已设置最多购买件数；3:最少最多购买件数均设置；
-         */
-        orderPurchaseLimitType?: number;
-        /**
-         * 每笔订单最少购买件数，若orderPurchaseLimitType设置为0，建议此字段同样修改为0；
-         */
-        minOrderCount?: number;
-        /**
-         * 每笔订单最多购买件数，若orderPurchaseLimitType设置为0，建议此字段同样修改为0；
-         */
-        maxOrderCount?: number;
-        /**
-         * 酒旅类目，且选择“电子凭证”，必填
-         */
-        customerInfo?: {
-          /**
-           * 1-不需要、2-需要1位出行人、3-需要全部出行人
-           */
-          customerInfoType?: string;
-          /**
-           * 如果出行人信息选择，需要1位出行人、需要全部出行人 选项,
-           * 	则展示出行人证件，且必传，1-身份证
-           *
-           */
-          customerCertificateType?: string[];
-          [k: string]: unknown;
-        };
-        /**
-         * 价保天数，不传则覆盖为0
-         */
-        priceProtectDays?: number;
-        [k: string]: unknown;
-      };
-      /**
-       * 运费模板id
-       */
-      expressTemplateId?: number;
-      /**
-       * 是否定点开售，true为定点开售，false为正常售卖
-       */
-      saleTimeFlag?: boolean;
-      /**
-       * 定点开售时间，如果saleTimeFlag为true时此项必填
-       */
-      timeOfSale?: number;
-      /**
-       * 支付方式：1 货到付款 2 在线支付 3 在线支付和货到付款；默认2
-       * 目前OpenAPI端只支持「在线支付」方式
-       */
-      payWay?: number;
-      /**
-       * 是否更新商品类目属性，itemPropValues传[]，并且updateItemPropValues 传true 会清空商品类目属性，如果商品类目属性有必填项会更新失败（如果需要改类目属性的话需要传true）
-       */
-      updateItemPropValues?: boolean;
-      /**
-       * 门店ID
-       */
-      poiIds?: number[];
-      /**
-       * 商品白底图，请上传格式为png/jpeg/jpg的图片，长宽比为1:1的图片，像素480*480px以上的图片，大小小于2M
-       */
-      whiteBaseImageUrl?: string;
-      /**
-       * 商品透明图，请上传格式为png的图片，长宽比为1:1的图片，像素480*480px以上的图片，大小小于2M
-       */
-      transparentImageUrl?: string;
-      /**
-       * 商品短标题长度必须大于4且小于20个字符（2-10汉字）
-       */
-      shortTitle?: string;
-      /**
-       * 商品卖点长度必须大于8且小于24个字符（4-12汉字）
-       */
-      sellingPoint?: string;
-      /**
-       * 使用说明，非必传，约定字符限制400个中文字长度以内。空行数量10行以内。
-       */
-      instructions?: string;
-      [k: string]: unknown;
-    };
-    /**
-     * API出参
-     */
-    response: {
-      /**
-       * 主返回码
-       */
-      code?: string;
-      /**
-       * 主返回信息
-       */
-      msg?: string;
-      /**
-       * 子返回码
-       */
-      sub_code?: string;
-      /**
-       * 子返回信息
-       */
-      sub_msg?: string;
-      /**
-       * 返回码，1成功
-       */
-      result?: number;
-      /**
-       * 错误信息
-       */
-      error_msg?: string;
-      /**
-       * 返回内容
-       */
-      data?: {
-        /**
-         * 快手商品id
-         */
-        kwaiItemId: number;
-        /**
-         * 外部商品id，仅供记录外部商品和快手商品对应关系
-         */
-        relItemId: number;
-        /**
-         * skuIdList
-         */
-        skuIdMapping: {
-          /**
-           * 快手商品sku id
-           */
-          kwaiSkuId: number;
-          /**
-           * 外部商品 Sku id，仅供记录外部商品sku和快手商品sku对应关系
-           */
-          relSkuId: number;
-          /**
-           * skuNick，sku编码必须30个字符以内
-           *
-           */
-          skuNick?: string;
           [k: string]: unknown;
         }[];
         [k: string]: unknown;
@@ -2218,6 +1692,673 @@ export interface ApiDeclaration {
          * 是否是合约机商品
          */
         contractPhone?: boolean;
+        /**
+         * 下架原因
+         */
+        ofllineReason: string;
+        [k: string]: unknown;
+      };
+      [k: string]: unknown;
+    };
+    [k: string]: unknown;
+  };
+  /**
+   * 商品图片上传
+   */
+  "open.item.image.upload": {
+    /**
+     * API入参
+     */
+    request: {
+      /**
+       * 图片原始url
+       */
+      imgUrl: string;
+      /**
+       * 图片字节数组
+       */
+      imgBytes: NodeJS.ReadableStream | Buffer;
+      /**
+       * 1（商品主图）、
+       * 2（商品详情图）、
+       * 3（sku图片）、
+       * 4（类目属性图片）、
+       * 5（商品白底图，请上传格式为png/jpeg/jpg的图片，长宽比为1:1的图片，像素480*480px以上的图片，大小小于2M）、
+       *
+       * 6（商品透明图，请上传格式为png的图片，长宽比为1:1的图片，像素480*480px以上的图片，大小小于2M
+       * ）
+       *
+       *
+       */
+      uploadType: number;
+      [k: string]: unknown;
+    };
+    /**
+     * API出参
+     */
+    response: {
+      /**
+       * 主返回码
+       */
+      code?: string;
+      /**
+       * 主返回信息
+       */
+      msg?: string;
+      /**
+       * 子返回码
+       */
+      sub_code?: string;
+      /**
+       * 子返回信息
+       */
+      sub_msg?: string;
+      /**
+       * 返回码，1成功
+       */
+      result?: number;
+      /**
+       * 错误信息
+       */
+      error_msg?: string;
+      /**
+       * 图片信息
+       */
+      data?: {
+        /**
+         * 原始图片url
+         */
+        originImgUrl: string;
+        /**
+         * 快手图片url
+         */
+        kwaiImgUrl: string;
+        [k: string]: unknown;
+      };
+      [k: string]: unknown;
+    };
+    [k: string]: unknown;
+  };
+  /**
+   * 编辑商品（新）
+   */
+  "open.item.edit": {
+    /**
+     * API入参
+     */
+    request: {
+      /**
+       * 商品唯一Id
+       */
+      itemId: number;
+      /**
+       * 商品名称
+       */
+      title?: string;
+      /**
+       * 三方商品id
+       */
+      relItemId?: number;
+      /**
+       * 类目Id
+       */
+      categoryId?: number;
+      /**
+       * 类目名称
+       */
+      categoryName?: string;
+      /**
+       * 商品主图，1. 最多上传9张图片
+       * 2. 单张图片大小不超过2M，支持png/jpeg/webp/bmp格式
+       */
+      imageUrls?: string[];
+      /**
+       * sku信息列表。0 < 数量 <= 600
+       */
+      skuList?: {
+        /**
+         * 商品sku唯一id
+         */
+        skuId: number;
+        /**
+         * 三方商品skuId
+         */
+        relSkuId?: number;
+        /**
+         * Sku 价格，单位为分。1 <= 数值 <=类目配置价格上限
+         */
+        skuSalePrice: number;
+        /**
+         * sku编码,分仓商品不能为空，SKU编码仅支持中英文、数字以及特殊字符
+         */
+        skuNick?: string;
+        /**
+         * 商品规格多属性规格参数。目前支持三级属性，并且需要传三级属性的完整笛卡尔积。录入多规格商品时，需要包含所有规格的组合
+         */
+        skuProps?: {
+          /**
+           * 规格名称
+           */
+          propName: string;
+          /**
+           * 规格值名称
+           */
+          propValueName: string;
+          /**
+           * 图片url, 如果是主属性图片必传，图片url。0 < 长度 <= 2000，图片大小不超过2M，支持png/jpeg/webp/bmp格式
+           */
+          imageUrl?: string;
+          /**
+           * 1是 0 否 ，是否是主属性，主属性标记为关联sku规格图片
+           */
+          isMainProp: number;
+          /**
+           * 规格值分组id
+           */
+          propValueGroupId?: number;
+          /**
+           * 销售属性版本 自定义1，使用类目模板传2
+           */
+          propVersion: number;
+          [k: string]: unknown;
+        }[];
+        /**
+         * 质检参数
+         */
+        skuCertificate?: {
+          /**
+           * 成色
+           */
+          condition?: string;
+          /**
+           * 购买渠道
+           */
+          purchasingChannels?: string;
+          /**
+           * 电池效率
+           */
+          batteryEfficiency?: string;
+          /**
+           * 主板维修
+           */
+          mainBoard?: string;
+          /**
+           * 电池情况
+           */
+          batteryCondition?: string;
+          /**
+           * 屏幕情况
+           */
+          screenCondition?: string;
+          /**
+           * 外壳磕碰
+           */
+          shellCollision?: string;
+          /**
+           * 质检报告url
+           */
+          reportUrl?: string;
+          /**
+           * 质检编号
+           */
+          qualityInspectionNo?: string;
+          /**
+           * SN
+           */
+          sn?: string;
+          /**
+           * 外壳划痕
+           */
+          shellScratch?: string;
+          /**
+           * 外壳掉漆
+           */
+          shellPaint?: string;
+          /**
+           * 系统设备
+           */
+          deviceSystem?: string;
+          [k: string]: unknown;
+        };
+        /**
+         * 1 增加库存 2 减少库存 3 设置库存  免审编辑只支持 1 和 2
+         */
+        skuStockChangeType: number;
+        /**
+         * 变更的库存数量
+         */
+        skuChangeStock: number;
+        /**
+         * 商品划线价
+         * 注意：划线价必须大于当前商品的最高单价，并且
+         * 划线价不可超过单价的10倍
+         *
+         */
+        skuMarketPrice?: number;
+        /**
+         * sku条形码
+         */
+        gtinCode?: string;
+        /**
+         * 套餐详情，商品类型为团购时，才可使用该字段，非必传
+         */
+        mealDetail?: {
+          /**
+           * 套餐分组，最多定义10个分组
+           */
+          mealGroupDTOList: {
+            /**
+             * 套餐分组名称（限制10个字符）
+             *
+             */
+            title: string;
+            /**
+             * 套餐分组，最多50组
+             */
+            mealContentDTOList: {
+              /**
+               * 内容项标题（20字符以内）
+               */
+              title: string;
+              /**
+               * 内容项数量（输入数字不超过4位）
+               */
+              count: number;
+              /**
+               * 内容项单价（单位分），最大值9999900
+               */
+              price: number;
+              [k: string]: unknown;
+            }[];
+            /**
+             * 套餐内容项 几选几（第一个几），最小值1，最大值套餐分组数量
+             */
+            fromNum: number;
+            /**
+             * 套餐内容项 几选几（第二个几），最小值1，最大值套餐分组数量
+             */
+            selectNum: number;
+            [k: string]: unknown;
+          }[];
+          /**
+           * 最低用餐人数，最小值1，非必填
+           */
+          lowestPeopleNum?: number;
+          /**
+           * 最高用餐人数，最大值20，非必填
+           */
+          highestPeopleNum?: number;
+          /**
+           * 备注，非必填，最多2000字符
+           */
+          remark?: string;
+          [k: string]: unknown;
+        };
+        [k: string]: unknown;
+      }[];
+      /**
+       * 商品关联的视频id
+       */
+      itemVideoId?: number;
+      /**
+       * 商品是否限购；true:限购，false:不限购
+       */
+      purchaseLimit?: boolean;
+      /**
+       * 商品限购数量，当purchaseLimit为ture时，必填
+       */
+      limitCount?: number;
+      /**
+       * 商品类目属性，商品类目属性有必填项，必传。（注意：商品类目属性不允许重复）
+       */
+      itemPropValues?: {
+        /**
+         * 属性id（规格数量上限200，规格值数量上限500）
+         */
+        propId: number;
+        /**
+         * 单选属性 (根据open.item.category.config中propInputType和required判断是否必填)
+         */
+        radioPropValue?: {
+          /**
+           * 属性值id
+           */
+          propValueId: number;
+          /**
+           * 属性值
+           */
+          propValue: string;
+          [k: string]: unknown;
+        };
+        /**
+         * 多选属性 (根据open.item.category.config中propInputType和required判断是否必填)
+         */
+        checkBoxPropValuesList?: {
+          /**
+           * 属性值id
+           */
+          propValueId: number;
+          /**
+           * 属性值
+           */
+          propValue: string;
+          [k: string]: unknown;
+        }[];
+        /**
+         * 文本属性值 (根据open.item.category.config中propInputType和required判断是否必填，不允许传空字符串)
+         */
+        textPropValue?: string;
+        /**
+         * 时间戳属性 (根据open.item.category.config中propInputType和required判断是否必填)
+         */
+        datetimeTimestamp?: number;
+        /**
+         * 时间范围属性 (根据open.item.category.config中propInputType和required判断是否必填)
+         */
+        dateRange?: {
+          /**
+           * 起始时间（毫秒）
+           */
+          startTimeTimestamp?: number;
+          /**
+           * 结束时间（毫秒）
+           */
+          endTimeTimestamp?: number;
+          [k: string]: unknown;
+        };
+        /**
+         * 序号，open.item.category.config返回
+         */
+        sortNum: number;
+        /**
+         * 图片属性列表 (根据open.item.category.config中propInputType和required判断是否必填)
+         */
+        imagePropValues?: string[];
+        /**
+         * 属性名称
+         */
+        propName?: string;
+        /**
+         * 属性别名
+         */
+        propAlias?: string;
+        /**
+         * 1-文本 2-checkbox 3-数字 4-邮箱 5-日期 6-url地址 7-时间范围 8-单选框 9-图片
+         */
+        inputType?: number;
+        /**
+         * 1-sku属性 2-商品属性
+         */
+        propType?: number;
+        /**
+         *   单位属性值Id，open.item.category.config返回
+         */
+        unitPropValueId?: number;
+        /**
+         * 单位属性值名称
+         */
+        unitPropValueName?: string;
+        [k: string]: unknown;
+      }[];
+      /**
+       * 商品详情。0 < 长度 <= 1000
+       */
+      details?: string;
+      /**
+       * 商品详情图 1. 最多上传20张图片
+       * 2. 单张图片大小不超过2M，支持png/jpeg/webp/bmp格式
+       */
+      detailImageUrls?: string[];
+      /**
+       * 是否更新商品详情图，detailImageUrls传[]，并且updateItemPropValues 传true 会清空商品详情图，（如果需要改商品详情图的话需要传true）
+       */
+      updateDetailImageUrls?: boolean;
+      /**
+       * 是否分仓，true为分仓模式商品，false不为分仓商品
+       */
+      stockPartner?: boolean;
+      /**
+       * 商品备注最多支持8个字符，只支持中文、英文、数字
+       */
+      itemRemark?: string;
+      /**
+       * 服务规则
+       */
+      serviceRule?: {
+        /**
+         * 退款规则，请求内容为枚举数值，非后面文案： 1:支持7天无理由退货 4:不支持7天无理由退货 5:支持7天无理由退货(拆封后不支持) 6:支持7天无理由退货(激活后不支持) 7:支持7天无理由退货(安装后不支持) 8:支持7天无理由退货(定制类不支持) 9:支持7天无理由退货(使用后不支持) ，由open.item.category.config获得（退款规则会根据类目变化而变化）
+         */
+        refundRule: string;
+        /**
+         * 发货间隔时间，单位：秒，范围在[3,15天] 需要转换为秒 259200 为3天，deliverGoodsInteralTime和promiseDeliveryTime至少填一个且不能都填。填deliverGoodsInteralTime代码预售商品，填promiseDeliveryTime代表非预售商品。（如果需要取消请传 0 或 -1），需要注意具体预售时长会根据具体类目不同
+         */
+        deliverGoodsInteralTime?: number;
+        /**
+         * 非预售商品承诺发货时间，单位：秒，取值86400,172800,分别代表24、48小时，deliverGoodsInteralTime和promiseDeliveryTime至少填一个且不能都填。填deliverGoodsInteralTime代码预售商品，填promiseDeliveryTime代表非预售商品。（如果需要取消请传 0 或 -1）
+         */
+        promiseDeliveryTime?: number;
+        /**
+         * 是否立即上架  ,0立即上架，1不立即上架
+         */
+        immediatelyOnOfflineFlag?: number;
+        /**
+         * 发货方式 logistics：物流配送（默认） certificate：电子凭证
+         */
+        deliveryMethod?: string;
+        /**
+         * 服务承诺：freshRotRefund：坏了包退
+         * brokenRefund：破损包退
+         * allergyRefund：过敏包退
+         */
+        servicePromise: {
+          /**
+           * 坏了包退
+           */
+          freshRotRefund?: boolean;
+          /**
+           * 破损包退
+           */
+          brokenRefund?: boolean;
+          /**
+           * 过敏包退
+           */
+          allergyRefund?: boolean;
+          [k: string]: unknown;
+        };
+        /**
+         * 电子凭证不可用时间
+         */
+        unavailableTimeRule?: {
+          /**
+           * 不可用星期
+           * 1:周一、2:周二、3:周三、4:周四、5:周五、6:周六、7:周
+           */
+          weeks?: number[];
+          /**
+           * 不可用节假日
+           * 1:元旦、2:春节、3:清明节、4:劳动节、5:端午节、6:国庆节、7:中秋节
+           */
+          holidays?: number[];
+          /**
+           * 不可用时间范围，最多三组，单位毫秒，每组时间起止相互互斥
+           */
+          timeRanges?: {
+            /**
+             * 开始时间时间戳
+             * 时间为00:00:00
+             */
+            startTime: number;
+            /**
+             * 结束时间时间戳
+             * 时间为 23:59:59
+             */
+            endTime: number;
+            [k: string]: unknown;
+          }[];
+          [k: string]: unknown;
+        };
+        /**
+         *  码商，仅有deliveryMethod 为certificate：电子凭证时，此字段才有值，且需校验
+         * ks：快手平台发码 merchant：商家发码  couponLibrary:券码库发码
+         */
+        certMerchantCode?: string;
+        /**
+         * 电子凭证有效期类型，仅有deliveryMethod 为certificate：电子凭证时，此字段才有值
+         * 1：日期范围；2：仅有截止日期；3：有效天数
+         */
+        certExpireType?: number;
+        /**
+         * 开始时间，仅有deliveryMethod 为certificate：电子凭证时，certExpireType为1或2时此字段才有值
+         */
+        certStartTime?: number;
+        /**
+         * 截止时间，仅有deliveryMethod 为certificate：电子凭证时，certExpireType为1或2时此字段才有值
+         */
+        certEndTime?: number;
+        /**
+         * 有效天数，仅有deliveryMethod 为certificate：电子凭证时，certExpireType为3时此字段才有值
+         */
+        certExpDays?: number;
+        /**
+         * 订单限购类型0：未设置；1:已设置最少购买件数；2:已设置最多购买件数；3:最少最多购买件数均设置；
+         */
+        orderPurchaseLimitType?: number;
+        /**
+         * 每笔订单最少购买件数，若orderPurchaseLimitType设置为0，建议此字段同样修改为0；
+         */
+        minOrderCount?: number;
+        /**
+         * 每笔订单最多购买件数，若orderPurchaseLimitType设置为0，建议此字段同样修改为0；
+         */
+        maxOrderCount?: number;
+        /**
+         * 酒旅类目，且选择“电子凭证”，必填
+         */
+        customerInfo?: {
+          /**
+           * 1-不需要、2-需要1位出行人、3-需要全部出行人
+           */
+          customerInfoType?: string;
+          /**
+           * 如果出行人信息选择，需要1位出行人、需要全部出行人 选项,
+           * 	则展示出行人证件，且必传，1-身份证
+           *
+           */
+          customerCertificateType?: string[];
+          [k: string]: unknown;
+        };
+        /**
+         * 价保天数，不传则覆盖为0
+         */
+        priceProtectDays?: number;
+        [k: string]: unknown;
+      };
+      /**
+       * 运费模板id
+       */
+      expressTemplateId?: number;
+      /**
+       * 是否定点开售，true为定点开售，false为正常售卖
+       */
+      saleTimeFlag?: boolean;
+      /**
+       * 定点开售时间，如果saleTimeFlag为true时此项必填
+       */
+      timeOfSale?: number;
+      /**
+       * 支付方式：1 货到付款 2 在线支付 3 在线支付和货到付款；默认2
+       * 目前OpenAPI端只支持「在线支付」方式
+       */
+      payWay?: number;
+      /**
+       * 是否更新商品类目属性，itemPropValues传[]，并且updateItemPropValues 传true 会清空商品类目属性，如果商品类目属性有必填项会更新失败（如果需要改类目属性的话需要传true）
+       */
+      updateItemPropValues?: boolean;
+      /**
+       * 门店ID
+       */
+      poiIds?: number[];
+      /**
+       * 商品白底图，请上传格式为png/jpeg/jpg的图片，长宽比为1:1的图片，像素480*480px以上的图片，大小小于2M
+       */
+      whiteBaseImageUrl?: string;
+      /**
+       * 商品透明图，请上传格式为png的图片，长宽比为1:1的图片，像素480*480px以上的图片，大小小于2M
+       */
+      transparentImageUrl?: string;
+      /**
+       * 商品短标题长度必须大于4且小于20个字符（2-10汉字）
+       */
+      shortTitle?: string;
+      /**
+       * 商品卖点长度必须大于8且小于24个字符（4-12汉字）
+       */
+      sellingPoint?: string;
+      /**
+       * 使用说明，非必传，约定字符限制400个中文字长度以内。空行数量10行以内。
+       */
+      instructions?: string;
+      [k: string]: unknown;
+    };
+    /**
+     * API出参
+     */
+    response: {
+      /**
+       * 主返回码
+       */
+      code?: string;
+      /**
+       * 主返回信息
+       */
+      msg?: string;
+      /**
+       * 子返回码
+       */
+      sub_code?: string;
+      /**
+       * 子返回信息
+       */
+      sub_msg?: string;
+      /**
+       * 返回码，1成功
+       */
+      result?: number;
+      /**
+       * 错误信息
+       */
+      error_msg?: string;
+      /**
+       * 返回内容
+       */
+      data?: {
+        /**
+         * 快手商品id
+         */
+        kwaiItemId: number;
+        /**
+         * 外部商品id，仅供记录外部商品和快手商品对应关系
+         */
+        relItemId: number;
+        /**
+         * skuIdList
+         */
+        skuIdMapping: {
+          /**
+           * 快手商品sku id
+           */
+          kwaiSkuId: number;
+          /**
+           * 外部商品 Sku id，仅供记录外部商品sku和快手商品sku对应关系
+           */
+          relSkuId: number;
+          /**
+           * skuNick，sku编码必须30个字符以内
+           *
+           */
+          skuNick?: string;
+          [k: string]: unknown;
+        }[];
         [k: string]: unknown;
       };
       [k: string]: unknown;
@@ -2839,83 +2980,10 @@ export interface ApiDeclaration {
          * 是否是合约机商品
          */
         contractPhone?: boolean;
-        [k: string]: unknown;
-      };
-      [k: string]: unknown;
-    };
-    [k: string]: unknown;
-  };
-  /**
-   * 商品图片上传
-   */
-  "open.item.image.upload": {
-    /**
-     * API入参
-     */
-    request: {
-      /**
-       * 图片原始url
-       */
-      imgUrl: string;
-      /**
-       * 图片字节数组
-       */
-      imgBytes: NodeJS.ReadableStream | Buffer;
-      /**
-       * 1（商品主图）、
-       * 2（商品详情图）、
-       * 3（sku图片）、
-       * 4（类目属性图片）、
-       * 5（商品白底图，请上传格式为png/jpeg/jpg的图片，长宽比为1:1的图片，像素480*480px以上的图片，大小小于2M）、
-       *
-       * 6（商品透明图，请上传格式为png的图片，长宽比为1:1的图片，像素480*480px以上的图片，大小小于2M
-       * ）
-       *
-       *
-       */
-      uploadType: number;
-      [k: string]: unknown;
-    };
-    /**
-     * API出参
-     */
-    response: {
-      /**
-       * 主返回码
-       */
-      code?: string;
-      /**
-       * 主返回信息
-       */
-      msg?: string;
-      /**
-       * 子返回码
-       */
-      sub_code?: string;
-      /**
-       * 子返回信息
-       */
-      sub_msg?: string;
-      /**
-       * 返回码，1成功
-       */
-      result?: number;
-      /**
-       * 错误信息
-       */
-      error_msg?: string;
-      /**
-       * 图片信息
-       */
-      data?: {
         /**
-         * 原始图片url
+         * 下架原因
          */
-        originImgUrl: string;
-        /**
-         * 快手图片url
-         */
-        kwaiImgUrl: string;
+        ofllineReason: string;
         [k: string]: unknown;
       };
       [k: string]: unknown;
@@ -2966,6 +3034,130 @@ export interface ApiDeclaration {
       result?: number;
       /**
        * 返回码描述
+       */
+      error_msg?: string;
+      [k: string]: unknown;
+    };
+    [k: string]: unknown;
+  };
+  /**
+   * 新增sku货品关联关系
+   */
+  "open.item.sku.goods.relation.add": {
+    /**
+     * API入参
+     */
+    request: {
+      /**
+       * 商品ID
+       */
+      itemId: number;
+      /**
+       * sku与货品关联信息
+       */
+      skuGoodsRelation: {
+        /**
+         * 货品ID
+         */
+        goodsId: string;
+        /**
+         * skuId
+         */
+        skuId: number;
+        [k: string]: unknown;
+      }[];
+      [k: string]: unknown;
+    };
+    /**
+     * API出参
+     */
+    response: {
+      /**
+       * 主返回码
+       */
+      code?: string;
+      /**
+       * 主返回信息
+       */
+      msg?: string;
+      /**
+       * 子返回码
+       */
+      sub_code?: string;
+      /**
+       * 子返回信息
+       */
+      sub_msg?: string;
+      /**
+       * 返回码，1成功
+       */
+      result?: number;
+      /**
+       * 错误信息
+       */
+      error_msg?: string;
+      [k: string]: unknown;
+    };
+    [k: string]: unknown;
+  };
+  /**
+   * 删除sku货品关联关系
+   */
+  "open.item.sku.goods.relation.delete": {
+    /**
+     * API入参
+     */
+    request: {
+      /**
+       * 商品ID
+       */
+      itemId: number;
+      /**
+       * sku与货品关联信息
+       */
+      skuGoodsRelation: {
+        /**
+         * 货品ID
+         */
+        goodsId: string;
+        /**
+         * skuId
+         */
+        skuId: number;
+        [k: string]: unknown;
+      }[];
+      /**
+       * 是否将库存模式切换到商品库存模式
+       */
+      updateItemStockModel?: boolean;
+      [k: string]: unknown;
+    };
+    /**
+     * API出参
+     */
+    response: {
+      /**
+       * 主返回码
+       */
+      code?: string;
+      /**
+       * 主返回信息
+       */
+      msg?: string;
+      /**
+       * 子返回码
+       */
+      sub_code?: string;
+      /**
+       * 子返回信息
+       */
+      sub_msg?: string;
+      /**
+       * 返回码，1成功
+       */
+      result?: number;
+      /**
+       * 错误信息
        */
       error_msg?: string;
       [k: string]: unknown;
@@ -3510,584 +3702,9 @@ export interface ApiDeclaration {
     [k: string]: unknown;
   };
   /**
-   * 商品新增（新）
+   * 更新sku货品关联关系
    */
-  "open.item.new": {
-    /**
-     * API入参
-     */
-    request: {
-      /**
-       * 商品名称
-       */
-      title: string;
-      /**
-       * 外部商品id，仅供记录外部商品和快手商品对应关系；
-       * 注意：外部商品id不可与历史新建商品重复
-       */
-      relItemId: number;
-      /**
-       * 类目id
-       */
-      categoryId: number;
-      /**
-       * 类目名称
-       */
-      categoryName?: string;
-      /**
-       * 商品主图，1. 最多上传9张图片
-       * 2. 单张图片大小不超过2M，支持png/jpeg/webp/bmp格式
-       */
-      imageUrls: string[];
-      /**
-       * sku信息列表。0 < 数量 <= 600
-       */
-      skuList: {
-        /**
-         * 三方skuId
-         */
-        relSkuId: number;
-        /**
-         * Sku 库存。0 <= 数值 <= 9999999
-         */
-        skuStock: number;
-        /**
-         * Sku 价格，单位为分。1 <= 数值 <=类目配置价格上限
-         */
-        skuSalePrice: number;
-        /**
-         * sku编码，分仓商品必传，SKU编码仅支持中英文、数字以及特殊字符
-         */
-        skuNick?: string;
-        /**
-         * 商品规格多属性规格参数。目前支持三级属性，并且需要传三级属性的完整笛卡尔积。录入多规格商品时，需要包含所有规格的组合
-         */
-        skuProps: {
-          /**
-           * 规格名称
-           */
-          propName: string;
-          /**
-           * 规格值名称
-           */
-          propValueName: string;
-          /**
-           * 图片url, 如果是主属性图片必传，图片url。0 < 长度 <= 2000，图片大小不超过2M，支持png/jpeg/webp/bmp格式
-           */
-          imageUrl?: string;
-          /**
-           * 1是 0 否 ，是否是主属性，主属性标记为关联sku规格图片
-           */
-          isMainProp: number;
-          /**
-           * 规格值分组id
-           */
-          propValueGroupId?: number;
-          /**
-           * 销售属性版本 自定义1，使用类目模板传2
-           */
-          propVersion: number;
-          [k: string]: unknown;
-        }[];
-        /**
-         * 质检参数，二手类型商品需要添加
-         */
-        skuCertificate?: {
-          /**
-           * 成色
-           */
-          condition?: string;
-          /**
-           * 购买渠道
-           */
-          purchasingChannels?: string;
-          /**
-           * 电池效率
-           */
-          batteryEfficiency?: string;
-          /**
-           * 主板维修
-           */
-          mainBoard?: string;
-          /**
-           * 电池情况
-           */
-          batteryCondition?: string;
-          /**
-           * 屏幕情况
-           */
-          screenCondition?: string;
-          /**
-           * 外壳磕碰
-           */
-          shellCollision?: string;
-          /**
-           * 质检报告url
-           */
-          reportUrl?: string;
-          /**
-           * 质检编号
-           */
-          qualityInspectionNo?: string;
-          /**
-           * SN
-           */
-          sn?: string;
-          /**
-           * 外壳划痕
-           */
-          shellScratch?: string;
-          /**
-           * 外壳掉漆
-           */
-          shellPaint?: string;
-          /**
-           * 系统设备
-           */
-          deviceSystem?: string;
-          [k: string]: unknown;
-        };
-        /**
-         * 商品划线价
-         * 注意：划线价必须大于当前商品的最高单价，并且
-         * 划线价不可超过单价的10倍
-         *
-         */
-        skuMarketPrice?: number;
-        /**
-         * 货品Id，多仓商品支持字段
-         */
-        goodsId?: string;
-        /**
-         * sku条形码
-         */
-        gtinCode?: string;
-        /**
-         * 套餐详情，商品类型为团购时，才可使用该字段，非必传
-         */
-        mealDetail?: {
-          /**
-           * 套餐分组，最多定义10个分组
-           */
-          mealGroupDTOList: {
-            /**
-             * 套餐分组名称（限制10个字符）
-             *
-             */
-            title: string;
-            /**
-             * 套餐分组，最多50组
-             */
-            mealContentDTOList: {
-              /**
-               * 内容项标题（20字符以内）
-               */
-              title: string;
-              /**
-               * 内容项数量（输入数字不超过4位）
-               */
-              count: number;
-              /**
-               * 内容项单价（单位分），最大值9999900
-               */
-              price: number;
-              [k: string]: unknown;
-            }[];
-            /**
-             * 套餐内容项 几选几（第一个几），最小值1，最大值套餐分组数量
-             */
-            fromNum: number;
-            /**
-             * 套餐内容项 几选几（第二个几），最小值1，最大值套餐分组数量
-             */
-            selectNum: number;
-            [k: string]: unknown;
-          }[];
-          /**
-           * 最低用餐人数，最小值1，非必填
-           */
-          lowestPeopleNum?: number;
-          /**
-           * 最高用餐人数，最大值20，非必填
-           */
-          highestPeopleNum?: number;
-          /**
-           * 备注，非必填，最多2000字符
-           */
-          remark?: string;
-          [k: string]: unknown;
-        };
-        [k: string]: unknown;
-      }[];
-      /**
-       * 商品关联的视频id
-       */
-      itemVideoId?: number;
-      /**
-       * 是否限购，默认不限购
-       */
-      purchaseLimit?: boolean;
-      /**
-       * 商品限购数量。purchaseLimit为true时，限购数量必填
-       */
-      limitCount?: number;
-      /**
-       * 商品类目属性，商品类目属性有必填项，必传。（注意：类目属性不允许重复）
-       */
-      itemPropValues?: {
-        /**
-         * 属性id（规格数量上限200，规格值数量上限500）
-         */
-        propId: number;
-        /**
-         * 单选属性 (根据open.item.category.config中propInputType和required判断是否必填)
-         */
-        radioPropValue?: {
-          /**
-           * 属性值id
-           */
-          propValueId: number;
-          /**
-           * 属性值
-           */
-          propValue: string;
-          [k: string]: unknown;
-        };
-        /**
-         * 多选属性 (根据open.item.category.config中propInputType和required判断是否必填)
-         */
-        checkBoxPropValuesList?: {
-          /**
-           * 属性值id
-           */
-          propValueId: number;
-          /**
-           * 属性值
-           */
-          propValue: string;
-          [k: string]: unknown;
-        }[];
-        /**
-         * 文本属性值 (根据open.item.category.config中propInputType和required判断是否必填，不允许传空字符串)
-         */
-        textPropValue?: string;
-        /**
-         * 时间戳属性 (根据open.item.category.config中propInputType和required判断是否必填)
-         */
-        datetimeTimestamp?: number;
-        /**
-         * 时间范围属性 (根据open.item.category.config中propInputType和required判断是否必填)
-         */
-        dateRange?: {
-          /**
-           * 起始时间（毫秒）
-           */
-          startTimeTimestamp?: number;
-          /**
-           * 结束时间（毫秒）
-           */
-          endTimeTimestamp?: number;
-          [k: string]: unknown;
-        };
-        /**
-         * 序号，open.item.category.config返回
-         */
-        sortNum: number;
-        /**
-         * 图片属性列表 (根据open.item.category.config中propInputType和required判断是否必填)
-         */
-        imagePropValues?: string[];
-        /**
-         * 属性名称
-         */
-        propName?: string;
-        /**
-         * 属性别名
-         */
-        propAlias?: string;
-        /**
-         * 1-文本 2-checkbox 3-数字 4-邮箱 5-日期 6-url地址 7-时间范围 8-单选框 9-图片
-         */
-        inputType?: number;
-        /**
-         * 1-sku属性 2-商品属性
-         */
-        propType?: number;
-        /**
-         * 单位属性值Id，open.item.category.config返回
-         */
-        unitPropValueId?: number;
-        /**
-         * 单位属性值名称
-         */
-        unitPropValueName?: string;
-        [k: string]: unknown;
-      }[];
-      /**
-       * 商品详情描述。0 < 长度 <= 1000
-       */
-      details: string;
-      /**
-       * 商品详情图，1. 最多上传20张图片
-       * 2. 单张图片大小不超过2M，支持png/jpeg/webp/bmp格式
-       */
-      detailImageUrls?: string[];
-      /**
-       * 是否分仓，默认为false
-       */
-      stockPartner?: boolean;
-      /**
-       * 商品备注最多8个字符 备注支持中文、英文、数字
-       */
-      itemRemark?: string;
-      /**
-       *  服务规则
-       */
-      serviceRule: {
-        /**
-         * 退款规则，请求内容为枚举数值，非后面文案： 1:支持7天无理由退货 4:不支持7天无理由退货 5:支持7天无理由退货(拆封后不支持) 6:支持7天无理由退货(激活后不支持) 7:支持7天无理由退货(安装后不支持) 8:支持7天无理由退货(定制类不支持) 9:支持7天无理由退货(使用后不支持) ，由open.item.category.config获得（退款规则会根据类目变化而变化）
-         */
-        refundRule: string;
-        /**
-         * 发货间隔时间，单位：秒，范围在[3,15天] 需要转换为秒 259200 为3天，deliverGoodsInteralTime和promiseDeliveryTime至少填一个且不能都填。填deliverGoodsInteralTime代码预售商品，填promiseDeliveryTime代表非预售商品。（如果需要取消请传 0 或 -1），需要注意具体预售时长会根据具体类目不同
-         */
-        deliverGoodsInteralTime?: number;
-        /**
-         * 非预售商品承诺发货时间，单位：秒，取值86400,172800,分别代表24、48小时，deliverGoodsInteralTime和promiseDeliveryTime至少填一个且不能都填。填deliverGoodsInteralTime代码预售商品，填promiseDeliveryTime代表非预售商品。（如果需要取消请传 0 或 -1）
-         */
-        promiseDeliveryTime?: number;
-        /**
-         * 是否立即上架  ,0立即上架，1不立即上架
-         */
-        immediatelyOnOfflineFlag?: number;
-        /**
-         * 发货方式 logistics：物流配送（默认） certificate：电子凭证
-         */
-        deliveryMethod?: string;
-        /**
-         * 服务承诺：freshRotRefund：坏了包退
-         * brokenRefund：破损包退
-         * allergyRefund：过敏包退
-         */
-        servicePromise: {
-          /**
-           * 坏了包退
-           */
-          freshRotRefund?: boolean;
-          /**
-           * 破损包退
-           */
-          brokenRefund?: boolean;
-          /**
-           * 过敏包退
-           */
-          allergyRefund?: boolean;
-          [k: string]: unknown;
-        };
-        /**
-         * 电子凭证不可用时间
-         */
-        unavailableTimeRule?: {
-          /**
-           * 不可用星期
-           * 1:周一、2:周二、3:周三、4:周四、5:周五、6:周六、7:周
-           */
-          weeks?: number[];
-          /**
-           * 不可用节假日
-           * 1:元旦、2:春节、3:清明节、4:劳动节、5:端午节、6:国庆节、7:中秋节
-           */
-          holidays?: number[];
-          /**
-           * 不可用时间范围，最多三组，单位毫秒，每组时间起止相互互斥
-           */
-          timeRanges?: {
-            /**
-             * 开始时间时间戳
-             * 时间为00:00:00
-             */
-            startTime: number;
-            /**
-             * 结束时间时间戳
-             * 时间为 23:59:59
-             */
-            endTime: number;
-            [k: string]: unknown;
-          }[];
-          [k: string]: unknown;
-        };
-        /**
-         *  码商，仅有deliveryMethod 为certificate：电子凭证时，此字段才有值，且需校验
-         * ks：快手平台发码 merchant：商家发码  couponLibrary:券码库发码
-         */
-        certMerchantCode?: string;
-        /**
-         * 电子凭证有效期类型，仅有deliveryMethod 为certificate：电子凭证时，此字段才有值
-         * 1：日期范围；2：仅有截止日期；3：有效天数
-         */
-        certExpireType?: number;
-        /**
-         * 开始时间，仅有deliveryMethod 为certificate：电子凭证时，certExpireType为1或2时此字段才有值
-         */
-        certStartTime?: number;
-        /**
-         * 截止时间，仅有deliveryMethod 为certificate：电子凭证时，certExpireType为1或2时此字段才有值
-         */
-        certEndTime?: number;
-        /**
-         * 有效天数，仅有deliveryMethod 为certificate：电子凭证时，certExpireType为3时此字段才有值
-         */
-        certExpDays?: number;
-        /**
-         * 订单限购类型0：未设置；1:已设置最少购买件数；2:已设置最多购买件数；3:最少最多购买件数均设置；
-         */
-        orderPurchaseLimitType?: number;
-        /**
-         * 每笔订单最少购买件数，若orderPurchaseLimitType设置为0，建议此字段同样修改为0；
-         */
-        minOrderCount?: number;
-        /**
-         * 每笔订单最多购买件数，若orderPurchaseLimitType设置为0，建议此字段同样修改为0；
-         */
-        maxOrderCount?: number;
-        /**
-         * 酒旅类目，且选择“电子凭证”，必填
-         */
-        customerInfo?: {
-          /**
-           * 1-不需要、2-需要1位出行人、3-需要全部出行人
-           */
-          customerInfoType?: string;
-          /**
-           * 如果出行人信息选择，需要1位出行人、需要全部出行人 选项,
-           * 	则展示出行人证件，且必传，1-身份证
-           *
-           */
-          customerCertificateType?: string[];
-          [k: string]: unknown;
-        };
-        /**
-         * 价保天数，不传则覆盖为0
-         */
-        priceProtectDays?: number;
-        [k: string]: unknown;
-      };
-      /**
-       * 运费模板id
-       */
-      expressTemplateId: number;
-      /**
-       * 是否定点开售，默认为false
-       */
-      saleTimeFlag?: boolean;
-      /**
-       * 定点开售时间，如果开启定点开售必填
-       */
-      timeOfSale?: number;
-      /**
-       * 支付方式：1 货到付款 2 在线支付 3 在线支付和货到付款；默认2
-       * 目前OpenAPI端只支持「在线支付」方式
-       */
-      payWay?: number;
-      /**
-       * 是否是多仓库存模式，默认是false
-       */
-      multipleStock?: boolean;
-      /**
-       * 门店ID
-       */
-      poiIds?: number[];
-      /**
-       * 商品白底图，请上传格式为png/jpeg/jpg的图片，长宽比为1:1的图片，像素480*480px以上的图片，大小小于2M
-       */
-      whiteBaseImageUrl?: string;
-      /**
-       * 商品透明图，请上传格式为png的图片，长宽比为1:1的图片，像素480*480px以上的图片，大小小于2M
-       */
-      transparentImageUrl?: string;
-      /**
-       * 商品短标题长度必须大于4且小于20个字符（2-10汉字）
-       */
-      shortTitle?: string;
-      /**
-       * 商品卖点长度必须大于8且小于24个字符（4-12汉字）
-       */
-      sellingPoint?: string;
-      /**
-       * 使用说明,非必传，约定字符限制400个中文字长度以内。空行数量10行以内。
-       */
-      instructions?: string;
-      [k: string]: unknown;
-    };
-    /**
-     * API出参
-     */
-    response: {
-      /**
-       * 主返回码
-       */
-      code?: string;
-      /**
-       * 主返回信息
-       */
-      msg?: string;
-      /**
-       * 子返回码
-       */
-      sub_code?: string;
-      /**
-       * 子返回信息
-       */
-      sub_msg?: string;
-      /**
-       * 返回码，1成功
-       */
-      result?: number;
-      /**
-       * 错误信息
-       */
-      error_msg?: string;
-      /**
-       * 新增商品返回数据
-       */
-      data?: {
-        /**
-         * 快手商品id
-         */
-        kwaiItemId: number;
-        /**
-         * 外部商品id，仅供记录外部商品和快手商品对应关系
-         */
-        relItemId: number;
-        /**
-         * skuIdList
-         */
-        skuIdMapping: {
-          /**
-           * 快手商品sku id
-           */
-          kwaiSkuId: number;
-          /**
-           * 外部商品 Sku id，仅供记录外部商品sku和快手商品sku对应关系
-           */
-          relSkuId: number;
-          /**
-           * skuNick，sku编码必须30个字符以内
-           *
-           */
-          skuNick?: string;
-          [k: string]: unknown;
-        }[];
-        [k: string]: unknown;
-      };
-      [k: string]: unknown;
-    };
-    [k: string]: unknown;
-  };
-  /**
-   * 新增sku货品关联关系
-   */
-  "open.item.sku.goods.relation.add": {
+  "open.item.sku.goods.relation.update": {
     /**
      * API入参
      */
@@ -4110,70 +3727,6 @@ export interface ApiDeclaration {
         skuId: number;
         [k: string]: unknown;
       }[];
-      [k: string]: unknown;
-    };
-    /**
-     * API出参
-     */
-    response: {
-      /**
-       * 主返回码
-       */
-      code?: string;
-      /**
-       * 主返回信息
-       */
-      msg?: string;
-      /**
-       * 子返回码
-       */
-      sub_code?: string;
-      /**
-       * 子返回信息
-       */
-      sub_msg?: string;
-      /**
-       * 返回码，1成功
-       */
-      result?: number;
-      /**
-       * 错误信息
-       */
-      error_msg?: string;
-      [k: string]: unknown;
-    };
-    [k: string]: unknown;
-  };
-  /**
-   * 删除sku货品关联关系
-   */
-  "open.item.sku.goods.relation.delete": {
-    /**
-     * API入参
-     */
-    request: {
-      /**
-       * 商品ID
-       */
-      itemId: number;
-      /**
-       * sku与货品关联信息
-       */
-      skuGoodsRelation: {
-        /**
-         * 货品ID
-         */
-        goodsId: string;
-        /**
-         * skuId
-         */
-        skuId: number;
-        [k: string]: unknown;
-      }[];
-      /**
-       * 是否将库存模式切换到商品库存模式
-       */
-      updateItemStockModel?: boolean;
       [k: string]: unknown;
     };
     /**
@@ -4272,66 +3825,6 @@ export interface ApiDeclaration {
         goodsCode: string;
         [k: string]: unknown;
       }[];
-      [k: string]: unknown;
-    };
-    [k: string]: unknown;
-  };
-  /**
-   * 更新sku货品关联关系
-   */
-  "open.item.sku.goods.relation.update": {
-    /**
-     * API入参
-     */
-    request: {
-      /**
-       * 商品ID
-       */
-      itemId: number;
-      /**
-       * sku与货品关联信息
-       */
-      skuGoodsRelation: {
-        /**
-         * 货品ID
-         */
-        goodsId: string;
-        /**
-         * skuId
-         */
-        skuId: number;
-        [k: string]: unknown;
-      }[];
-      [k: string]: unknown;
-    };
-    /**
-     * API出参
-     */
-    response: {
-      /**
-       * 主返回码
-       */
-      code?: string;
-      /**
-       * 主返回信息
-       */
-      msg?: string;
-      /**
-       * 子返回码
-       */
-      sub_code?: string;
-      /**
-       * 子返回信息
-       */
-      sub_msg?: string;
-      /**
-       * 返回码，1成功
-       */
-      result?: number;
-      /**
-       * 错误信息
-       */
-      error_msg?: string;
       [k: string]: unknown;
     };
     [k: string]: unknown;
@@ -4595,66 +4088,6 @@ export interface ApiDeclaration {
         }[];
         [k: string]: unknown;
       };
-      [k: string]: unknown;
-    };
-    [k: string]: unknown;
-  };
-  /**
-   * 获取商品类目列表
-   */
-  "open.item.category": {
-    /**
-     * API入参
-     */
-    request?: {
-      [k: string]: unknown;
-    };
-    /**
-     * API出参
-     */
-    response: {
-      /**
-       * 主返回码
-       */
-      code?: string;
-      /**
-       * 主返回信息
-       */
-      msg?: string;
-      /**
-       * 子返回码
-       */
-      sub_code?: string;
-      /**
-       * 子返回信息
-       */
-      sub_msg?: string;
-      /**
-       * 返回码，1：成功
-       */
-      result?: number;
-      /**
-       * 类目列表
-       */
-      data?: {
-        /**
-         * 类目id
-         */
-        categoryId: number;
-        /**
-         * 类目名称
-         */
-        categoryName: string;
-        /**
-         * 父级类目id
-         */
-        categoryPid: number;
-        [k: string]: unknown;
-      }[];
-      /**
-       * 错误描述
-       */
-      error_msg?: string;
       [k: string]: unknown;
     };
     [k: string]: unknown;
@@ -5346,286 +4779,9 @@ export interface ApiDeclaration {
     [k: string]: unknown;
   };
   /**
-   * 关闭订单
+   * 订单详情v2
    */
-  "open.seller.order.close": {
-    /**
-     * API入参
-     */
-    request: {
-      /**
-       * 订单编号
-       */
-      orderId: number;
-      [k: string]: unknown;
-    };
-    /**
-     * API出参
-     */
-    response: {
-      /**
-       * 主返回码
-       */
-      code?: string;
-      /**
-       * 主返回信息
-       */
-      msg?: string;
-      /**
-       * 子返回码
-       */
-      sub_code?: string;
-      /**
-       * 子返回信息
-       */
-      sub_msg?: string;
-      /**
-       * 返回码
-       */
-      result?: number;
-      /**
-       * 错误码描述
-       */
-      error_msg?: string;
-      [k: string]: unknown;
-    };
-    [k: string]: unknown;
-  };
-  /**
-   * 订单费率查询
-   */
-  "open.order.takerate.inquiry": {
-    /**
-     * API入参
-     */
-    request: {
-      /**
-       * 时间戳格式
-       */
-      orderTime: number;
-      /**
-       * categoryId、merchantShopType
-       * 分别为，商品类目id、店铺类型
-       */
-      params: Record<string, any>;
-      [k: string]: unknown;
-    };
-    /**
-     * API出参
-     */
-    response: {
-      /**
-       * 主返回码
-       */
-      code?: string;
-      /**
-       * 主返回信息
-       */
-      msg?: string;
-      /**
-       * 基础返回信息
-       */
-      baseRespInfo?: {
-        /**
-         * 返回code码
-         */
-        code?: number;
-        /**
-         * 是否成功
-         */
-        success?: boolean;
-        [k: string]: unknown;
-      };
-      /**
-       * TakeRate费率类型
-       */
-      trRuleValueType?: string;
-      /**
-       * 费率
-       */
-      ruleValue?: string;
-      [k: string]: unknown;
-    };
-    [k: string]: unknown;
-  };
-  /**
-   * 发货
-   */
-  "open.seller.order.goods.deliver": {
-    /**
-     * API入参
-     */
-    request: {
-      /**
-       * 订单编号
-       */
-      orderId: number;
-      /**
-       * 快递单号
-       */
-      expressNo: string;
-      /**
-       * 快递公司code，由https://open.kwaixiaodian.com/docs/dev?id=VRk7NdU6ZI获取
-       */
-      expressCode: number;
-      /**
-       * 质检信息专用非必填，发货可忽略
-       */
-      qualityParam?: string;
-      /**
-       * 商家退货地址，可从查询商家地址列表API-open.address.seller.list中获取退货地址
-       */
-      returnAddressId?: number;
-      [k: string]: unknown;
-    };
-    /**
-     * API出参
-     */
-    response: {
-      /**
-       * 主返回码
-       */
-      code?: string;
-      /**
-       * 主返回信息
-       */
-      msg?: string;
-      /**
-       * 子返回码
-       */
-      sub_code?: string;
-      /**
-       * 子返回信息
-       */
-      sub_msg?: string;
-      /**
-       * 返回码
-       */
-      result?: number;
-      /**
-       * 错误码描述
-       */
-      error_msg?: string;
-      [k: string]: unknown;
-    };
-    [k: string]: unknown;
-  };
-  /**
-   * 物流更新
-   */
-  "open.seller.order.logistics.update": {
-    /**
-     * API入参
-     */
-    request: {
-      /**
-       * 订单编号
-       */
-      orderId: number;
-      /**
-       * 快递单号
-       */
-      expressNo: string;
-      /**
-       * 快递公司code
-       */
-      expressCode: number;
-      [k: string]: unknown;
-    };
-    /**
-     * API出参
-     */
-    response: {
-      /**
-       * 主返回码
-       */
-      code?: string;
-      /**
-       * 主返回信息
-       */
-      msg?: string;
-      /**
-       * 子返回码
-       */
-      sub_code?: string;
-      /**
-       * 子返回信息
-       */
-      sub_msg?: string;
-      /**
-       * 返回码
-       */
-      result?: number;
-      /**
-       * 错误码描述
-       */
-      error_msg?: string;
-      [k: string]: unknown;
-    };
-    [k: string]: unknown;
-  };
-  /**
-   * 添加备注
-   */
-  "open.seller.order.note.add": {
-    /**
-     * API入参
-     */
-    request: {
-      /**
-       * 订单编号
-       */
-      orderId: number;
-      /**
-       * 员工ID
-       */
-      staffId?: number;
-      /**
-       * 备注  字符数<=200
-       */
-      note?: string;
-      /**
-       * 0：表示不插旗; 1：RED; 2：YELLOW; 3：GREEN; 4：BLUE; 5：PURPLE; 6：GREY;
-       */
-      flag?: number;
-      [k: string]: unknown;
-    };
-    /**
-     * API出参
-     */
-    response: {
-      /**
-       * 主返回码
-       */
-      code?: string;
-      /**
-       * 主返回信息
-       */
-      msg?: string;
-      /**
-       * 子返回码
-       */
-      sub_code?: string;
-      /**
-       * 子返回信息
-       */
-      sub_msg?: string;
-      /**
-       * 返回码，1正确，其他返回码表示接口未执行成功
-       */
-      result?: number;
-      /**
-       * 错误码描述
-       */
-      error_msg?: string;
-      [k: string]: unknown;
-    };
-    [k: string]: unknown;
-  };
-  /**
-   * 获取订单费用详情
-   */
-  "open.seller.order.fee.detail": {
+  "open.order.detail": {
     /**
      * API入参
      */
@@ -5633,7 +4789,7 @@ export interface ApiDeclaration {
       /**
        * 订单id
        */
-      orderId: number;
+      oid: number;
       [k: string]: unknown;
     };
     /**
@@ -5657,231 +4813,655 @@ export interface ApiDeclaration {
        */
       sub_msg?: string;
       /**
-       * 返回码
+       * 返回码，1成功
        */
       result?: number;
       /**
-       * 金额信息
+       * 错误信息
+       */
+      error_msg?: string;
+      /**
+       * 订单详情
        */
       data?: {
         /**
-         * 订单id
+         * 订单基础信息
          */
-        oid?: number;
-        /**
-         * 卖家id
-         */
-        sellerId?: number;
-        /**
-         * 货款, 商家维度，不包括运费 计算公式为：商品总金额(price * num)- 商家承担(merchantBearAmount)
-         */
-        totalFee?: number;
-        /**
-         * 订单优惠金额，累加marketingInfoOuters所有类型的优惠
-         */
-        discountFee?: number;
-        /**
-         * 运费
-         */
-        expressFee?: number;
-        /**
-         * 优惠补贴，platformBearAmount + merchantBearAmount
-         */
-        platformAllowance?: number;
-        /**
-         * 商家实收，货款 + 运费
-         */
-        sellerRecv?: number;
-        /**
-         * 买家实付，货款 + 运费 - 平台承担补贴（platformBearAmount）
-         */
-        buyerPay?: number;
-        /**
-         * 订单优惠信息
-         */
-        marketingInfoOuters?: {
-          /**
-           * 主类型,1000:优惠券，4000:多件优惠，5000:直降，6000:抵现
-           */
-          type?: number;
-          /**
-           * 子类型,优惠券(1001:商家满减优惠券,1002:平台补贴)，多件优惠(4001:满减满折)，直降(5001:直降-福利购)，抵现(6001:快米抵现)
-           */
-          subType?: number;
-          /**
-           * 优惠金额
-           */
-          discountFee?: number;
-          /**
-           * 承担费用详情
-           */
-          bearInfoList?: {
-            /**
-             * 1 商家承担，2 平台承担
-             */
-            bearer?: number;
-            /**
-             * 承担金额，单位分
-             */
-            bearAmount?: number;
-            /**
-             * 是否出资 1是 0否
-             */
-            hasFund?: number;
-            [k: string]: unknown;
-          }[];
-          /**
-           * 优惠模版信息
-           */
-          template?: number;
-          [k: string]: unknown;
-        }[];
-        /**
-         * 订单商品详情
-         */
-        productFeeInfoOuters?: {
-          /**
-           * id
-           */
-          id?: number;
+        orderBaseInfo?: {
           /**
            * 订单id
            */
           oid?: number;
           /**
-           * 商品skuId
+           * 付款时间
            */
-          skuId?: number;
+          payTime?: number;
           /**
-           * 商品原始价格
+           * 买家图像
            */
-          originalPrice?: number;
+          buyerImage?: string;
           /**
-           * 商品售卖价格
+           * 买家id
            */
-          price?: number;
+          buyerOpenId?: string;
           /**
-           * 订单商品数量
+           * 买家昵称
            */
-          num?: number;
+          buyerNick?: string;
           /**
-           * 商品优惠总金额金额
+           * 卖家id
+           */
+          sellerOpenId?: string;
+          /**
+           * 卖家昵称
+           */
+          sellerNick?: string;
+          /**
+           * 运费
+           */
+          expressFee?: number;
+          /**
+           * 促销减价、折扣价格
            */
           discountFee?: number;
           /**
-           * 营销信息
+           * 子订单商品总价
            */
-          productMarketingInfoOuters?: {
+          totalFee?: number;
+          /**
+           * 订单状态：[0, "未知状态"], [10, "待付款"], [30, "已付款"], [40, "已发货"], [50, "已签收"], [70, "订单成功"], [80, "订单失败"];
+           */
+          status?: number;
+          /**
+           * 发货时间
+           */
+          sendTime?: number;
+          /**
+           * 退款时间
+           */
+          refundTime?: number;
+          /**
+           * 创建时间
+           */
+          createTime?: number;
+          /**
+           * 更新时间
+           */
+          updateTime?: number;
+          /**
+           * 买家留言
+           */
+          remark?: string;
+          /**
+           * 发货间隔时间，单位：天
+           */
+          theDayOfDeliverGoodsTime?: number;
+          /**
+           * 非预售商品承诺发货时间点,即订单支付时间+承诺发货时间间隔
+           */
+          promiseTimeStampOfDelivery?: number;
+          /**
+           * 活动类型
+           */
+          activityType?: number;
+          /**
+           * 分销类型 0-全部 1-普通订单 2-分销订单
+           */
+          cpsType?: number;
+          /**
+           * 预售发货时间/承诺发货时间
+           */
+          validPromiseShipmentTimeStamp?: number;
+          /**
+           * 预售：preSale 0：非预售 1:预售
+           */
+          preSale?: number;
+          /**
+           * 收货时间
+           */
+          recvTime?: number;
+          /**
+           * UNKNOWN = 0; JD = 1; RECHARGE_MOBILE = 2; // 券包 COUPON_PACKAGE = 3； // 话费充值 MI = 5; // 小米 CROSS_BORDER = 8; // 跨境
+           */
+          coType?: number;
+          /**
+           * 评价状态： 0未评价，1评价
+           */
+          commentStatus?: number;
+          /**
+           * 支付类型
+           */
+          payType?: number;
+          /**
+           * 风险Code码，10001=骗补订单，不建议商家发货
+           */
+          riskCode?: number;
+          /**
+           * 订单POI信息
+           */
+          orderPoiInfo?: {
             /**
-             * 主类型,1000:优惠券，4000:多件优惠，5000:直降，6000:抵现
+             * POI的ID
              */
-            type?: number;
+            poiId?: number;
             /**
-             * 子类型,优惠券(1001:商家满减优惠券,1002:平台补贴)，多件优惠(4001:满减满折)，直降(5001:直降-福利购)，抵现(6001:快米抵现)
+             * POI的名称
              */
-            subType?: number;
+            name?: string;
             /**
-             * 优惠金额
+             * POI的详细地址
              */
-            discountFee?: number;
-            /**
-             * 承担费用明细
-             */
-            bearInfoList?: {
-              /**
-               * 1 商家承担，2 平台承担
-               */
-              bearer?: number;
-              /**
-               * 承担金额，单位分
-               */
-              bearAmount?: number;
-              /**
-               * 是否出资 1是 0否
-               */
-              hasFund?: number;
-              [k: string]: unknown;
-            }[];
-            /**
-             * 新增优惠模版信息
-             */
-            template?: number;
+            address?: string;
             [k: string]: unknown;
-          }[];
+          };
+          /**
+           * 店铺新客
+           */
+          shopNewBuyer?: boolean;
+          /**
+           * 平台新客
+           */
+          platformNewBuyer?: boolean;
+          /**
+           * 税费信息
+           */
+          orderTaxInfo?: {
+            /**
+             * 税费总金额
+             */
+            taxAmount?: number;
+            /**
+             * 卖家承担金额
+             */
+            sellerBearAmount?: number;
+            [k: string]: unknown;
+          };
+          /**
+           * 支付方式
+           */
+          payChannel?: string;
+          /**
+           * 商家报备延迟审核之后发货时间
+           */
+          sellerDelayPromiseTimeStamp?: number;
+          [k: string]: unknown;
+        };
+        /**
+         * 订单商品信息
+         */
+        orderItemInfo?: {
+          /**
+           * 快手商品skuid
+           */
+          skuId?: number;
+          /**
+           * 服务商商品skuid
+           */
+          relSkuId?: number;
+          /**
+           * sku商品规格快照
+           */
+          skuDesc?: string;
+          /**
+           * sku编码
+           */
+          skuNick?: string;
+          /**
+           * 商品id
+           */
+          itemId?: number;
+          /**
+           * 服务商商品id
+           */
+          relItemId?: number;
+          /**
+           * 商品名称
+           */
+          itemTitle?: string;
+          /**
+           * 商品链接
+           */
+          itemLinkUrl?: string;
+          /**
+           * 商品图片地址
+           */
+          itemPicUrl?: string;
+          /**
+           * sku数量
+           */
+          num?: number;
+          /**
+           * 商品促销前单价快照 以分为单位
+           */
+          originalPrice?: number;
+          /**
+           * 折扣金额
+           */
+          discountFee?: number;
+          /**
+           * 商品单价快照，以分为单位
+           */
+          price?: number;
+          /**
+           * 1自建商品 2 闪电购商品
+           */
+          itemType?: number;
+          /**
+           * sku修改之前原商品信息
+           */
+          itemPrevInfo?: {
+            /**
+             * 商品skuId
+             */
+            skuId?: number;
+            /**
+             * 服务商skuId
+             */
+            relSkuId?: number;
+            /**
+             * sku描述信息
+             */
+            skuDesc?: string;
+            /**
+             * sku编码
+             */
+            skuNick?: string;
+            [k: string]: unknown;
+          };
+          /**
+           * 外部货品编码
+           */
+          goodsCode?: string;
+          /**
+           * 快手仓库编码
+           */
+          warehouseCode?: string;
+          /**
+           * 订单商品id，原有的id历史字段。商品id请使用itemId
+           */
+          orderItemId?: number;
+          /**
+           * 电子凭证券码库ID
+           */
+          goodStoreCode?: number;
+          /**
+           * 服务信息
+           */
+          serviceInfo?: {
+            /**
+             * 服务标签
+             */
+            serviceRule?: string;
+            /**
+             * 是否使用运费险
+             */
+            freight?: boolean;
+            /**
+             * 运费险提供者类型
+             */
+            freightProviderType?: number;
+            /**
+             * 首单保障
+             */
+            firstOrderGuarantee?: boolean;
+            /**
+             * 急速发货 1是 0否
+             */
+            instantDelivery?: number;
+            /**
+             * 急速退款
+             */
+            instantRefund?: boolean;
+            /**
+             * 假一赔N
+             */
+            compensateFake?: {
+              /**
+               * 赔付倍数
+               */
+              times?: number;
+              /**
+               * 假一赔N描述
+               */
+              desc?: string;
+              /**
+               * 假一赔N链接
+               */
+              link?: string;
+              [k: string]: unknown;
+            };
+            /**
+             * 服务规则
+             */
+            serviceRuleInfo?: {
+              /**
+               *  保证金 0 未交 1 已交
+               */
+              depositRule?: string;
+              /**
+               * 退款规则 1 7日无理由退换货 2 3 协商退款
+               */
+              refundRule?: string;
+              /**
+               * 发货间隔时间（单位：秒），为预售单的发货时间间隔，若不是预售单，返回值为0
+               */
+              deliverGoodsIntervalTime?: number;
+              /**
+               * 发货间隔时间（单位：天），为预售单的发货时间间隔，若不是预售单，返回值为0
+               */
+              theDayOfDeliverGoodsTime?: number;
+              /**
+               * 预售标志,true: 非预售,false: 预售
+               */
+              saleFlag?: boolean;
+              /**
+               * 承诺发货时间(单位为s),24/48/72小时,-1表示不承诺
+               */
+              promiseDeliveryTime?: number;
+              /**
+               * 发货方式 logistics：物流配送（默认） certificate：电子凭证
+               */
+              deliveryMethod?: string;
+              /**
+               * 是否支持核销 0：不支持 1：支持 -1：未设置
+               */
+              supportVerification?: number;
+              /**
+               * 电子凭证码商
+               */
+              certMerchantCode?: string;
+              /**
+               * 电子凭证有效期类型
+               */
+              certExpireType?: number;
+              /**
+               * 电子凭证起始时间
+               */
+              certStartTime?: number;
+              /**
+               * 电子凭证截止时间
+               */
+              certEndTime?: number;
+              /**
+               * 电子凭证有效天数
+               */
+              certExpDays?: number;
+              [k: string]: unknown;
+            };
+            [k: string]: unknown;
+          };
+          /**
+           * 扩展信息
+           */
+          itemExtra?: {
+            /**
+             * 类目信息
+             */
+            categoryInfo?: {
+              /**
+               * 类目id
+               */
+              itemCid?: number;
+              /**
+               * 名称
+               */
+              categoryName?: string;
+              [k: string]: unknown;
+            };
+            [k: string]: unknown;
+          };
+          [k: string]: unknown;
+        };
+        /**
+         * 订单退款信息，按照创建时间逆序，最新的在第一个
+         */
+        orderRefundList?: {
+          /**
+           * 退款id
+           */
+          refundId?: number;
+          /**
+           * 退款状态 枚举：[10, "买家仅退款申请"] [11, "买家退货退款申请"] [20, "平台介入-买家仅退款申请"] [21, "平台介入-买家退货退款申请"] [22, "平台介入-已确认退货退款"] [30, "商品回寄信息待买家更新"] [40, "商品回寄信息待卖家确认"] [50, "退款执行中"] [60, "退款成功"] [70, "退款失败"]
+           */
+          refundStatus?: number;
           [k: string]: unknown;
         }[];
         /**
-         * 平台补贴中平台承担的费用 新模型计算公式（marketingInfoOuters.bearInfoList不为null）：累加marketingInfoOuters.bearInfoList 中平台承担类型的bearAmount          旧模型计算公式（marketingInfoOuters.bearInfoList为null）：取marketingInfoOuters子类型1002的discountFee
+         * 订单物流信息
          */
-        platformBearAmount?: number;
+        orderLogisticsInfo?: {
+          /**
+           * 快递单号
+           */
+          expressNo?: string;
+          /**
+           * 快递公司code
+           */
+          expressCode?: number;
+          [k: string]: unknown;
+        }[];
         /**
-         * 平台补贴中商家承担的费用 计算公式：累加marketingInfoOuters.bearInfoList 中商家承担类型的bearAmount
+         * 订单备注，按照创建时间正序，最新的在最后一个
          */
-        merchantBearAmount?: number;
-        [k: string]: unknown;
-      };
-      /**
-       * 错误码描述
-       */
-      error_msg?: string;
-      [k: string]: unknown;
-    };
-    [k: string]: unknown;
-  };
-  /**
-   * 获取用户公开信息
-   */
-  "open.user.info.get": {
-    /**
-     * API入参
-     */
-    request?: {
-      [k: string]: unknown;
-    };
-    /**
-     * API出参
-     */
-    response: {
-      /**
-       * 主返回码
-       */
-      code?: string;
-      /**
-       * 主返回信息
-       */
-      msg?: string;
-      /**
-       * 子返回码
-       */
-      sub_code?: string;
-      /**
-       * 返回码
-       */
-      result?: number;
-      /**
-       * 商家信息
-       */
-      data?: {
+        orderNote?: {
+          /**
+           * 卖家备注
+           */
+          sellerNote?: string[];
+          [k: string]: unknown;
+        };
         /**
-         * 用户昵称
+         * 订单地址信息
          */
-        name?: string;
+        orderAddress?: {
+          /**
+           * 收货人名称
+           */
+          consignee?: string;
+          /**
+           * 收货人名称加密
+           */
+          encryptedConsignee?: string;
+          /**
+           * 收货人脱敏
+           */
+          desensitiseConsignee?: string;
+          /**
+           * 收货人手机
+           */
+          mobile?: string;
+          /**
+           * 手机号加密
+           */
+          encryptedMobile?: string;
+          /**
+           * 手机号脱敏
+           */
+          desensitiseMobile?: string;
+          /**
+           * 收货省份编码
+           */
+          provinceCode?: number;
+          /**
+           * 收货省
+           */
+          province?: string;
+          /**
+           * 收货城市编码
+           */
+          cityCode?: number;
+          /**
+           * 收货城市
+           */
+          city?: string;
+          /**
+           * 收货街道编码
+           */
+          districtCode?: number;
+          /**
+           * 收货街道
+           */
+          district?: string;
+          /**
+           * 详细地址
+           */
+          address?: string;
+          /**
+           * 详细地址加密
+           */
+          encryptedAddress?: string;
+          /**
+           * 详细地址脱敏
+           */
+          desensitiseAddress?: string;
+          /**
+           * 虚拟商品充值信息
+           */
+          rechargeAccount?: {
+            /**
+             * 手机号
+             */
+            account?: string;
+            /**
+             * 账号类型 1 手机号 2 QQ号 3 微信号
+             */
+            accountType?: number;
+            /**
+             * 账号类型说明
+             */
+            accountTypeDesc?: string;
+            [k: string]: unknown;
+          };
+          [k: string]: unknown;
+        };
         /**
-         * 用户性别，"F"为女性，"M"为男性，"其他"为未知
+         * 订单插旗
          */
-        sex?: string;
+        orderFlag?: {
+          /**
+           * 插旗颜色
+           */
+          flag?: string[];
+          [k: string]: unknown;
+        };
         /**
-         * 用户头像地址
+         * 订单阶段信息
          */
-        head?: string;
+        orderStepInfo?: {
+          /**
+           * 阶段信息
+           */
+          orderPaymentStatus?: {
+            /**
+             * 阶段支付类型，1定金预售
+             */
+            payStepType?: number;
+            /**
+             * 阶段支付状态，阶段支付类型+1+阶段一状态+2+阶段二状态拼接（1+1+30+2+30）
+             */
+            orderPayStatus?: number;
+            [k: string]: unknown;
+          };
+          /**
+           * 分阶段详情
+           */
+          orderPaymentSteps?: {
+            /**
+             * 唯一ID
+             */
+            id?: number;
+            /**
+             * 阶段支付类型，1定金预售
+             */
+            payStepType?: number;
+            /**
+             * 阶段编号，定金预售场景下：1定金，2尾款
+             */
+            payStepNo?: number;
+            /**
+             * 阶段名称
+             */
+            payStepName?: string;
+            /**
+             * 阶段状态:5初始化，10提单待支付、30已支付、80已关闭、90已退款
+             */
+            payStepStatus?: number;
+            /**
+             * 单价
+             */
+            stepPrice?: number;
+            /**
+             * 数量
+             */
+            skuNum?: number;
+            /**
+             * 总价 stepTotalPrice= stepPrice*skuNum
+             */
+            stepTotalPrice?: number;
+            /**
+             * 优惠金额（分）
+             */
+            discountFee?: number;
+            /**
+             * 邮费（分）
+             */
+            expressFee?: number;
+            /**
+             * 支付金额（分）
+             */
+            paymentFee?: number;
+            /**
+             * 支付时间
+             */
+            payTime?: number;
+            /**
+             * 支付渠道描述
+             */
+            payChannelDesc?: string;
+            /**
+             * 支付开始时间
+             */
+            startPayTime?: number;
+            /**
+             * 支付结束时间
+             */
+            endPayTime?: number;
+            [k: string]: unknown;
+          }[];
+          [k: string]: unknown;
+        };
         /**
-         * 用户高清大头像地址
+         * 定制信息
          */
-        bigHead?: string;
+        orderCustomizedInfo?: {
+          /**
+           * 定制商品类型
+           */
+          customizedItemType?: number;
+          /**
+           * 定制成功链接
+           */
+          customizedUrl?: string;
+          /**
+           * 定制成功编码
+           */
+          customizedCode?: string;
+          [k: string]: unknown;
+        };
         /**
-         * 用户的openId，同一个用户在同一个开发者主体下返回的openId是一致的
+         * 分销信息
          */
-        openId?: string;
+        orderCpsInfo?: {
+          /**
+           * 分销ID
+           */
+          distributorId?: number;
+          /**
+           * 分销名
+           */
+          distributorName?: string;
+          [k: string]: unknown;
+        };
         [k: string]: unknown;
       };
       [k: string]: unknown;
@@ -6571,6 +6151,1293 @@ export interface ApiDeclaration {
     [k: string]: unknown;
   };
   /**
+   * 获取订单列表旗帜v2
+   */
+  "open.order.tag.flag": {
+    /**
+     * API入参
+     */
+    request: {
+      /**
+       * 订单状态，0未知 1 全部 2 待付款 3 待发货 4 待收货（已发货）5 已收货 6 交易成功订单 7 已关闭订单
+       */
+      orderViewStatus: number;
+      /**
+       * 每页请求数量  最多一页50条
+       */
+      pageSize: number;
+      /**
+       * 1时间降序 2时间升序  默认降序
+       */
+      sort?: number;
+      /**
+       * 1按创建时间查找  2按更新时间查找  默认创建时间
+       */
+      queryType?: number;
+      /**
+       * 订单生成时间的开始时间，单位毫秒， 不能小于90天前，且需要小于结束时间
+       */
+      beginTime: number;
+      /**
+       * 订单生成时间的截止时间，单位毫秒，与开始时间的时间范围不大于7天
+       */
+      endTime: number;
+      /**
+       * 分销类型 0-全部 1-普通订单 2-分销订单
+       */
+      cpsType?: number;
+      /**
+       * 游标内容  第一次传空串，之后传上一次的cursor返回值，若返回“nomore”则标识到底
+       */
+      cursor: string;
+      /**
+       * 此卖家的买家订单
+       */
+      buyerId?: number;
+      [k: string]: unknown;
+    };
+    /**
+     * API出参
+     */
+    response: {
+      /**
+       * 主返回码
+       */
+      code?: string;
+      /**
+       * 主返回信息
+       */
+      msg?: string;
+      /**
+       * 子返回码
+       */
+      sub_code?: string;
+      /**
+       * 子返回信息
+       */
+      sub_msg?: string;
+      /**
+       * 返回码，1成功
+       */
+      result?: number;
+      /**
+       * 错误信息
+       */
+      error_msg?: string;
+      /**
+       * 订单列表
+       */
+      data?: {
+        /**
+         * 一页数据量
+         */
+        pageSize?: number;
+        /**
+         * 开始时间
+         */
+        beginTime?: number;
+        /**
+         * 结束时间
+         */
+        endTime?: number;
+        /**
+         * 游标，nomore代表分页到底
+         */
+        cursor?: string;
+        /**
+         * 订单列表
+         */
+        orderList?: {
+          /**
+           * 订单基础信息
+           */
+          orderBaseInfo?: {
+            /**
+             * 订单id
+             */
+            oid?: number;
+            /**
+             * 付款时间
+             */
+            payTime?: number;
+            /**
+             * 买家图像
+             */
+            buyerImage?: string;
+            /**
+             * 买家id
+             */
+            buyerOpenId?: string;
+            /**
+             * 买家昵称
+             */
+            buyerNick?: string;
+            /**
+             * 卖家id
+             */
+            sellerOpenId?: string;
+            /**
+             * 卖家昵称
+             */
+            sellerNick?: string;
+            /**
+             * 运费
+             */
+            expressFee?: number;
+            /**
+             * 促销减价、折扣价格
+             */
+            discountFee?: number;
+            /**
+             * 子订单商品总价
+             */
+            totalFee?: number;
+            /**
+             * 订单状态：[0, "未知状态"], [10, "待付款"], [30, "已付款"], [40, "已发货"], [50, "已签收"], [70, "订单成功"], [80, "订单失败"];
+             */
+            status?: number;
+            /**
+             * 发货时间
+             */
+            sendTime?: number;
+            /**
+             * 退款时间
+             */
+            refundTime?: number;
+            /**
+             * 创建时间
+             */
+            createTime?: number;
+            /**
+             * 更新时间
+             */
+            updateTime?: number;
+            /**
+             * 买家留言
+             */
+            remark?: string;
+            /**
+             * 发货超时间隔时间，单位：天
+             */
+            theDayOfDeliverGoodsTime?: number;
+            /**
+             * 非预售单承诺发货时间，时间戳格式，即非预售商品的承诺发货时间点，值等于订单支付时间+发货时间间隔
+             */
+            promiseTimeStampOfDelivery?: number;
+            /**
+             * 活动类型
+             */
+            activityType?: number;
+            /**
+             * 分销类型 0-全部 1-普通订单 2-分销订单
+             */
+            cpsType?: number;
+            /**
+             * 预售单的承诺发货时间，时间戳格式，即预售商品的的承诺发货时间点，值等于订单支付时间+发货时间间隔
+             */
+            validPromiseShipmentTimeStamp?: number;
+            /**
+             * 预售：preSale 0：非预售 1:预售
+             */
+            preSale?: number;
+            /**
+             * 收货时间
+             */
+            recvTime?: number;
+            /**
+             * UNKNOWN = 0; JD = 1; RECHARGE_MOBILE = 2; // 券包 COUPON_PACKAGE = 3； // 话费充值 MI = 5; // 小米 CROSS_BORDER = 8; // 跨境
+             */
+            coType?: number;
+            /**
+             * 评价状态： 0未评价，1评价
+             */
+            commentStatus?: number;
+            /**
+             * 支付方式，1=微信；2=支付宝
+             */
+            payType?: number;
+            /**
+             * 风险Code码，10001=黑产订单，不建议商家发货
+             */
+            riskCode?: number;
+            /**
+             * 支付方式
+             */
+            payChannel?: string;
+            /**
+             * 商家报备审核后的发货时间
+             */
+            sellerDelayPromiseTimeStamp?: number;
+            [k: string]: unknown;
+          };
+          /**
+           * 订单商品信息
+           */
+          orderItemInfo?: {
+            /**
+             * 快手商品skuid
+             */
+            skuId?: number;
+            /**
+             * 服务商商品skuid
+             */
+            relSkuId?: number;
+            /**
+             * sku商品规格快照
+             */
+            skuDesc?: string;
+            /**
+             * sku编码
+             */
+            skuNick?: string;
+            /**
+             * 商品id
+             */
+            itemId?: number;
+            /**
+             * 服务商商品id
+             */
+            relItemId?: number;
+            /**
+             * 商品名称
+             */
+            itemTitle?: string;
+            /**
+             * 商品链接
+             */
+            itemLinkUrl?: string;
+            /**
+             * 商品图片地址
+             */
+            itemPicUrl?: string;
+            /**
+             * sku数量
+             */
+            num?: number;
+            /**
+             * 商品促销前单价快照 以分为单位
+             */
+            originalPrice?: number;
+            /**
+             * 折扣金额
+             */
+            discountFee?: number;
+            /**
+             * 商品单价快照，以分为单位
+             */
+            price?: number;
+            /**
+             * 1自建商品 2 闪电购商品
+             */
+            itemType?: number;
+            /**
+             * sku修改之前原商品信息
+             */
+            itemPrevInfo?: {
+              /**
+               * 商品skuId
+               */
+              skuId?: number;
+              /**
+               * 服务商skuId
+               */
+              relSkuId?: number;
+              /**
+               * sku描述信息
+               */
+              skuDesc?: string;
+              /**
+               * sku编码
+               */
+              skuNick?: string;
+              [k: string]: unknown;
+            };
+            /**
+             * 外部货品编码
+             */
+            goodsCode?: string;
+            /**
+             * 快手仓库编码
+             */
+            warehouseCode?: string;
+            /**
+             * 订单商品id，原有的id历史字段。商品id请使用itemId
+             */
+            orderItemId?: number;
+            /**
+             * 电子凭证券码库ID
+             */
+            goodStoreCode?: number;
+            /**
+             * 服务信息
+             */
+            serviceInfo?: {
+              /**
+               * 服务标签
+               */
+              serviceRule?: string;
+              /**
+               * 是否使用运费险
+               */
+              freight?: boolean;
+              /**
+               * 运费险提供者类型
+               */
+              freightProviderType?: number;
+              /**
+               * 首单保障
+               */
+              firstOrderGuarantee?: boolean;
+              /**
+               * 急速发货 1是 0否
+               */
+              instantDelivery?: number;
+              /**
+               * 急速退款
+               */
+              instantRefund?: boolean;
+              /**
+               * 假一赔N
+               */
+              compensateFake?: {
+                /**
+                 * 赔付倍数
+                 */
+                times?: number;
+                /**
+                 * 假一赔N描述
+                 */
+                desc?: string;
+                /**
+                 * 假一赔N链接
+                 */
+                link?: string;
+                [k: string]: unknown;
+              };
+              /**
+               * 服务规则
+               */
+              serviceRuleInfo?: {
+                /**
+                 *  保证金 0 未交 1 已交
+                 */
+                depositRule?: string;
+                /**
+                 * 退款规则 1 7日无理由退换货 2 3 协商退款
+                 */
+                refundRule?: string;
+                /**
+                 * 发货间隔时间（单位：秒），为预售单的发货时间间隔，若不是预售单，返回值为0
+                 */
+                deliverGoodsIntervalTime?: number;
+                /**
+                 * 发货间隔时间（单位：天），为预售单的发货时间间隔，若不是预售单，返回值为0
+                 */
+                theDayOfDeliverGoodsTime?: number;
+                /**
+                 * 预售标志,true: 非预售,false: 预售
+                 */
+                saleFlag?: boolean;
+                /**
+                 * 承诺发货时间(单位为s),24/48/72小时,-1表示不承诺
+                 */
+                promiseDeliveryTime?: number;
+                /**
+                 * 发货方式 logistics：物流配送（默认） certificate：电子凭证
+                 */
+                deliveryMethod?: string;
+                /**
+                 * 是否支持核销 0：不支持 1：支持 -1：未设置
+                 */
+                supportVerification?: number;
+                /**
+                 * 电子凭证码商
+                 */
+                certMerchantCode?: string;
+                /**
+                 * 电子凭证有效期类型
+                 */
+                certExpireType?: number;
+                /**
+                 * 电子凭证起始时间
+                 */
+                certStartTime?: number;
+                /**
+                 * 电子凭证截止时间
+                 */
+                certEndTime?: number;
+                /**
+                 * 电子凭证有效天数
+                 */
+                certExpDays?: number;
+                [k: string]: unknown;
+              };
+              [k: string]: unknown;
+            };
+            /**
+             * 扩展信息
+             */
+            itemExtra?: {
+              /**
+               * 类目信息
+               */
+              categoryInfo?: {
+                /**
+                 * 类目id
+                 */
+                itemCid?: number;
+                /**
+                 * 名称
+                 */
+                categoryName?: string;
+                [k: string]: unknown;
+              };
+              [k: string]: unknown;
+            };
+            [k: string]: unknown;
+          };
+          /**
+           * 订单退款列表，按照创建时间逆序，最新的在第一个
+           */
+          orderRefundList?: {
+            /**
+             * 退款id
+             */
+            refundId?: number;
+            /**
+             * 退款状态 枚举：[10, "买家仅退款申请"] [11, "买家退货退款申请"] [20, "平台介入-买家仅退款申请"] [21, "平台介入-买家退货退款申请"] [22, "平台介入-已确认退货退款"] [30, "商品回寄信息待买家更新"] [40, "商品回寄信息待卖家确认"] [50, "退款执行中"] [60, "退款成功"] [70, "退款失败"]
+             */
+            refundStatus?: number;
+            [k: string]: unknown;
+          }[];
+          /**
+           * 订单物流信息
+           */
+          orderLogisticsInfo?: {
+            /**
+             * 快递单号
+             */
+            expressNo?: string;
+            /**
+             * 快递公司code
+             */
+            expressCode?: number;
+            [k: string]: unknown;
+          }[];
+          /**
+           * 订单备注，按照创建时间正序，最新的在最后一个
+           */
+          orderNote?: {
+            /**
+             * 卖家备注
+             */
+            sellerNote?: string[];
+            [k: string]: unknown;
+          };
+          /**
+           * 订单地址信息
+           */
+          orderAddress?: {
+            /**
+             * 收货人名称
+             */
+            consignee?: string;
+            /**
+             * 收货人名称加密
+             */
+            encryptedConsignee?: string;
+            /**
+             * 收货人脱敏
+             */
+            desensitiseConsignee?: string;
+            /**
+             * 收货人手机
+             */
+            mobile?: string;
+            /**
+             * 手机号加密
+             */
+            encryptedMobile?: string;
+            /**
+             * 手机号脱敏
+             */
+            desensitiseMobile?: string;
+            /**
+             * 收货省份编码
+             */
+            provinceCode?: number;
+            /**
+             * 收货省
+             */
+            province?: string;
+            /**
+             * 收货城市编码
+             */
+            cityCode?: number;
+            /**
+             * 收货城市
+             */
+            city?: string;
+            /**
+             * 收货街道编码
+             */
+            districtCode?: number;
+            /**
+             * 收货街道
+             */
+            district?: string;
+            /**
+             * 详细地址
+             */
+            address?: string;
+            /**
+             * 详细地址加密
+             */
+            encryptedAddress?: string;
+            /**
+             * 详细地址脱敏
+             */
+            desensitiseAddress?: string;
+            /**
+             * 虚拟商品充值信息
+             */
+            rechargeAccount?: {
+              /**
+               * 手机号
+               */
+              account?: string;
+              /**
+               * 账号类型 1 手机号 2 QQ号 3 微信号
+               */
+              accountType?: number;
+              /**
+               * 账号类型说明
+               */
+              accountTypeDesc?: string;
+              [k: string]: unknown;
+            };
+            [k: string]: unknown;
+          };
+          /**
+           * 订单阶段信息
+           */
+          orderStepInfo?: {
+            /**
+             * 阶段信息
+             */
+            orderPaymentStatus?: {
+              /**
+               * 阶段支付类型，1定金预售
+               */
+              payStepType?: number;
+              /**
+               * 阶段支付状态，阶段支付类型+1+阶段一状态+2+阶段二状态拼接（1+1+30+2+30）
+               */
+              orderPayStatus?: number;
+              [k: string]: unknown;
+            };
+            /**
+             * 分阶段详情
+             */
+            orderPaymentSteps?: {
+              /**
+               * 唯一ID
+               */
+              id?: number;
+              /**
+               * 阶段支付类型，1定金预售
+               */
+              payStepType?: number;
+              /**
+               * 阶段编号，定金预售场景下：1定金，2尾款
+               */
+              payStepNo?: number;
+              /**
+               * 阶段名称
+               */
+              payStepName?: string;
+              /**
+               * 阶段状态:5初始化，10提单待支付、30已支付、80已关闭、90已退款
+               */
+              payStepStatus?: number;
+              /**
+               * 单价
+               */
+              stepPrice?: number;
+              /**
+               * 数量
+               */
+              skuNum?: number;
+              /**
+               * 总价 stepTotalPrice= stepPrice*skuNum
+               */
+              stepTotalPrice?: number;
+              /**
+               * 优惠金额（分）
+               */
+              discountFee?: number;
+              /**
+               * 邮费（分）
+               */
+              expressFee?: number;
+              /**
+               * 支付金额（分）
+               */
+              paymentFee?: number;
+              /**
+               * 支付时间
+               */
+              payTime?: number;
+              /**
+               * 支付渠道描述
+               */
+              payChannelDesc?: string;
+              /**
+               * 支付开始时间
+               */
+              startPayTime?: number;
+              /**
+               * 支付结束时间
+               */
+              endPayTime?: number;
+              [k: string]: unknown;
+            }[];
+            [k: string]: unknown;
+          };
+          /**
+           * 订单分销信息
+           */
+          orderCpsInfo?: {
+            /**
+             * 分销ID
+             */
+            distributorId?: number;
+            /**
+             * 分销名
+             */
+            distributorName?: string;
+            [k: string]: unknown;
+          };
+          /**
+           * 旗帜信息
+           */
+          orderFlag?: {
+            /**
+             * 1
+             */
+            flag?: string[];
+            [k: string]: unknown;
+          };
+          [k: string]: unknown;
+        }[];
+        [k: string]: unknown;
+      };
+      [k: string]: unknown;
+    };
+    [k: string]: unknown;
+  };
+  /**
+   * 订单费率查询
+   */
+  "open.order.takerate.inquiry": {
+    /**
+     * API入参
+     */
+    request: {
+      /**
+       * 时间戳格式
+       */
+      orderTime: number;
+      /**
+       * categoryId、merchantShopType
+       * 分别为，商品类目id、店铺类型
+       */
+      params: Record<string, any>;
+      [k: string]: unknown;
+    };
+    /**
+     * API出参
+     */
+    response: {
+      /**
+       * 主返回码
+       */
+      code?: string;
+      /**
+       * 主返回信息
+       */
+      msg?: string;
+      /**
+       * 基础返回信息
+       */
+      baseRespInfo?: {
+        /**
+         * 返回code码
+         */
+        code?: number;
+        /**
+         * 是否成功
+         */
+        success?: boolean;
+        [k: string]: unknown;
+      };
+      /**
+       * TakeRate费率类型
+       */
+      trRuleValueType?: string;
+      /**
+       * 费率
+       */
+      ruleValue?: string;
+      [k: string]: unknown;
+    };
+    [k: string]: unknown;
+  };
+  /**
+   * 关闭订单
+   */
+  "open.seller.order.close": {
+    /**
+     * API入参
+     */
+    request: {
+      /**
+       * 订单编号
+       */
+      orderId: number;
+      [k: string]: unknown;
+    };
+    /**
+     * API出参
+     */
+    response: {
+      /**
+       * 主返回码
+       */
+      code?: string;
+      /**
+       * 主返回信息
+       */
+      msg?: string;
+      /**
+       * 子返回码
+       */
+      sub_code?: string;
+      /**
+       * 子返回信息
+       */
+      sub_msg?: string;
+      /**
+       * 返回码
+       */
+      result?: number;
+      /**
+       * 错误码描述
+       */
+      error_msg?: string;
+      [k: string]: unknown;
+    };
+    [k: string]: unknown;
+  };
+  /**
+   * 物流更新
+   */
+  "open.seller.order.logistics.update": {
+    /**
+     * API入参
+     */
+    request: {
+      /**
+       * 订单编号
+       */
+      orderId: number;
+      /**
+       * 快递单号
+       */
+      expressNo: string;
+      /**
+       * 快递公司code
+       */
+      expressCode: number;
+      [k: string]: unknown;
+    };
+    /**
+     * API出参
+     */
+    response: {
+      /**
+       * 主返回码
+       */
+      code?: string;
+      /**
+       * 主返回信息
+       */
+      msg?: string;
+      /**
+       * 子返回码
+       */
+      sub_code?: string;
+      /**
+       * 子返回信息
+       */
+      sub_msg?: string;
+      /**
+       * 返回码
+       */
+      result?: number;
+      /**
+       * 错误码描述
+       */
+      error_msg?: string;
+      [k: string]: unknown;
+    };
+    [k: string]: unknown;
+  };
+  /**
+   * 发货
+   */
+  "open.seller.order.goods.deliver": {
+    /**
+     * API入参
+     */
+    request: {
+      /**
+       * 订单编号
+       */
+      orderId: number;
+      /**
+       * 快递单号
+       */
+      expressNo: string;
+      /**
+       * 快递公司code，由https://open.kwaixiaodian.com/docs/dev?id=VRk7NdU6ZI获取
+       */
+      expressCode: number;
+      /**
+       * 质检信息专用非必填，发货可忽略
+       */
+      qualityParam?: string;
+      /**
+       * 商家退货地址，可从查询商家地址列表API-open.address.seller.list中获取退货地址
+       */
+      returnAddressId?: number;
+      [k: string]: unknown;
+    };
+    /**
+     * API出参
+     */
+    response: {
+      /**
+       * 主返回码
+       */
+      code?: string;
+      /**
+       * 主返回信息
+       */
+      msg?: string;
+      /**
+       * 子返回码
+       */
+      sub_code?: string;
+      /**
+       * 子返回信息
+       */
+      sub_msg?: string;
+      /**
+       * 返回码
+       */
+      result?: number;
+      /**
+       * 错误码描述
+       */
+      error_msg?: string;
+      [k: string]: unknown;
+    };
+    [k: string]: unknown;
+  };
+  /**
+   * 添加备注
+   */
+  "open.seller.order.note.add": {
+    /**
+     * API入参
+     */
+    request: {
+      /**
+       * 订单编号
+       */
+      orderId: number;
+      /**
+       * 员工ID
+       */
+      staffId?: number;
+      /**
+       * 备注  字符数<=200
+       */
+      note?: string;
+      /**
+       * 0：表示不插旗; 1：RED; 2：YELLOW; 3：GREEN; 4：BLUE; 5：PURPLE; 6：GREY;
+       */
+      flag?: number;
+      [k: string]: unknown;
+    };
+    /**
+     * API出参
+     */
+    response: {
+      /**
+       * 主返回码
+       */
+      code?: string;
+      /**
+       * 主返回信息
+       */
+      msg?: string;
+      /**
+       * 子返回码
+       */
+      sub_code?: string;
+      /**
+       * 子返回信息
+       */
+      sub_msg?: string;
+      /**
+       * 返回码，1正确，其他返回码表示接口未执行成功
+       */
+      result?: number;
+      /**
+       * 错误码描述
+       */
+      error_msg?: string;
+      [k: string]: unknown;
+    };
+    [k: string]: unknown;
+  };
+  /**
+   * 修改订单规格
+   */
+  "open.seller.order.sku.update": {
+    /**
+     * API入参
+     */
+    request: {
+      /**
+       * 订单id
+       */
+      orderId: number;
+      /**
+       * 商品id
+       */
+      itemId: number;
+      /**
+       * 订单商品老skuID
+       */
+      oldSkuId: number;
+      /**
+       * 订单商品新skuID
+       */
+      newSkuId: number;
+      [k: string]: unknown;
+    };
+    /**
+     * API出参
+     */
+    response: {
+      /**
+       * 主返回码
+       */
+      code?: string;
+      /**
+       * 主返回信息
+       */
+      msg?: string;
+      /**
+       * 子返回码
+       */
+      sub_code?: string;
+      /**
+       * 子返回信息
+       */
+      sub_msg?: string;
+      /**
+       * 返回码
+       */
+      result?: number;
+      /**
+       * 错误码描述
+       */
+      error_msg?: string;
+      [k: string]: unknown;
+    };
+    [k: string]: unknown;
+  };
+  /**
+   * 获取订单费用详情
+   */
+  "open.seller.order.fee.detail": {
+    /**
+     * API入参
+     */
+    request: {
+      /**
+       * 订单id
+       */
+      orderId: number;
+      [k: string]: unknown;
+    };
+    /**
+     * API出参
+     */
+    response: {
+      /**
+       * 主返回码
+       */
+      code?: string;
+      /**
+       * 主返回信息
+       */
+      msg?: string;
+      /**
+       * 子返回码
+       */
+      sub_code?: string;
+      /**
+       * 子返回信息
+       */
+      sub_msg?: string;
+      /**
+       * 返回码
+       */
+      result?: number;
+      /**
+       * 金额信息
+       */
+      data?: {
+        /**
+         * 订单id
+         */
+        oid?: number;
+        /**
+         * 卖家id
+         */
+        sellerId?: number;
+        /**
+         * 货款, 商家维度，不包括运费 计算公式为：商品总金额(price * num)- 商家承担(merchantBearAmount)
+         */
+        totalFee?: number;
+        /**
+         * 订单优惠金额，累加marketingInfoOuters所有类型的优惠
+         */
+        discountFee?: number;
+        /**
+         * 运费
+         */
+        expressFee?: number;
+        /**
+         * 优惠补贴，platformBearAmount + merchantBearAmount
+         */
+        platformAllowance?: number;
+        /**
+         * 商家实收，货款 + 运费
+         */
+        sellerRecv?: number;
+        /**
+         * 买家实付，货款 + 运费 - 平台承担补贴（platformBearAmount）
+         */
+        buyerPay?: number;
+        /**
+         * 订单优惠信息
+         */
+        marketingInfoOuters?: {
+          /**
+           * 主类型,1000:优惠券，4000:多件优惠，5000:直降，6000:抵现
+           */
+          type?: number;
+          /**
+           * 子类型,优惠券(1001:商家满减优惠券,1002:平台补贴)，多件优惠(4001:满减满折)，直降(5001:直降-福利购)，抵现(6001:快米抵现)
+           */
+          subType?: number;
+          /**
+           * 优惠金额
+           */
+          discountFee?: number;
+          /**
+           * 承担费用详情
+           */
+          bearInfoList?: {
+            /**
+             * 1 商家承担，2 平台承担
+             */
+            bearer?: number;
+            /**
+             * 承担金额，单位分
+             */
+            bearAmount?: number;
+            /**
+             * 是否出资 1是 0否
+             */
+            hasFund?: number;
+            [k: string]: unknown;
+          }[];
+          /**
+           * 优惠模版信息
+           */
+          template?: number;
+          [k: string]: unknown;
+        }[];
+        /**
+         * 订单商品详情
+         */
+        productFeeInfoOuters?: {
+          /**
+           * id
+           */
+          id?: number;
+          /**
+           * 订单id
+           */
+          oid?: number;
+          /**
+           * 商品skuId
+           */
+          skuId?: number;
+          /**
+           * 商品原始价格
+           */
+          originalPrice?: number;
+          /**
+           * 商品售卖价格
+           */
+          price?: number;
+          /**
+           * 订单商品数量
+           */
+          num?: number;
+          /**
+           * 商品优惠总金额金额
+           */
+          discountFee?: number;
+          /**
+           * 营销信息
+           */
+          productMarketingInfoOuters?: {
+            /**
+             * 主类型,1000:优惠券，4000:多件优惠，5000:直降，6000:抵现
+             */
+            type?: number;
+            /**
+             * 子类型,优惠券(1001:商家满减优惠券,1002:平台补贴)，多件优惠(4001:满减满折)，直降(5001:直降-福利购)，抵现(6001:快米抵现)
+             */
+            subType?: number;
+            /**
+             * 优惠金额
+             */
+            discountFee?: number;
+            /**
+             * 承担费用明细
+             */
+            bearInfoList?: {
+              /**
+               * 1 商家承担，2 平台承担
+               */
+              bearer?: number;
+              /**
+               * 承担金额，单位分
+               */
+              bearAmount?: number;
+              /**
+               * 是否出资 1是 0否
+               */
+              hasFund?: number;
+              [k: string]: unknown;
+            }[];
+            /**
+             * 新增优惠模版信息
+             */
+            template?: number;
+            [k: string]: unknown;
+          }[];
+          [k: string]: unknown;
+        }[];
+        /**
+         * 平台补贴中平台承担的费用 新模型计算公式（marketingInfoOuters.bearInfoList不为null）：累加marketingInfoOuters.bearInfoList 中平台承担类型的bearAmount          旧模型计算公式（marketingInfoOuters.bearInfoList为null）：取marketingInfoOuters子类型1002的discountFee
+         */
+        platformBearAmount?: number;
+        /**
+         * 平台补贴中商家承担的费用 计算公式：累加marketingInfoOuters.bearInfoList 中商家承担类型的bearAmount
+         */
+        merchantBearAmount?: number;
+        [k: string]: unknown;
+      };
+      /**
+       * 错误码描述
+       */
+      error_msg?: string;
+      [k: string]: unknown;
+    };
+    [k: string]: unknown;
+  };
+  /**
+   * 获取用户公开信息
+   */
+  "open.user.info.get": {
+    /**
+     * API入参
+     */
+    request?: {
+      [k: string]: unknown;
+    };
+    /**
+     * API出参
+     */
+    response: {
+      /**
+       * 主返回码
+       */
+      code?: string;
+      /**
+       * 主返回信息
+       */
+      msg?: string;
+      /**
+       * 子返回码
+       */
+      sub_code?: string;
+      /**
+       * 返回码
+       */
+      result?: number;
+      /**
+       * 商家信息
+       */
+      data?: {
+        /**
+         * 用户昵称
+         */
+        name?: string;
+        /**
+         * 用户性别，"F"为女性，"M"为男性，"其他"为未知
+         */
+        sex?: string;
+        /**
+         * 用户头像地址
+         */
+        head?: string;
+        /**
+         * 用户高清大头像地址
+         */
+        bigHead?: string;
+        /**
+         * 用户的openId，同一个用户在同一个开发者主体下返回的openId是一致的
+         */
+        openId?: string;
+        [k: string]: unknown;
+      };
+      [k: string]: unknown;
+    };
+    [k: string]: unknown;
+  };
+  /**
    * 获取商家信息
    */
   "open.user.seller.get": {
@@ -6702,92 +7569,6 @@ export interface ApiDeclaration {
          * true表示商家的社会信用码存在且归属于当前商家，校验通过，false表示校验未通过
          */
         exist?: boolean;
-        [k: string]: unknown;
-      };
-      [k: string]: unknown;
-    };
-    [k: string]: unknown;
-  };
-  /**
-   * 获取店铺信息
-   */
-  "open.shop.info.get": {
-    /**
-     * API入参
-     */
-    request?: {
-      [k: string]: unknown;
-    };
-    /**
-     * API出参
-     */
-    response: {
-      /**
-       * 主返回码
-       */
-      code?: string;
-      /**
-       * 主返回信息
-       */
-      msg?: string;
-      /**
-       * 子返回码
-       */
-      sub_code?: string;
-      /**
-       * 子返回信息
-       */
-      sub_msg?: string;
-      /**
-       * 返回码，1成功
-       */
-      result?: number;
-      /**
-       * 错误信息
-       */
-      error_msg?: string;
-      /**
-       * 店铺信息
-       */
-      data?: {
-        /**
-         * 店铺全名
-         */
-        shopName: string;
-        /**
-         * 店铺类型。1: 旗舰店；2: 专卖店；3:专营店；4: 卖场旗舰店；5: 普通企业店；6: 个人普通店；7: 个体工商户；其他类型
-         */
-        shopType: number;
-        /**
-         * 店铺评分信息
-         */
-        shopScoreInfo?: {
-          /**
-           * 购物体验分(保留两位小数)
-           */
-          shopExpScoreStr?: string;
-          /**
-           * 商品品质分(保留两位小数)
-           */
-          productQualityScoreStr?: string;
-          /**
-           * 内容质量分(保留两位小数)
-           */
-          contentQualifyScoreStr?: string;
-          /**
-           * 客服服务分(保留两位小数)
-           */
-          customerServiceScoreStr?: string;
-          /**
-           * 物流服务分(保留两位小数)
-           */
-          logisticsServiceScoreStr?: string;
-          /**
-           * 售后服务分(保留两位小数)
-           */
-          afterSalesServiceScoreStr?: string;
-          [k: string]: unknown;
-        };
         [k: string]: unknown;
       };
       [k: string]: unknown;
@@ -7063,6 +7844,92 @@ export interface ApiDeclaration {
     [k: string]: unknown;
   };
   /**
+   * 获取店铺信息
+   */
+  "open.shop.info.get": {
+    /**
+     * API入参
+     */
+    request?: {
+      [k: string]: unknown;
+    };
+    /**
+     * API出参
+     */
+    response: {
+      /**
+       * 主返回码
+       */
+      code?: string;
+      /**
+       * 主返回信息
+       */
+      msg?: string;
+      /**
+       * 子返回码
+       */
+      sub_code?: string;
+      /**
+       * 子返回信息
+       */
+      sub_msg?: string;
+      /**
+       * 返回码，1成功
+       */
+      result?: number;
+      /**
+       * 错误信息
+       */
+      error_msg?: string;
+      /**
+       * 店铺信息
+       */
+      data?: {
+        /**
+         * 店铺全名
+         */
+        shopName: string;
+        /**
+         * 店铺类型。1: 旗舰店；2: 专卖店；3:专营店；4: 卖场旗舰店；5: 普通企业店；6: 个人普通店；7: 个体工商户；其他类型
+         */
+        shopType: number;
+        /**
+         * 店铺评分信息
+         */
+        shopScoreInfo?: {
+          /**
+           * 购物体验分(保留两位小数)
+           */
+          shopExpScoreStr?: string;
+          /**
+           * 商品品质分(保留两位小数)
+           */
+          productQualityScoreStr?: string;
+          /**
+           * 内容质量分(保留两位小数)
+           */
+          contentQualifyScoreStr?: string;
+          /**
+           * 客服服务分(保留两位小数)
+           */
+          customerServiceScoreStr?: string;
+          /**
+           * 物流服务分(保留两位小数)
+           */
+          logisticsServiceScoreStr?: string;
+          /**
+           * 售后服务分(保留两位小数)
+           */
+          afterSalesServiceScoreStr?: string;
+          [k: string]: unknown;
+        };
+        [k: string]: unknown;
+      };
+      [k: string]: unknown;
+    };
+    [k: string]: unknown;
+  };
+  /**
    * 商家同意退款
    */
   "open.seller.order.refund.approve": {
@@ -7216,6 +8083,60 @@ export interface ApiDeclaration {
        * 当前退款单状态，枚举：仅支持退款单状态为 [22, "平台介入-已确认退货退款"]  [30, "商品回寄信息待买家更新"]  [40, "商品回寄信息待卖家确认"]  时，可调用确认收货接口
        */
       status?: number;
+      [k: string]: unknown;
+    };
+    /**
+     * API出参
+     */
+    response: {
+      /**
+       * 主返回码
+       */
+      code?: string;
+      /**
+       * 主返回信息
+       */
+      msg?: string;
+      /**
+       * 子返回码
+       */
+      sub_code?: string;
+      /**
+       * 子返回信息
+       */
+      sub_msg?: string;
+      /**
+       * 返回码，1正确，其他返回码表示接口未执行成功
+       */
+      result?: number;
+      /**
+       * 返回码描述
+       */
+      error_msg?: string;
+      [k: string]: unknown;
+    };
+    [k: string]: unknown;
+  };
+  /**
+   * 商家同意退货
+   */
+  "open.seller.order.refund.returngoods.approve": {
+    /**
+     * API入参
+     */
+    request: {
+      /**
+       * 退款单id
+       */
+      refundId: number;
+      /**
+       * 退款金额 单位：分，仅用于校验和当前退款单的退款金额是否一致
+       */
+      refundAmount: number;
+      /**
+       * 退货地址id，不传使用默认退货地址，可以通过获取商家地址列表API（open.address.seller.list）获取商家的退货地址
+       */
+      addressId?: number;
       [k: string]: unknown;
     };
     /**
@@ -7442,60 +8363,6 @@ export interface ApiDeclaration {
       };
       /**
        * 返回码说明
-       */
-      error_msg?: string;
-      [k: string]: unknown;
-    };
-    [k: string]: unknown;
-  };
-  /**
-   * 商家同意退货
-   */
-  "open.seller.order.refund.returngoods.approve": {
-    /**
-     * API入参
-     */
-    request: {
-      /**
-       * 退款单id
-       */
-      refundId: number;
-      /**
-       * 退款金额 单位：分，仅用于校验和当前退款单的退款金额是否一致
-       */
-      refundAmount: number;
-      /**
-       * 退货地址id，不传使用默认退货地址，可以通过获取商家地址列表API（open.address.seller.list）获取商家的退货地址
-       */
-      addressId?: number;
-      [k: string]: unknown;
-    };
-    /**
-     * API出参
-     */
-    response: {
-      /**
-       * 主返回码
-       */
-      code?: string;
-      /**
-       * 主返回信息
-       */
-      msg?: string;
-      /**
-       * 子返回码
-       */
-      sub_code?: string;
-      /**
-       * 子返回信息
-       */
-      sub_msg?: string;
-      /**
-       * 返回码，1正确，其他返回码表示接口未执行成功
-       */
-      result?: number;
-      /**
-       * 返回码描述
        */
       error_msg?: string;
       [k: string]: unknown;
@@ -8282,754 +9149,6 @@ export interface ApiDeclaration {
     [k: string]: unknown;
   };
   /**
-   * 修改订单规格
-   */
-  "open.seller.order.sku.update": {
-    /**
-     * API入参
-     */
-    request: {
-      /**
-       * 订单id
-       */
-      orderId: number;
-      /**
-       * 商品id
-       */
-      itemId: number;
-      /**
-       * 订单商品老skuID
-       */
-      oldSkuId: number;
-      /**
-       * 订单商品新skuID
-       */
-      newSkuId: number;
-      [k: string]: unknown;
-    };
-    /**
-     * API出参
-     */
-    response: {
-      /**
-       * 主返回码
-       */
-      code?: string;
-      /**
-       * 主返回信息
-       */
-      msg?: string;
-      /**
-       * 子返回码
-       */
-      sub_code?: string;
-      /**
-       * 子返回信息
-       */
-      sub_msg?: string;
-      /**
-       * 返回码
-       */
-      result?: number;
-      /**
-       * 错误码描述
-       */
-      error_msg?: string;
-      [k: string]: unknown;
-    };
-    [k: string]: unknown;
-  };
-  /**
-   * 订单详情v2
-   */
-  "open.order.detail": {
-    /**
-     * API入参
-     */
-    request: {
-      /**
-       * 订单id
-       */
-      oid: number;
-      [k: string]: unknown;
-    };
-    /**
-     * API出参
-     */
-    response: {
-      /**
-       * 主返回码
-       */
-      code?: string;
-      /**
-       * 主返回信息
-       */
-      msg?: string;
-      /**
-       * 子返回码
-       */
-      sub_code?: string;
-      /**
-       * 子返回信息
-       */
-      sub_msg?: string;
-      /**
-       * 返回码，1成功
-       */
-      result?: number;
-      /**
-       * 错误信息
-       */
-      error_msg?: string;
-      /**
-       * 订单详情
-       */
-      data?: {
-        /**
-         * 订单基础信息
-         */
-        orderBaseInfo?: {
-          /**
-           * 订单id
-           */
-          oid?: number;
-          /**
-           * 付款时间
-           */
-          payTime?: number;
-          /**
-           * 买家图像
-           */
-          buyerImage?: string;
-          /**
-           * 买家id
-           */
-          buyerOpenId?: string;
-          /**
-           * 买家昵称
-           */
-          buyerNick?: string;
-          /**
-           * 卖家id
-           */
-          sellerOpenId?: string;
-          /**
-           * 卖家昵称
-           */
-          sellerNick?: string;
-          /**
-           * 运费
-           */
-          expressFee?: number;
-          /**
-           * 促销减价、折扣价格
-           */
-          discountFee?: number;
-          /**
-           * 子订单商品总价
-           */
-          totalFee?: number;
-          /**
-           * 订单状态：[0, "未知状态"], [10, "待付款"], [30, "已付款"], [40, "已发货"], [50, "已签收"], [70, "订单成功"], [80, "订单失败"];
-           */
-          status?: number;
-          /**
-           * 发货时间
-           */
-          sendTime?: number;
-          /**
-           * 退款时间
-           */
-          refundTime?: number;
-          /**
-           * 创建时间
-           */
-          createTime?: number;
-          /**
-           * 更新时间
-           */
-          updateTime?: number;
-          /**
-           * 买家留言
-           */
-          remark?: string;
-          /**
-           * 发货间隔时间，单位：天
-           */
-          theDayOfDeliverGoodsTime?: number;
-          /**
-           * 非预售商品承诺发货时间点,即订单支付时间+承诺发货时间间隔
-           */
-          promiseTimeStampOfDelivery?: number;
-          /**
-           * 活动类型
-           */
-          activityType?: number;
-          /**
-           * 分销类型 0-全部 1-普通订单 2-分销订单
-           */
-          cpsType?: number;
-          /**
-           * 预售发货时间/承诺发货时间
-           */
-          validPromiseShipmentTimeStamp?: number;
-          /**
-           * 预售：preSale 0：非预售 1:预售
-           */
-          preSale?: number;
-          /**
-           * 收货时间
-           */
-          recvTime?: number;
-          /**
-           * UNKNOWN = 0; JD = 1; RECHARGE_MOBILE = 2; // 券包 COUPON_PACKAGE = 3； // 话费充值 MI = 5; // 小米 CROSS_BORDER = 8; // 跨境
-           */
-          coType?: number;
-          /**
-           * 评价状态： 0未评价，1评价
-           */
-          commentStatus?: number;
-          /**
-           * 支付类型
-           */
-          payType?: number;
-          /**
-           * 风险Code码，10001=骗补订单，不建议商家发货
-           */
-          riskCode?: number;
-          /**
-           * 订单POI信息
-           */
-          orderPoiInfo?: {
-            /**
-             * POI的ID
-             */
-            poiId?: number;
-            /**
-             * POI的名称
-             */
-            name?: string;
-            /**
-             * POI的详细地址
-             */
-            address?: string;
-            [k: string]: unknown;
-          };
-          /**
-           * 店铺新客
-           */
-          shopNewBuyer?: boolean;
-          /**
-           * 平台新客
-           */
-          platformNewBuyer?: boolean;
-          /**
-           * 税费信息
-           */
-          orderTaxInfo?: {
-            /**
-             * 税费总金额
-             */
-            taxAmount?: number;
-            /**
-             * 卖家承担金额
-             */
-            sellerBearAmount?: number;
-            [k: string]: unknown;
-          };
-          /**
-           * 支付方式
-           */
-          payChannel?: string;
-          /**
-           * 商家报备延迟审核之后发货时间
-           */
-          sellerDelayPromiseTimeStamp?: number;
-          [k: string]: unknown;
-        };
-        /**
-         * 订单商品信息
-         */
-        orderItemInfo?: {
-          /**
-           * 快手商品skuid
-           */
-          skuId?: number;
-          /**
-           * 服务商商品skuid
-           */
-          relSkuId?: number;
-          /**
-           * sku商品规格快照
-           */
-          skuDesc?: string;
-          /**
-           * sku编码
-           */
-          skuNick?: string;
-          /**
-           * 商品id
-           */
-          itemId?: number;
-          /**
-           * 服务商商品id
-           */
-          relItemId?: number;
-          /**
-           * 商品名称
-           */
-          itemTitle?: string;
-          /**
-           * 商品链接
-           */
-          itemLinkUrl?: string;
-          /**
-           * 商品图片地址
-           */
-          itemPicUrl?: string;
-          /**
-           * sku数量
-           */
-          num?: number;
-          /**
-           * 商品促销前单价快照 以分为单位
-           */
-          originalPrice?: number;
-          /**
-           * 折扣金额
-           */
-          discountFee?: number;
-          /**
-           * 商品单价快照，以分为单位
-           */
-          price?: number;
-          /**
-           * 1自建商品 2 闪电购商品
-           */
-          itemType?: number;
-          /**
-           * sku修改之前原商品信息
-           */
-          itemPrevInfo?: {
-            /**
-             * 商品skuId
-             */
-            skuId?: number;
-            /**
-             * 服务商skuId
-             */
-            relSkuId?: number;
-            /**
-             * sku描述信息
-             */
-            skuDesc?: string;
-            /**
-             * sku编码
-             */
-            skuNick?: string;
-            [k: string]: unknown;
-          };
-          /**
-           * 外部货品编码
-           */
-          goodsCode?: string;
-          /**
-           * 快手仓库编码
-           */
-          warehouseCode?: string;
-          /**
-           * 订单商品id，原有的id历史字段。商品id请使用itemId
-           */
-          orderItemId?: number;
-          /**
-           * 电子凭证券码库ID
-           */
-          goodStoreCode?: number;
-          /**
-           * 服务信息
-           */
-          serviceInfo?: {
-            /**
-             * 服务标签
-             */
-            serviceRule?: string;
-            /**
-             * 是否使用运费险
-             */
-            freight?: boolean;
-            /**
-             * 运费险提供者类型
-             */
-            freightProviderType?: number;
-            /**
-             * 首单保障
-             */
-            firstOrderGuarantee?: boolean;
-            /**
-             * 急速发货 1是 0否
-             */
-            instantDelivery?: number;
-            /**
-             * 急速退款
-             */
-            instantRefund?: boolean;
-            /**
-             * 假一赔N
-             */
-            compensateFake?: {
-              /**
-               * 赔付倍数
-               */
-              times?: number;
-              /**
-               * 假一赔N描述
-               */
-              desc?: string;
-              /**
-               * 假一赔N链接
-               */
-              link?: string;
-              [k: string]: unknown;
-            };
-            /**
-             * 服务规则
-             */
-            serviceRuleInfo?: {
-              /**
-               *  保证金 0 未交 1 已交
-               */
-              depositRule?: string;
-              /**
-               * 退款规则 1 7日无理由退换货 2 3 协商退款
-               */
-              refundRule?: string;
-              /**
-               * 发货间隔时间（单位：秒），为预售单的发货时间间隔，若不是预售单，返回值为0
-               */
-              deliverGoodsIntervalTime?: number;
-              /**
-               * 发货间隔时间（单位：天），为预售单的发货时间间隔，若不是预售单，返回值为0
-               */
-              theDayOfDeliverGoodsTime?: number;
-              /**
-               * 预售标志,true: 非预售,false: 预售
-               */
-              saleFlag?: boolean;
-              /**
-               * 承诺发货时间(单位为s),24/48/72小时,-1表示不承诺
-               */
-              promiseDeliveryTime?: number;
-              /**
-               * 发货方式 logistics：物流配送（默认） certificate：电子凭证
-               */
-              deliveryMethod?: string;
-              /**
-               * 是否支持核销 0：不支持 1：支持 -1：未设置
-               */
-              supportVerification?: number;
-              /**
-               * 电子凭证码商
-               */
-              certMerchantCode?: string;
-              /**
-               * 电子凭证有效期类型
-               */
-              certExpireType?: number;
-              /**
-               * 电子凭证起始时间
-               */
-              certStartTime?: number;
-              /**
-               * 电子凭证截止时间
-               */
-              certEndTime?: number;
-              /**
-               * 电子凭证有效天数
-               */
-              certExpDays?: number;
-              [k: string]: unknown;
-            };
-            [k: string]: unknown;
-          };
-          /**
-           * 扩展信息
-           */
-          itemExtra?: {
-            /**
-             * 类目信息
-             */
-            categoryInfo?: {
-              /**
-               * 类目id
-               */
-              itemCid?: number;
-              /**
-               * 名称
-               */
-              categoryName?: string;
-              [k: string]: unknown;
-            };
-            [k: string]: unknown;
-          };
-          [k: string]: unknown;
-        };
-        /**
-         * 订单退款信息，按照创建时间逆序，最新的在第一个
-         */
-        orderRefundList?: {
-          /**
-           * 退款id
-           */
-          refundId?: number;
-          /**
-           * 退款状态 枚举：[10, "买家仅退款申请"] [11, "买家退货退款申请"] [20, "平台介入-买家仅退款申请"] [21, "平台介入-买家退货退款申请"] [22, "平台介入-已确认退货退款"] [30, "商品回寄信息待买家更新"] [40, "商品回寄信息待卖家确认"] [50, "退款执行中"] [60, "退款成功"] [70, "退款失败"]
-           */
-          refundStatus?: number;
-          [k: string]: unknown;
-        }[];
-        /**
-         * 订单物流信息
-         */
-        orderLogisticsInfo?: {
-          /**
-           * 快递单号
-           */
-          expressNo?: string;
-          /**
-           * 快递公司code
-           */
-          expressCode?: number;
-          [k: string]: unknown;
-        }[];
-        /**
-         * 订单备注，按照创建时间正序，最新的在最后一个
-         */
-        orderNote?: {
-          /**
-           * 卖家备注
-           */
-          sellerNote?: string[];
-          [k: string]: unknown;
-        };
-        /**
-         * 订单地址信息
-         */
-        orderAddress?: {
-          /**
-           * 收货人名称
-           */
-          consignee?: string;
-          /**
-           * 收货人名称加密
-           */
-          encryptedConsignee?: string;
-          /**
-           * 收货人脱敏
-           */
-          desensitiseConsignee?: string;
-          /**
-           * 收货人手机
-           */
-          mobile?: string;
-          /**
-           * 手机号加密
-           */
-          encryptedMobile?: string;
-          /**
-           * 手机号脱敏
-           */
-          desensitiseMobile?: string;
-          /**
-           * 收货省份编码
-           */
-          provinceCode?: number;
-          /**
-           * 收货省
-           */
-          province?: string;
-          /**
-           * 收货城市编码
-           */
-          cityCode?: number;
-          /**
-           * 收货城市
-           */
-          city?: string;
-          /**
-           * 收货街道编码
-           */
-          districtCode?: number;
-          /**
-           * 收货街道
-           */
-          district?: string;
-          /**
-           * 详细地址
-           */
-          address?: string;
-          /**
-           * 详细地址加密
-           */
-          encryptedAddress?: string;
-          /**
-           * 详细地址脱敏
-           */
-          desensitiseAddress?: string;
-          /**
-           * 虚拟商品充值信息
-           */
-          rechargeAccount?: {
-            /**
-             * 手机号
-             */
-            account?: string;
-            /**
-             * 账号类型 1 手机号 2 QQ号 3 微信号
-             */
-            accountType?: number;
-            /**
-             * 账号类型说明
-             */
-            accountTypeDesc?: string;
-            [k: string]: unknown;
-          };
-          [k: string]: unknown;
-        };
-        /**
-         * 订单插旗
-         */
-        orderFlag?: {
-          /**
-           * 插旗颜色
-           */
-          flag?: string[];
-          [k: string]: unknown;
-        };
-        /**
-         * 订单阶段信息
-         */
-        orderStepInfo?: {
-          /**
-           * 阶段信息
-           */
-          orderPaymentStatus?: {
-            /**
-             * 阶段支付类型，1定金预售
-             */
-            payStepType?: number;
-            /**
-             * 阶段支付状态，阶段支付类型+1+阶段一状态+2+阶段二状态拼接（1+1+30+2+30）
-             */
-            orderPayStatus?: number;
-            [k: string]: unknown;
-          };
-          /**
-           * 分阶段详情
-           */
-          orderPaymentSteps?: {
-            /**
-             * 唯一ID
-             */
-            id?: number;
-            /**
-             * 阶段支付类型，1定金预售
-             */
-            payStepType?: number;
-            /**
-             * 阶段编号，定金预售场景下：1定金，2尾款
-             */
-            payStepNo?: number;
-            /**
-             * 阶段名称
-             */
-            payStepName?: string;
-            /**
-             * 阶段状态:5初始化，10提单待支付、30已支付、80已关闭、90已退款
-             */
-            payStepStatus?: number;
-            /**
-             * 单价
-             */
-            stepPrice?: number;
-            /**
-             * 数量
-             */
-            skuNum?: number;
-            /**
-             * 总价 stepTotalPrice= stepPrice*skuNum
-             */
-            stepTotalPrice?: number;
-            /**
-             * 优惠金额（分）
-             */
-            discountFee?: number;
-            /**
-             * 邮费（分）
-             */
-            expressFee?: number;
-            /**
-             * 支付金额（分）
-             */
-            paymentFee?: number;
-            /**
-             * 支付时间
-             */
-            payTime?: number;
-            /**
-             * 支付渠道描述
-             */
-            payChannelDesc?: string;
-            /**
-             * 支付开始时间
-             */
-            startPayTime?: number;
-            /**
-             * 支付结束时间
-             */
-            endPayTime?: number;
-            [k: string]: unknown;
-          }[];
-          [k: string]: unknown;
-        };
-        /**
-         * 定制信息
-         */
-        orderCustomizedInfo?: {
-          /**
-           * 定制商品类型
-           */
-          customizedItemType?: number;
-          /**
-           * 定制成功链接
-           */
-          customizedUrl?: string;
-          /**
-           * 定制成功编码
-           */
-          customizedCode?: string;
-          [k: string]: unknown;
-        };
-        /**
-         * 分销信息
-         */
-        orderCpsInfo?: {
-          /**
-           * 分销ID
-           */
-          distributorId?: number;
-          /**
-           * 分销名
-           */
-          distributorName?: string;
-          [k: string]: unknown;
-        };
-        [k: string]: unknown;
-      };
-      [k: string]: unknown;
-    };
-    [k: string]: unknown;
-  };
-  /**
    * 查询快赚客拉新推广效果趋势数据
    */
   "open.distribution.cps.kwaimoney.new.promotion.effect.trend": {
@@ -9478,56 +9597,6 @@ export interface ApiDeclaration {
     [k: string]: unknown;
   };
   /**
-   * 更新快赚客推广位
-   */
-  "open.distribution.cps.kwaimoney.pid.update": {
-    /**
-     * API入参
-     */
-    request: {
-      /**
-       * 推广位名称
-       */
-      promotionBitName: string;
-      /**
-       * cps pid
-       */
-      cpsPid: string;
-      [k: string]: unknown;
-    };
-    /**
-     * API出参
-     */
-    response: {
-      /**
-       * 主返回码
-       */
-      code?: string;
-      /**
-       * 主返回信息
-       */
-      msg?: string;
-      /**
-       * 子返回码
-       */
-      sub_code?: string;
-      /**
-       * 子返回信息
-       */
-      sub_msg?: string;
-      /**
-       * 结果状态，1-成功
-       */
-      result?: number;
-      /**
-       * 错误描述
-       */
-      error_msg?: string;
-      [k: string]: unknown;
-    };
-    [k: string]: unknown;
-  };
-  /**
    * 查询快赚客推广位
    */
   "open.distribution.cps.kwaimoney.pid.list": {
@@ -9809,6 +9878,56 @@ export interface ApiDeclaration {
         pcursor: string;
         [k: string]: unknown;
       };
+      [k: string]: unknown;
+    };
+    [k: string]: unknown;
+  };
+  /**
+   * 更新快赚客推广位
+   */
+  "open.distribution.cps.kwaimoney.pid.update": {
+    /**
+     * API入参
+     */
+    request: {
+      /**
+       * 推广位名称
+       */
+      promotionBitName: string;
+      /**
+       * cps pid
+       */
+      cpsPid: string;
+      [k: string]: unknown;
+    };
+    /**
+     * API出参
+     */
+    response: {
+      /**
+       * 主返回码
+       */
+      code?: string;
+      /**
+       * 主返回信息
+       */
+      msg?: string;
+      /**
+       * 子返回码
+       */
+      sub_code?: string;
+      /**
+       * 子返回信息
+       */
+      sub_msg?: string;
+      /**
+       * 结果状态，1-成功
+       */
+      result?: number;
+      /**
+       * 错误描述
+       */
+      error_msg?: string;
       [k: string]: unknown;
     };
     [k: string]: unknown;
@@ -10170,6 +10289,232 @@ export interface ApiDeclaration {
     [k: string]: unknown;
   };
   /**
+   * 分销团长订单详情
+   */
+  "open.distribution.cps.leader.order.detail": {
+    /**
+     * API入参
+     */
+    request: {
+      /**
+       * 订单ID
+       */
+      oid: number;
+      /**
+       * 卖家ID
+       */
+      sellerId: number;
+      /**
+       * 资金流转类型 [1:服务费收入订单] [2:服务费支出订单]
+       */
+      fundType?: number;
+      [k: string]: unknown;
+    };
+    /**
+     * API出参
+     */
+    response: {
+      /**
+       * 主返回码
+       */
+      code?: string;
+      /**
+       * 主返回信息
+       */
+      msg?: string;
+      /**
+       * 子返回码
+       */
+      sub_code?: string;
+      /**
+       * 子返回信息
+       */
+      sub_msg?: string;
+      /**
+       * 返回码，1成功
+       */
+      result?: number;
+      /**
+       * 错误信息
+       */
+      error_msg?: string;
+      /**
+       * 订单信息
+       */
+      data?: {
+        /**
+         * 订单ID
+         */
+        oid?: number;
+        /**
+         * 团长id
+         */
+        activityUserId?: number;
+        /**
+         * 活动id
+         */
+        activityId?: number;
+        /**
+         * 分销订单状态 [0:全部订单] [30:已付款] [50:已收货] [60:已结算] [80:已失效]
+         */
+        cpsOrderStatus?: number;
+        /**
+         * 订单创建时间(毫秒)
+         */
+        orderCreateTime?: number;
+        /**
+         * 订单交易总金额
+         */
+        orderTradeAmount?: number;
+        /**
+         * 付款金额
+         */
+        payAmount?: number;
+        /**
+         * 团长服务费比例(千分比)
+         */
+        regimentalPromotionRate?: number;
+        /**
+         * 服务费， 单位（万分之一分， eg：10000是1分）
+         */
+        regimentalPromotionAmount?: number;
+        /**
+         * 商品信息
+         */
+        cpsOrderProductView?: {
+          /**
+           * 订单Id
+           */
+          oid?: number;
+          /**
+           * 商品id
+           */
+          itemId?: number;
+          /**
+           * 商品标题
+           */
+          itemTitle?: string;
+          /**
+           * 商品单价快照(分)
+           */
+          itemPrice?: number;
+          /**
+           * 商家Id
+           */
+          sellerId?: number;
+          /**
+           * 商家昵称快照
+           */
+          sellerNickName?: string;
+          /**
+           * skuId
+           */
+          skuId?: number;
+          [k: string]: unknown;
+        }[];
+        /**
+         * 创建时间(毫秒)
+         */
+        createTime?: number;
+        /**
+         * 更新时间(毫秒)
+         */
+        updateTime?: number;
+        /**
+         * 订单发货时间(毫秒）
+         */
+        sendTime?: number;
+        /**
+         * 订单发货状态1-已发货，0-未发货
+         */
+        sendStatus?: number;
+        /**
+         * 订单收货时间（毫秒）
+         */
+        recvTime?: number;
+        /**
+         * 推广者ID
+         */
+        promotionId?: number;
+        /**
+         * 推广者昵称
+         */
+        promotionNickName?: string;
+        /**
+         * 推广者类型 0-无，1-达人推广，2-团长推广
+         */
+        promotionType?: number;
+        /**
+         * 结算金额 分（不包含二级团长）
+         */
+        settlementAmount?: number;
+        /**
+         * 结算时间
+         */
+        settlementTime?: number;
+        /**
+         * 结算成功时间(毫秒)
+         */
+        settlementSuccessTime?: number;
+        /**
+         * 买家唯一识别ID
+         */
+        buyerOpenId?: string;
+        /**
+         * 推广者快手号
+         */
+        promotionKwaiId?: string;
+        /**
+         * 支出结算金额 分
+         */
+        expendRegimentalSettleAmount?: number;
+        /**
+         * 预估 支出结算金额 千分之一分
+         */
+        expendEstimateSettleAmount?: number;
+        /**
+         * 支出服务费比例 千分比
+         */
+        expendRegimentalPromotionRate?: number;
+        /**
+         * 计佣基数（分）
+         */
+        baseAmount?: number;
+        /**
+         * 分成比例（千分比），100->10%,如果该返回值为“计算中”，请等待服务器计算完成，重新请求
+         */
+        shareRateStr?: string;
+        /**
+         * 奖励服务费收入（分）
+         */
+        excitationInCome?: number;
+        /**
+         * 接单服务费收入（分）
+         */
+        serviceIncome?: number;
+        /**
+         * 订单业务结算类型
+         */
+        settlementBizType?: number;
+        /**
+         * 资金流转类型 [1:服务费收入订单] [2:服务费支出订单]
+         */
+        fundType?: number;
+        /**
+         * 快赚客id
+         */
+        kwaimoneyUserId?: number;
+        /**
+         * 快赚客昵称
+         */
+        kwaimoneyUserNickName?: string;
+        [k: string]: unknown;
+      }[];
+      [k: string]: unknown;
+    };
+    [k: string]: unknown;
+  };
+  /**
    * 分销团长订单列表(游标方式)
    */
   "open.distribution.cps.leader.order.cursor.list": {
@@ -10430,232 +10775,6 @@ export interface ApiDeclaration {
     [k: string]: unknown;
   };
   /**
-   * 分销团长订单详情
-   */
-  "open.distribution.cps.leader.order.detail": {
-    /**
-     * API入参
-     */
-    request: {
-      /**
-       * 订单ID
-       */
-      oid: number;
-      /**
-       * 卖家ID
-       */
-      sellerId: number;
-      /**
-       * 资金流转类型 [1:服务费收入订单] [2:服务费支出订单]
-       */
-      fundType?: number;
-      [k: string]: unknown;
-    };
-    /**
-     * API出参
-     */
-    response: {
-      /**
-       * 主返回码
-       */
-      code?: string;
-      /**
-       * 主返回信息
-       */
-      msg?: string;
-      /**
-       * 子返回码
-       */
-      sub_code?: string;
-      /**
-       * 子返回信息
-       */
-      sub_msg?: string;
-      /**
-       * 返回码，1成功
-       */
-      result?: number;
-      /**
-       * 错误信息
-       */
-      error_msg?: string;
-      /**
-       * 订单信息
-       */
-      data?: {
-        /**
-         * 订单ID
-         */
-        oid?: number;
-        /**
-         * 团长id
-         */
-        activityUserId?: number;
-        /**
-         * 活动id
-         */
-        activityId?: number;
-        /**
-         * 分销订单状态 [0:全部订单] [30:已付款] [50:已收货] [60:已结算] [80:已失效]
-         */
-        cpsOrderStatus?: number;
-        /**
-         * 订单创建时间(毫秒)
-         */
-        orderCreateTime?: number;
-        /**
-         * 订单交易总金额
-         */
-        orderTradeAmount?: number;
-        /**
-         * 付款金额
-         */
-        payAmount?: number;
-        /**
-         * 团长服务费比例(千分比)
-         */
-        regimentalPromotionRate?: number;
-        /**
-         * 服务费， 单位（万分之一分， eg：10000是1分）
-         */
-        regimentalPromotionAmount?: number;
-        /**
-         * 商品信息
-         */
-        cpsOrderProductView?: {
-          /**
-           * 订单Id
-           */
-          oid?: number;
-          /**
-           * 商品id
-           */
-          itemId?: number;
-          /**
-           * 商品标题
-           */
-          itemTitle?: string;
-          /**
-           * 商品单价快照(分)
-           */
-          itemPrice?: number;
-          /**
-           * 商家Id
-           */
-          sellerId?: number;
-          /**
-           * 商家昵称快照
-           */
-          sellerNickName?: string;
-          /**
-           * skuId
-           */
-          skuId?: number;
-          [k: string]: unknown;
-        }[];
-        /**
-         * 创建时间(毫秒)
-         */
-        createTime?: number;
-        /**
-         * 更新时间(毫秒)
-         */
-        updateTime?: number;
-        /**
-         * 订单发货时间(毫秒）
-         */
-        sendTime?: number;
-        /**
-         * 订单发货状态1-已发货，0-未发货
-         */
-        sendStatus?: number;
-        /**
-         * 订单收货时间（毫秒）
-         */
-        recvTime?: number;
-        /**
-         * 推广者ID
-         */
-        promotionId?: number;
-        /**
-         * 推广者昵称
-         */
-        promotionNickName?: string;
-        /**
-         * 推广者类型 0-无，1-达人推广，2-团长推广
-         */
-        promotionType?: number;
-        /**
-         * 结算金额 分（不包含二级团长）
-         */
-        settlementAmount?: number;
-        /**
-         * 结算时间
-         */
-        settlementTime?: number;
-        /**
-         * 结算成功时间(毫秒)
-         */
-        settlementSuccessTime?: number;
-        /**
-         * 买家唯一识别ID
-         */
-        buyerOpenId?: string;
-        /**
-         * 推广者快手号
-         */
-        promotionKwaiId?: string;
-        /**
-         * 支出结算金额 分
-         */
-        expendRegimentalSettleAmount?: number;
-        /**
-         * 预估 支出结算金额 千分之一分
-         */
-        expendEstimateSettleAmount?: number;
-        /**
-         * 支出服务费比例 千分比
-         */
-        expendRegimentalPromotionRate?: number;
-        /**
-         * 计佣基数（分）
-         */
-        baseAmount?: number;
-        /**
-         * 分成比例（千分比），100->10%,如果该返回值为“计算中”，请等待服务器计算完成，重新请求
-         */
-        shareRateStr?: string;
-        /**
-         * 奖励服务费收入（分）
-         */
-        excitationInCome?: number;
-        /**
-         * 接单服务费收入（分）
-         */
-        serviceIncome?: number;
-        /**
-         * 订单业务结算类型
-         */
-        settlementBizType?: number;
-        /**
-         * 资金流转类型 [1:服务费收入订单] [2:服务费支出订单]
-         */
-        fundType?: number;
-        /**
-         * 快赚客id
-         */
-        kwaimoneyUserId?: number;
-        /**
-         * 快赚客昵称
-         */
-        kwaimoneyUserNickName?: string;
-        [k: string]: unknown;
-      }[];
-      [k: string]: unknown;
-    };
-    [k: string]: unknown;
-  };
-  /**
    * 推广链接创建接口
    */
   "open.distribution.cps.link.create": {
@@ -10737,74 +10856,6 @@ export interface ApiDeclaration {
          * kwai url
          */
         kwaiUrl?: string;
-        [k: string]: unknown;
-      };
-      [k: string]: unknown;
-    };
-    [k: string]: unknown;
-  };
-  /**
-   * 推广位创建接口
-   */
-  "open.distribution.cps.pid.create": {
-    /**
-     * API入参
-     */
-    request: {
-      /**
-       * 推广位名称
-       */
-      promotionBitName: string;
-      [k: string]: unknown;
-    };
-    /**
-     * API出参
-     */
-    response: {
-      /**
-       * 主返回码
-       */
-      code?: string;
-      /**
-       * 主返回信息
-       */
-      msg?: string;
-      /**
-       * 子返回码
-       */
-      sub_code?: string;
-      /**
-       * 子返回信息
-       */
-      sub_msg?: string;
-      /**
-       * 返回码
-       */
-      result?: number;
-      /**
-       * 返回码描述
-       */
-      error_msg?: string;
-      /**
-       * 推广位数据
-       */
-      data?: {
-        /**
-         * 推广位pid
-         */
-        cpsPid?: string;
-        /**
-         * 创建时间
-         */
-        createTime?: number;
-        /**
-         * 推广位名称
-         */
-        promotionBitName?: string;
-        /**
-         * 推广位状态 1-已开启，2-已失效，3-已删除
-         */
-        status?: number;
         [k: string]: unknown;
       };
       [k: string]: unknown;
@@ -11004,6 +11055,74 @@ export interface ApiDeclaration {
          * 订单业务结算类型
          */
         settlementBizType?: number;
+        [k: string]: unknown;
+      };
+      [k: string]: unknown;
+    };
+    [k: string]: unknown;
+  };
+  /**
+   * 推广位创建接口
+   */
+  "open.distribution.cps.pid.create": {
+    /**
+     * API入参
+     */
+    request: {
+      /**
+       * 推广位名称
+       */
+      promotionBitName: string;
+      [k: string]: unknown;
+    };
+    /**
+     * API出参
+     */
+    response: {
+      /**
+       * 主返回码
+       */
+      code?: string;
+      /**
+       * 主返回信息
+       */
+      msg?: string;
+      /**
+       * 子返回码
+       */
+      sub_code?: string;
+      /**
+       * 子返回信息
+       */
+      sub_msg?: string;
+      /**
+       * 返回码
+       */
+      result?: number;
+      /**
+       * 返回码描述
+       */
+      error_msg?: string;
+      /**
+       * 推广位数据
+       */
+      data?: {
+        /**
+         * 推广位pid
+         */
+        cpsPid?: string;
+        /**
+         * 创建时间
+         */
+        createTime?: number;
+        /**
+         * 推广位名称
+         */
+        promotionBitName?: string;
+        /**
+         * 推广位状态 1-已开启，2-已失效，3-已删除
+         */
+        status?: number;
         [k: string]: unknown;
       };
       [k: string]: unknown;
@@ -11265,94 +11384,6 @@ export interface ApiDeclaration {
     [k: string]: unknown;
   };
   /**
-   * 获取品牌好货专题列表
-   */
-  "open.distribution.cps.promotion.brand.theme.list": {
-    /**
-     * API入参
-     */
-    request?: {
-      [k: string]: unknown;
-    };
-    /**
-     * API出参
-     */
-    response: {
-      /**
-       * 主返回码
-       */
-      code?: string;
-      /**
-       * 主返回信息
-       */
-      msg?: string;
-      /**
-       * 子返回码
-       */
-      sub_code?: string;
-      /**
-       * 子返回信息
-       */
-      sub_msg?: string;
-      /**
-       * 响应码
-       */
-      result?: number;
-      /**
-       * 响应信息
-       */
-      error_msg?: string;
-      /**
-       * 品牌好货响应信息
-       */
-      data?: {
-        /**
-         * 品牌好货专题列表
-         */
-        brandThemeList?: {
-          /**
-           * 子专题列表
-           */
-          subThemeInfoList?: {
-            /**
-             * 子专题名称
-             */
-            subThemeTitle: string;
-            /**
-             * 子专题ID
-             */
-            subThemeId: number;
-            [k: string]: unknown;
-          }[];
-          /**
-           * 专题图片
-           */
-          themeImg?: string;
-          /**
-           * 专题ID
-           */
-          themeId: number;
-          /**
-           * 专题类型
-           */
-          themeType?: number;
-          /**
-           * 专题名称
-           */
-          themeTitle: string;
-          [k: string]: unknown;
-        }[];
-        /**
-         * 分页游标
-         */
-        pcursor?: string;
-        [k: string]: unknown;
-      };
-      [k: string]: unknown;
-    };
-    [k: string]: unknown;
-  };
-  /**
    * 获取品牌好货品牌商品
    */
   "open.distribution.cps.promotion.brand.theme.item.list": {
@@ -11517,110 +11548,6 @@ export interface ApiDeclaration {
     [k: string]: unknown;
   };
   /**
-   * 获取推荐专题详细信息
-   */
-  "open.distribution.cps.promotion.reco.topic.info": {
-    /**
-     * API入参
-     */
-    request: {
-      /**
-       * 专题ID
-       */
-      topicId?: number;
-      [k: string]: unknown;
-    };
-    /**
-     * API出参
-     */
-    response: {
-      /**
-       * 主返回码
-       */
-      code?: string;
-      /**
-       * 主返回信息
-       */
-      msg?: string;
-      /**
-       * 子返回码
-       */
-      sub_code?: string;
-      /**
-       * 子返回信息
-       */
-      sub_msg?: string;
-      /**
-       * 返回码，1成功
-       */
-      result?: number;
-      /**
-       * 错误信息
-       */
-      error_msg?: string;
-      /**
-       * 推荐专题详细信息
-       */
-      data?: {
-        /**
-         * 商品数量
-         */
-        totalCount?: number;
-        /**
-         * 专题名称
-         */
-        topicName?: string;
-        /**
-         * 专题图片
-         */
-        topicImg?: string;
-        /**
-         * 子主题信息列表
-         */
-        subTopicList?: {
-          /**
-           * 子主题ID
-           */
-          subTopicId?: number;
-          /**
-           * 子主题名称
-           */
-          subTopicName?: string;
-          [k: string]: unknown;
-        }[];
-        /**
-         * 距离下次更新剩余时间
-         */
-        updateTimeAway?: number;
-        /**
-         * 专题ID
-         */
-        topicId?: number;
-        /**
-         * 频道信息列表
-         */
-        channelList?: {
-          /**
-           * 频道名称
-           */
-          channelName?: string;
-          /**
-           * 频道ID
-           */
-          channelId?: number;
-          [k: string]: unknown;
-        }[];
-        /**
-         * 专题类型，1：商品；2：卖家
-         */
-        topicType?: number;
-        [k: string]: unknown;
-      };
-      [k: string]: unknown;
-    };
-    [k: string]: unknown;
-  };
-  /**
    * 获取推荐专题商品列表
    */
   "open.distribution.cps.promotion.reco.topic.item.list": {
@@ -11763,6 +11690,110 @@ export interface ApiDeclaration {
     [k: string]: unknown;
   };
   /**
+   * 获取推荐专题详细信息
+   */
+  "open.distribution.cps.promotion.reco.topic.info": {
+    /**
+     * API入参
+     */
+    request: {
+      /**
+       * 专题ID
+       */
+      topicId?: number;
+      [k: string]: unknown;
+    };
+    /**
+     * API出参
+     */
+    response: {
+      /**
+       * 主返回码
+       */
+      code?: string;
+      /**
+       * 主返回信息
+       */
+      msg?: string;
+      /**
+       * 子返回码
+       */
+      sub_code?: string;
+      /**
+       * 子返回信息
+       */
+      sub_msg?: string;
+      /**
+       * 返回码，1成功
+       */
+      result?: number;
+      /**
+       * 错误信息
+       */
+      error_msg?: string;
+      /**
+       * 推荐专题详细信息
+       */
+      data?: {
+        /**
+         * 商品数量
+         */
+        totalCount?: number;
+        /**
+         * 专题名称
+         */
+        topicName?: string;
+        /**
+         * 专题图片
+         */
+        topicImg?: string;
+        /**
+         * 子主题信息列表
+         */
+        subTopicList?: {
+          /**
+           * 子主题ID
+           */
+          subTopicId?: number;
+          /**
+           * 子主题名称
+           */
+          subTopicName?: string;
+          [k: string]: unknown;
+        }[];
+        /**
+         * 距离下次更新剩余时间
+         */
+        updateTimeAway?: number;
+        /**
+         * 专题ID
+         */
+        topicId?: number;
+        /**
+         * 频道信息列表
+         */
+        channelList?: {
+          /**
+           * 频道名称
+           */
+          channelName?: string;
+          /**
+           * 频道ID
+           */
+          channelId?: number;
+          [k: string]: unknown;
+        }[];
+        /**
+         * 专题类型，1：商品；2：卖家
+         */
+        topicType?: number;
+        [k: string]: unknown;
+      };
+      [k: string]: unknown;
+    };
+    [k: string]: unknown;
+  };
+  /**
    * 获取推荐专题列表
    */
   "open.distribution.cps.promotion.reco.topic.list": {
@@ -11818,6 +11849,170 @@ export interface ApiDeclaration {
         topicId?: number;
         [k: string]: unknown;
       }[];
+      [k: string]: unknown;
+    };
+    [k: string]: unknown;
+  };
+  /**
+   * 获取推荐专题商家列表
+   */
+  "open.distribution.cps.promotion.reco.topic.seller.list": {
+    /**
+     * API入参
+     */
+    request: {
+      /**
+       * 子主题ID
+       */
+      themeId?: number;
+      /**
+       * 游标
+       */
+      pcursor?: string;
+      /**
+       * 主题ID
+       */
+      topicId?: number;
+      /**
+       * 频道ID
+       */
+      channelId?: number;
+      [k: string]: unknown;
+    };
+    /**
+     * API出参
+     */
+    response: {
+      /**
+       * 主返回码
+       */
+      code?: string;
+      /**
+       * 主返回信息
+       */
+      msg?: string;
+      /**
+       * 子返回码
+       */
+      sub_code?: string;
+      /**
+       * 子返回信息
+       */
+      sub_msg?: string;
+      /**
+       * 返回码，1成功
+       */
+      result?: number;
+      /**
+       * 错误信息
+       */
+      error_msg?: string;
+      /**
+       * 商家信息
+       */
+      data?: {
+        /**
+         * 商家列表
+         */
+        sellerList?: {
+          /**
+           * 小店星级
+           */
+          shopStar?: string;
+          /**
+           * 店铺ID
+           */
+          shopId?: number;
+          /**
+           * 店铺Icon链接
+           */
+          shopIconUrl?: string;
+          /**
+           * 店铺名称
+           */
+          shopName?: string;
+          /**
+           * 商品销量Top商品
+           */
+          simpleItemInfoList?: {
+            /**
+             * 频道ID列表
+             */
+            channelIds: number[];
+            /**
+             * 30天销量
+             */
+            salesTip: number;
+            /**
+             * 商品价格（分）
+             */
+            goodsPrice: number;
+            /**
+             * 商品详情图，仅在获取详情接口时返回
+             */
+            itemDescUrls: string[];
+            /**
+             * 商品ID
+             */
+            goodsId: number;
+            /**
+             * 轮播图列表，仅在获取详情接口时返回
+             */
+            goodsGalleryUrls: string[];
+            /**
+             * 佣金率（千分比）
+             */
+            promotionRate: number;
+            /**
+             * 商品描述
+             */
+            goodsDesc: string;
+            /**
+             * 推广预估佣金（分）
+             */
+            promotionAmount: number;
+            /**
+             * 运费id
+             */
+            expressId: number;
+            /**
+             * 商品图片链接
+             */
+            goodsImageUrl: string;
+            /**
+             * 类目id
+             */
+            categoryId: number;
+            /**
+             * 商品标题
+             */
+            goodsTitle: string;
+            /**
+             * 卖家id
+             */
+            mallId: number;
+            /**
+             * 店铺类型（列表接口下无数据）：0-未知，1-旗舰店，2-专门店，3-专营店，4-卖场旗舰店，5-普通企业店，6-个人店，7-个体工商户
+             */
+            mallType: number;
+            /**
+             * 店铺名称
+             */
+            mallName: string;
+            /**
+             * 折扣价
+             */
+            zkGoodsPrice: number;
+            [k: string]: unknown;
+          }[];
+          [k: string]: unknown;
+        }[];
+        /**
+         * 游标
+         */
+        pcursor?: string;
+        [k: string]: unknown;
+      };
       [k: string]: unknown;
     };
     [k: string]: unknown;
@@ -12091,170 +12286,6 @@ export interface ApiDeclaration {
     [k: string]: unknown;
   };
   /**
-   * 获取推荐专题商家列表
-   */
-  "open.distribution.cps.promotion.reco.topic.seller.list": {
-    /**
-     * API入参
-     */
-    request: {
-      /**
-       * 子主题ID
-       */
-      themeId?: number;
-      /**
-       * 游标
-       */
-      pcursor?: string;
-      /**
-       * 主题ID
-       */
-      topicId?: number;
-      /**
-       * 频道ID
-       */
-      channelId?: number;
-      [k: string]: unknown;
-    };
-    /**
-     * API出参
-     */
-    response: {
-      /**
-       * 主返回码
-       */
-      code?: string;
-      /**
-       * 主返回信息
-       */
-      msg?: string;
-      /**
-       * 子返回码
-       */
-      sub_code?: string;
-      /**
-       * 子返回信息
-       */
-      sub_msg?: string;
-      /**
-       * 返回码，1成功
-       */
-      result?: number;
-      /**
-       * 错误信息
-       */
-      error_msg?: string;
-      /**
-       * 商家信息
-       */
-      data?: {
-        /**
-         * 商家列表
-         */
-        sellerList?: {
-          /**
-           * 小店星级
-           */
-          shopStar?: string;
-          /**
-           * 店铺ID
-           */
-          shopId?: number;
-          /**
-           * 店铺Icon链接
-           */
-          shopIconUrl?: string;
-          /**
-           * 店铺名称
-           */
-          shopName?: string;
-          /**
-           * 商品销量Top商品
-           */
-          simpleItemInfoList?: {
-            /**
-             * 频道ID列表
-             */
-            channelIds: number[];
-            /**
-             * 30天销量
-             */
-            salesTip: number;
-            /**
-             * 商品价格（分）
-             */
-            goodsPrice: number;
-            /**
-             * 商品详情图，仅在获取详情接口时返回
-             */
-            itemDescUrls: string[];
-            /**
-             * 商品ID
-             */
-            goodsId: number;
-            /**
-             * 轮播图列表，仅在获取详情接口时返回
-             */
-            goodsGalleryUrls: string[];
-            /**
-             * 佣金率（千分比）
-             */
-            promotionRate: number;
-            /**
-             * 商品描述
-             */
-            goodsDesc: string;
-            /**
-             * 推广预估佣金（分）
-             */
-            promotionAmount: number;
-            /**
-             * 运费id
-             */
-            expressId: number;
-            /**
-             * 商品图片链接
-             */
-            goodsImageUrl: string;
-            /**
-             * 类目id
-             */
-            categoryId: number;
-            /**
-             * 商品标题
-             */
-            goodsTitle: string;
-            /**
-             * 卖家id
-             */
-            mallId: number;
-            /**
-             * 店铺类型（列表接口下无数据）：0-未知，1-旗舰店，2-专门店，3-专营店，4-卖场旗舰店，5-普通企业店，6-个人店，7-个体工商户
-             */
-            mallType: number;
-            /**
-             * 店铺名称
-             */
-            mallName: string;
-            /**
-             * 折扣价
-             */
-            zkGoodsPrice: number;
-            [k: string]: unknown;
-          }[];
-          [k: string]: unknown;
-        }[];
-        /**
-         * 游标
-         */
-        pcursor?: string;
-        [k: string]: unknown;
-      };
-      [k: string]: unknown;
-    };
-    [k: string]: unknown;
-  };
-  /**
    * 删除达人
    */
   "open.distribution.distribution.plan.delete.promoter": {
@@ -12316,52 +12347,6 @@ export interface ApiDeclaration {
        * 活动ID
        */
       activityId: number;
-      [k: string]: unknown;
-    };
-    /**
-     * API出参
-     */
-    response: {
-      /**
-       * 主返回码
-       */
-      code?: string;
-      /**
-       * 主返回信息
-       */
-      msg?: string;
-      /**
-       * 子返回码
-       */
-      sub_code?: string;
-      /**
-       * 子返回信息
-       */
-      sub_msg?: string;
-      /**
-       * 返回码，1成功
-       */
-      result?: number;
-      /**
-       * 错误信息
-       */
-      error_msg?: string;
-      [k: string]: unknown;
-    };
-    [k: string]: unknown;
-  };
-  /**
-   * 团长删除招商活动
-   */
-  "open.distribution.investment.activity.open.delete": {
-    /**
-     * API入参
-     */
-    request: {
-      /**
-       * 活动ID
-       */
-      activityId?: number;
       [k: string]: unknown;
     };
     /**
@@ -12555,25 +12540,17 @@ export interface ApiDeclaration {
     [k: string]: unknown;
   };
   /**
-   * 团长审核活动报名商品
+   * 团长删除招商活动
    */
-  "open.distribution.investment.activity.open.item.audit": {
+  "open.distribution.investment.activity.open.delete": {
     /**
      * API入参
      */
     request: {
       /**
-       * 审核状态，2：通过；3：不通过
-       */
-      itemAuditStatus: number;
-      /**
-       * 商品ID列表
-       */
-      itemId: number[];
-      /**
        * 活动ID
        */
-      activityId: number;
+      activityId?: number;
       [k: string]: unknown;
     };
     /**
@@ -12708,6 +12685,60 @@ export interface ApiDeclaration {
        * 活动ID
        */
       data?: number;
+      [k: string]: unknown;
+    };
+    [k: string]: unknown;
+  };
+  /**
+   * 团长审核活动报名商品
+   */
+  "open.distribution.investment.activity.open.item.audit": {
+    /**
+     * API入参
+     */
+    request: {
+      /**
+       * 审核状态，2：通过；3：不通过
+       */
+      itemAuditStatus: number;
+      /**
+       * 商品ID列表
+       */
+      itemId: number[];
+      /**
+       * 活动ID
+       */
+      activityId: number;
+      [k: string]: unknown;
+    };
+    /**
+     * API出参
+     */
+    response: {
+      /**
+       * 主返回码
+       */
+      code?: string;
+      /**
+       * 主返回信息
+       */
+      msg?: string;
+      /**
+       * 子返回码
+       */
+      sub_code?: string;
+      /**
+       * 子返回信息
+       */
+      sub_msg?: string;
+      /**
+       * 返回码，1成功
+       */
+      result?: number;
+      /**
+       * 错误信息
+       */
+      error_msg?: string;
       [k: string]: unknown;
     };
     [k: string]: unknown;
@@ -12956,184 +12987,6 @@ export interface ApiDeclaration {
     [k: string]: unknown;
   };
   /**
-   * 招商活动推广效果
-   */
-  "open.distribution.investment.activity.open.promotion.effect": {
-    /**
-     * API入参
-     */
-    request: {
-      /**
-       * 分页游标
-       */
-      pageCursor?: number;
-      /**
-       * 商品ID
-       */
-      itemId?: number;
-      /**
-       * 活动ID
-       */
-      activityId: number;
-      /**
-       * 结束时间
-       */
-      endTime?: number;
-      /**
-       * 商品标题
-       */
-      itemTitle?: string;
-      /**
-       * 每页大小
-       */
-      pageSize: number;
-      [k: string]: unknown;
-    };
-    /**
-     * API出参
-     */
-    response: {
-      /**
-       * 主返回码
-       */
-      code?: string;
-      /**
-       * 主返回信息
-       */
-      msg?: string;
-      /**
-       * 子返回码
-       */
-      sub_code?: string;
-      /**
-       * 子返回信息
-       */
-      sub_msg?: string;
-      /**
-       * 返回码，1成功
-       */
-      result?: number;
-      /**
-       * 错误信息
-       */
-      error_msg?: string;
-      /**
-       * 响应数据
-       */
-      data?: {
-        /**
-         * 总数量
-         */
-        total?: number;
-        /**
-         * 数据更新时间
-         */
-        dateTime?: string;
-        /**
-         * 数据列表
-         */
-        investItem?: {
-          /**
-           * 类目名称
-           */
-          categoryName?: string;
-          /**
-           * 类目名称路径
-           */
-          categoryNamePath?: string[];
-          /**
-           * 商品ID
-           */
-          itemId?: number;
-          /**
-           * 预估佣金(分)
-           */
-          commissionAmount?: number;
-          /**
-           * 商品单价
-           */
-          itemPrice?: number;
-          /**
-           * GMV(分)
-           */
-          payOrderAmount?: number;
-          /**
-           * 库存
-           */
-          stockNum?: number;
-          /**
-           * 已结算笔数
-           */
-          settledOrderNum?: number;
-          /**
-           * 详情页UV
-           */
-          totalUv?: number;
-          /**
-           * 销量
-           */
-          volume?: number;
-          /**
-           * 团长服务费率(千分比)
-           */
-          investmentPromotionRate?: number;
-          /**
-           * 售价(分)
-           */
-          itemPriceFen?: number;
-          /**
-           * 类目ID
-           */
-          categoryId?: number;
-          /**
-           * 订单总数
-           */
-          payOrderNum?: number;
-          /**
-           * 已结算服务费(分)
-           */
-          settledTechServiceAmount?: number;
-          /**
-           * 商品图片链接
-           */
-          itemImgUrl?: string;
-          /**
-           * 类目id路径
-           */
-          categoryIdPath?: number[];
-          /**
-           * 活动ID
-           */
-          activityId?: number;
-          /**
-           * 技术服务费(分)
-           */
-          techServiceAmount?: number;
-          /**
-           * 佣金比率(千分比)
-           */
-          commissionRate?: number;
-          /**
-           * 已结算佣金(分)
-           */
-          settledCommissionAmount?: number;
-          /**
-           * 商品标题
-           */
-          itemTitle?: string;
-          /**
-           * 卖家ID
-           */
-          sellerId?: number;
-          [k: string]: unknown;
-        }[];
-        [k: string]: unknown;
-      };
-      [k: string]: unknown;
-    };
-    [k: string]: unknown;
-  };
-  /**
    * 获取活动详情
    */
   "open.distribution.investment.activity.open.info": {
@@ -13307,6 +13160,184 @@ export interface ApiDeclaration {
          * 更新时间
          */
         updateTime?: number;
+        [k: string]: unknown;
+      };
+      [k: string]: unknown;
+    };
+    [k: string]: unknown;
+  };
+  /**
+   * 招商活动推广效果
+   */
+  "open.distribution.investment.activity.open.promotion.effect": {
+    /**
+     * API入参
+     */
+    request: {
+      /**
+       * 分页游标
+       */
+      pageCursor?: number;
+      /**
+       * 商品ID
+       */
+      itemId?: number;
+      /**
+       * 活动ID
+       */
+      activityId: number;
+      /**
+       * 结束时间
+       */
+      endTime?: number;
+      /**
+       * 商品标题
+       */
+      itemTitle?: string;
+      /**
+       * 每页大小
+       */
+      pageSize: number;
+      [k: string]: unknown;
+    };
+    /**
+     * API出参
+     */
+    response: {
+      /**
+       * 主返回码
+       */
+      code?: string;
+      /**
+       * 主返回信息
+       */
+      msg?: string;
+      /**
+       * 子返回码
+       */
+      sub_code?: string;
+      /**
+       * 子返回信息
+       */
+      sub_msg?: string;
+      /**
+       * 返回码，1成功
+       */
+      result?: number;
+      /**
+       * 错误信息
+       */
+      error_msg?: string;
+      /**
+       * 响应数据
+       */
+      data?: {
+        /**
+         * 总数量
+         */
+        total?: number;
+        /**
+         * 数据更新时间
+         */
+        dateTime?: string;
+        /**
+         * 数据列表
+         */
+        investItem?: {
+          /**
+           * 类目名称
+           */
+          categoryName?: string;
+          /**
+           * 类目名称路径
+           */
+          categoryNamePath?: string[];
+          /**
+           * 商品ID
+           */
+          itemId?: number;
+          /**
+           * 预估佣金(分)
+           */
+          commissionAmount?: number;
+          /**
+           * 商品单价
+           */
+          itemPrice?: number;
+          /**
+           * GMV(分)
+           */
+          payOrderAmount?: number;
+          /**
+           * 库存
+           */
+          stockNum?: number;
+          /**
+           * 已结算笔数
+           */
+          settledOrderNum?: number;
+          /**
+           * 详情页UV
+           */
+          totalUv?: number;
+          /**
+           * 销量
+           */
+          volume?: number;
+          /**
+           * 团长服务费率(千分比)
+           */
+          investmentPromotionRate?: number;
+          /**
+           * 售价(分)
+           */
+          itemPriceFen?: number;
+          /**
+           * 类目ID
+           */
+          categoryId?: number;
+          /**
+           * 订单总数
+           */
+          payOrderNum?: number;
+          /**
+           * 已结算服务费(分)
+           */
+          settledTechServiceAmount?: number;
+          /**
+           * 商品图片链接
+           */
+          itemImgUrl?: string;
+          /**
+           * 类目id路径
+           */
+          categoryIdPath?: number[];
+          /**
+           * 活动ID
+           */
+          activityId?: number;
+          /**
+           * 技术服务费(分)
+           */
+          techServiceAmount?: number;
+          /**
+           * 佣金比率(千分比)
+           */
+          commissionRate?: number;
+          /**
+           * 已结算佣金(分)
+           */
+          settledCommissionAmount?: number;
+          /**
+           * 商品标题
+           */
+          itemTitle?: string;
+          /**
+           * 卖家ID
+           */
+          sellerId?: number;
+          [k: string]: unknown;
+        }[];
         [k: string]: unknown;
       };
       [k: string]: unknown;
@@ -13567,6 +13598,94 @@ export interface ApiDeclaration {
          * 链接
          */
         url?: string;
+        [k: string]: unknown;
+      };
+      [k: string]: unknown;
+    };
+    [k: string]: unknown;
+  };
+  /**
+   * 获取品牌好货专题列表
+   */
+  "open.distribution.cps.promotion.brand.theme.list": {
+    /**
+     * API入参
+     */
+    request?: {
+      [k: string]: unknown;
+    };
+    /**
+     * API出参
+     */
+    response: {
+      /**
+       * 主返回码
+       */
+      code?: string;
+      /**
+       * 主返回信息
+       */
+      msg?: string;
+      /**
+       * 子返回码
+       */
+      sub_code?: string;
+      /**
+       * 子返回信息
+       */
+      sub_msg?: string;
+      /**
+       * 响应码
+       */
+      result?: number;
+      /**
+       * 响应信息
+       */
+      error_msg?: string;
+      /**
+       * 品牌好货响应信息
+       */
+      data?: {
+        /**
+         * 品牌好货专题列表
+         */
+        brandThemeList?: {
+          /**
+           * 子专题列表
+           */
+          subThemeInfoList?: {
+            /**
+             * 子专题名称
+             */
+            subThemeTitle: string;
+            /**
+             * 子专题ID
+             */
+            subThemeId: number;
+            [k: string]: unknown;
+          }[];
+          /**
+           * 专题图片
+           */
+          themeImg?: string;
+          /**
+           * 专题ID
+           */
+          themeId: number;
+          /**
+           * 专题类型
+           */
+          themeType?: number;
+          /**
+           * 专题名称
+           */
+          themeTitle: string;
+          [k: string]: unknown;
+        }[];
+        /**
+         * 分页游标
+         */
+        pcursor?: string;
         [k: string]: unknown;
       };
       [k: string]: unknown;
@@ -13866,6 +13985,66 @@ export interface ApiDeclaration {
     [k: string]: unknown;
   };
   /**
+   * 获取推广需求的预热作品链接信息
+   */
+  "open.distribution.kwaimoney.preheat.work.link": {
+    /**
+     * API入参
+     */
+    request: {
+      /**
+       * 预热作品id
+       */
+      preheatWorkId: number;
+      [k: string]: unknown;
+    };
+    /**
+     * API出参
+     */
+    response: {
+      /**
+       * 主返回码
+       */
+      code?: string;
+      /**
+       * 主返回信息
+       */
+      msg?: string;
+      /**
+       * 子返回码
+       */
+      sub_code?: string;
+      /**
+       * 子返回信息
+       */
+      sub_msg?: string;
+      /**
+       * 返回值
+       */
+      result?: number;
+      /**
+       * 返回值详情
+       */
+      error_msg?: string;
+      /**
+       * 数据
+       */
+      data?: {
+        /**
+         * 口令链接
+         */
+        linkCode?: string;
+        /**
+         * http链接
+         */
+        linkUrl?: string;
+        [k: string]: unknown;
+      };
+      [k: string]: unknown;
+    };
+    [k: string]: unknown;
+  };
+  /**
    * 获取达人直播间小黄车上的商品列表
    */
   "open.distribution.kwaimoney.live.item.list": {
@@ -13982,17 +14161,13 @@ export interface ApiDeclaration {
     [k: string]: unknown;
   };
   /**
-   * 获取推广需求的预热作品链接信息
+   * 获取绑定pid页
    */
-  "open.distribution.kwaimoney.preheat.work.link": {
+  "open.distribution.pid.bind.url": {
     /**
      * API入参
      */
-    request: {
-      /**
-       * 预热作品id
-       */
-      preheatWorkId: number;
+    request?: {
       [k: string]: unknown;
     };
     /**
@@ -14016,25 +14191,21 @@ export interface ApiDeclaration {
        */
       sub_msg?: string;
       /**
-       * 返回值
+       * 返回码 1成功
        */
       result?: number;
       /**
-       * 返回值详情
+       * 返回码描述
        */
       error_msg?: string;
       /**
-       * 数据
+       * 返回数据
        */
       data?: {
         /**
-         * 口令链接
+         * 链接
          */
-        linkCode?: string;
-        /**
-         * http链接
-         */
-        linkUrl?: string;
+        url?: string;
         [k: string]: unknown;
       };
       [k: string]: unknown;
@@ -14331,58 +14502,6 @@ export interface ApiDeclaration {
           liveType?: number;
           [k: string]: unknown;
         }[];
-        [k: string]: unknown;
-      };
-      [k: string]: unknown;
-    };
-    [k: string]: unknown;
-  };
-  /**
-   * 获取绑定pid页
-   */
-  "open.distribution.pid.bind.url": {
-    /**
-     * API入参
-     */
-    request?: {
-      [k: string]: unknown;
-    };
-    /**
-     * API出参
-     */
-    response: {
-      /**
-       * 主返回码
-       */
-      code?: string;
-      /**
-       * 主返回信息
-       */
-      msg?: string;
-      /**
-       * 子返回码
-       */
-      sub_code?: string;
-      /**
-       * 子返回信息
-       */
-      sub_msg?: string;
-      /**
-       * 返回码 1成功
-       */
-      result?: number;
-      /**
-       * 返回码描述
-       */
-      error_msg?: string;
-      /**
-       * 返回数据
-       */
-      data?: {
-        /**
-         * 链接
-         */
-        url?: string;
         [k: string]: unknown;
       };
       [k: string]: unknown;
@@ -14810,60 +14929,6 @@ export interface ApiDeclaration {
     [k: string]: unknown;
   };
   /**
-   * 商品取消合作后，再次报名(二级团长业务)
-   */
-  "open.distribution.second.action.apply.again.investment.activity": {
-    /**
-     * API入参
-     */
-    request: {
-      /**
-       * 商品ID
-       */
-      itemId: number;
-      /**
-       * 报名的二级活动ID
-       */
-      activityId: number;
-      /**
-       * 该商品上一级活动ID
-       */
-      preActivityId: number;
-      [k: string]: unknown;
-    };
-    /**
-     * API出参
-     */
-    response: {
-      /**
-       * 主返回码
-       */
-      code?: string;
-      /**
-       * 主返回信息
-       */
-      msg?: string;
-      /**
-       * 子返回码
-       */
-      sub_code?: string;
-      /**
-       * 子返回信息
-       */
-      sub_msg?: string;
-      /**
-       * 返回码，1成功
-       */
-      result?: number;
-      /**
-       * 错误信息
-       */
-      error_msg?: string;
-      [k: string]: unknown;
-    };
-    [k: string]: unknown;
-  };
-  /**
    * 类目信息列表
    */
   "open.distribution.public.category.list": {
@@ -15127,6 +15192,60 @@ export interface ApiDeclaration {
     [k: string]: unknown;
   };
   /**
+   * 商品取消合作后，再次报名(二级团长业务)
+   */
+  "open.distribution.second.action.apply.again.investment.activity": {
+    /**
+     * API入参
+     */
+    request: {
+      /**
+       * 商品ID
+       */
+      itemId: number;
+      /**
+       * 报名的二级活动ID
+       */
+      activityId: number;
+      /**
+       * 该商品上一级活动ID
+       */
+      preActivityId: number;
+      [k: string]: unknown;
+    };
+    /**
+     * API出参
+     */
+    response: {
+      /**
+       * 主返回码
+       */
+      code?: string;
+      /**
+       * 主返回信息
+       */
+      msg?: string;
+      /**
+       * 子返回码
+       */
+      sub_code?: string;
+      /**
+       * 子返回信息
+       */
+      sub_msg?: string;
+      /**
+       * 返回码，1成功
+       */
+      result?: number;
+      /**
+       * 错误信息
+       */
+      error_msg?: string;
+      [k: string]: unknown;
+    };
+    [k: string]: unknown;
+  };
+  /**
    * 一级团长报名招商活动
    */
   "open.distribution.second.action.apply.investment.activity": {
@@ -15239,9 +15358,9 @@ export interface ApiDeclaration {
     [k: string]: unknown;
   };
   /**
-   * 修改商品报名服务费率
+   * 二级团长审核一级团长对某商品取消推广
    */
-  "open.distribution.second.action.edit.apply.investment.activity": {
+  "open.distribution.second.action.handle.cooperation": {
     /**
      * API入参
      */
@@ -15251,6 +15370,10 @@ export interface ApiDeclaration {
        */
       itemId: number;
       /**
+       * 提出申请的一级团长的ID
+       */
+      firstActivityUserId?: number;
+      /**
        * 报名的二级活动ID
        */
       activityId: number;
@@ -15259,13 +15382,11 @@ export interface ApiDeclaration {
        */
       preActivityId: number;
       /**
-       * (扩展需要，目前无作用)佣金费率，千分制，100->10%
+       * 商品操作：在此接口中只能填4与5
+       * 4-不同意取消推广
+       * 5-同意取消推广
        */
-      itemCommissionRate?: number;
-      /**
-       * 服务费率，千分制100->10%，服务费率不能小于当前报名二级活动要求的最低服务费率，不能大于该商品的一级活动服务费率
-       */
-      investmentPromotionRate: number;
+      itemAction: number;
       [k: string]: unknown;
     };
     /**
@@ -15301,9 +15422,9 @@ export interface ApiDeclaration {
     [k: string]: unknown;
   };
   /**
-   * 二级团长审核一级团长对某商品取消推广
+   * 修改商品报名服务费率
    */
-  "open.distribution.second.action.handle.cooperation": {
+  "open.distribution.second.action.edit.apply.investment.activity": {
     /**
      * API入参
      */
@@ -15313,10 +15434,6 @@ export interface ApiDeclaration {
        */
       itemId: number;
       /**
-       * 提出申请的一级团长的ID
-       */
-      firstActivityUserId?: number;
-      /**
        * 报名的二级活动ID
        */
       activityId: number;
@@ -15325,11 +15442,13 @@ export interface ApiDeclaration {
        */
       preActivityId: number;
       /**
-       * 商品操作：在此接口中只能填4与5
-       * 4-不同意取消推广
-       * 5-同意取消推广
+       * (扩展需要，目前无作用)佣金费率，千分制，100->10%
        */
-      itemAction: number;
+      itemCommissionRate?: number;
+      /**
+       * 服务费率，千分制100->10%，服务费率不能小于当前报名二级活动要求的最低服务费率，不能大于该商品的一级活动服务费率
+       */
+      investmentPromotionRate: number;
       [k: string]: unknown;
     };
     /**
@@ -16391,6 +16510,70 @@ export interface ApiDeclaration {
     [k: string]: unknown;
   };
   /**
+   * 添加选品到货架
+   */
+  "open.distribution.selection.pick": {
+    /**
+     * API入参
+     */
+    request: {
+      /**
+       * 商品ID列表
+       */
+      itemIds: number[];
+      [k: string]: unknown;
+    };
+    /**
+     * API出参
+     */
+    response: {
+      /**
+       * 主返回码
+       */
+      code?: string;
+      /**
+       * 主返回信息
+       */
+      msg?: string;
+      /**
+       * 子返回码
+       */
+      sub_code?: string;
+      /**
+       * 子返回信息
+       */
+      sub_msg?: string;
+      /**
+       * 返回码
+       */
+      result?: number;
+      /**
+       * 返回码描述
+       */
+      error_msg?: string;
+      /**
+       * 添加结果详情
+       */
+      data?: {
+        /**
+         * 商品ID
+         */
+        itemId: number;
+        /**
+         * 添加结果返回码
+         */
+        result: number;
+        /**
+         * 添加结果描述
+         */
+        errorMsg: string;
+        [k: string]: unknown;
+      }[];
+      [k: string]: unknown;
+    };
+    [k: string]: unknown;
+  };
+  /**
    * 商家已报名的团长招商活动列表
    */
   "open.distribution.seller.activity.apply.list": {
@@ -16578,70 +16761,6 @@ export interface ApiDeclaration {
         }[];
         [k: string]: unknown;
       };
-      [k: string]: unknown;
-    };
-    [k: string]: unknown;
-  };
-  /**
-   * 添加选品到货架
-   */
-  "open.distribution.selection.pick": {
-    /**
-     * API入参
-     */
-    request: {
-      /**
-       * 商品ID列表
-       */
-      itemIds: number[];
-      [k: string]: unknown;
-    };
-    /**
-     * API出参
-     */
-    response: {
-      /**
-       * 主返回码
-       */
-      code?: string;
-      /**
-       * 主返回信息
-       */
-      msg?: string;
-      /**
-       * 子返回码
-       */
-      sub_code?: string;
-      /**
-       * 子返回信息
-       */
-      sub_msg?: string;
-      /**
-       * 返回码
-       */
-      result?: number;
-      /**
-       * 返回码描述
-       */
-      error_msg?: string;
-      /**
-       * 添加结果详情
-       */
-      data?: {
-        /**
-         * 商品ID
-         */
-        itemId: number;
-        /**
-         * 添加结果返回码
-         */
-        result: number;
-        /**
-         * 添加结果描述
-         */
-        errorMsg: string;
-        [k: string]: unknown;
-      }[];
       [k: string]: unknown;
     };
     [k: string]: unknown;
@@ -17266,6 +17385,581 @@ export interface ApiDeclaration {
     [k: string]: unknown;
   };
   /**
+   * 商品新增（新）
+   */
+  "open.item.new": {
+    /**
+     * API入参
+     */
+    request: {
+      /**
+       * 商品名称
+       */
+      title: string;
+      /**
+       * 外部商品id，仅供记录外部商品和快手商品对应关系；
+       * 注意：外部商品id不可与历史新建商品重复
+       */
+      relItemId: number;
+      /**
+       * 类目id
+       */
+      categoryId: number;
+      /**
+       * 类目名称
+       */
+      categoryName?: string;
+      /**
+       * 商品主图，1. 最多上传9张图片
+       * 2. 单张图片大小不超过2M，支持png/jpeg/webp/bmp格式
+       */
+      imageUrls: string[];
+      /**
+       * sku信息列表。0 < 数量 <= 600
+       */
+      skuList: {
+        /**
+         * 三方skuId
+         */
+        relSkuId: number;
+        /**
+         * Sku 库存。0 <= 数值 <= 9999999
+         */
+        skuStock: number;
+        /**
+         * Sku 价格，单位为分。1 <= 数值 <=类目配置价格上限
+         */
+        skuSalePrice: number;
+        /**
+         * sku编码，分仓商品必传，SKU编码仅支持中英文、数字以及特殊字符
+         */
+        skuNick?: string;
+        /**
+         * 商品规格多属性规格参数。目前支持三级属性，并且需要传三级属性的完整笛卡尔积。录入多规格商品时，需要包含所有规格的组合
+         */
+        skuProps: {
+          /**
+           * 规格名称
+           */
+          propName: string;
+          /**
+           * 规格值名称
+           */
+          propValueName: string;
+          /**
+           * 图片url, 如果是主属性图片必传，图片url。0 < 长度 <= 2000，图片大小不超过2M，支持png/jpeg/webp/bmp格式
+           */
+          imageUrl?: string;
+          /**
+           * 1是 0 否 ，是否是主属性，主属性标记为关联sku规格图片
+           */
+          isMainProp: number;
+          /**
+           * 规格值分组id
+           */
+          propValueGroupId?: number;
+          /**
+           * 销售属性版本 自定义1，使用类目模板传2
+           */
+          propVersion: number;
+          [k: string]: unknown;
+        }[];
+        /**
+         * 质检参数，二手类型商品需要添加
+         */
+        skuCertificate?: {
+          /**
+           * 成色
+           */
+          condition?: string;
+          /**
+           * 购买渠道
+           */
+          purchasingChannels?: string;
+          /**
+           * 电池效率
+           */
+          batteryEfficiency?: string;
+          /**
+           * 主板维修
+           */
+          mainBoard?: string;
+          /**
+           * 电池情况
+           */
+          batteryCondition?: string;
+          /**
+           * 屏幕情况
+           */
+          screenCondition?: string;
+          /**
+           * 外壳磕碰
+           */
+          shellCollision?: string;
+          /**
+           * 质检报告url
+           */
+          reportUrl?: string;
+          /**
+           * 质检编号
+           */
+          qualityInspectionNo?: string;
+          /**
+           * SN
+           */
+          sn?: string;
+          /**
+           * 外壳划痕
+           */
+          shellScratch?: string;
+          /**
+           * 外壳掉漆
+           */
+          shellPaint?: string;
+          /**
+           * 系统设备
+           */
+          deviceSystem?: string;
+          [k: string]: unknown;
+        };
+        /**
+         * 商品划线价
+         * 注意：划线价必须大于当前商品的最高单价，并且
+         * 划线价不可超过单价的10倍
+         *
+         */
+        skuMarketPrice?: number;
+        /**
+         * 货品Id，多仓商品支持字段
+         */
+        goodsId?: string;
+        /**
+         * sku条形码
+         */
+        gtinCode?: string;
+        /**
+         * 套餐详情，商品类型为团购时，才可使用该字段，非必传
+         */
+        mealDetail?: {
+          /**
+           * 套餐分组，最多定义10个分组
+           */
+          mealGroupDTOList: {
+            /**
+             * 套餐分组名称（限制10个字符）
+             *
+             */
+            title: string;
+            /**
+             * 套餐分组，最多50组
+             */
+            mealContentDTOList: {
+              /**
+               * 内容项标题（20字符以内）
+               */
+              title: string;
+              /**
+               * 内容项数量（输入数字不超过4位）
+               */
+              count: number;
+              /**
+               * 内容项单价（单位分），最大值9999900
+               */
+              price: number;
+              [k: string]: unknown;
+            }[];
+            /**
+             * 套餐内容项 几选几（第一个几），最小值1，最大值套餐分组数量
+             */
+            fromNum: number;
+            /**
+             * 套餐内容项 几选几（第二个几），最小值1，最大值套餐分组数量
+             */
+            selectNum: number;
+            [k: string]: unknown;
+          }[];
+          /**
+           * 最低用餐人数，最小值1，非必填
+           */
+          lowestPeopleNum?: number;
+          /**
+           * 最高用餐人数，最大值20，非必填
+           */
+          highestPeopleNum?: number;
+          /**
+           * 备注，非必填，最多2000字符
+           */
+          remark?: string;
+          [k: string]: unknown;
+        };
+        [k: string]: unknown;
+      }[];
+      /**
+       * 商品关联的视频id
+       */
+      itemVideoId?: number;
+      /**
+       * 是否限购，默认不限购
+       */
+      purchaseLimit?: boolean;
+      /**
+       * 商品限购数量。purchaseLimit为true时，限购数量必填
+       */
+      limitCount?: number;
+      /**
+       * 商品类目属性，商品类目属性有必填项，必传。（注意：类目属性不允许重复）
+       */
+      itemPropValues?: {
+        /**
+         * 属性id（规格数量上限200，规格值数量上限500）
+         */
+        propId: number;
+        /**
+         * 单选属性 (根据open.item.category.config中propInputType和required判断是否必填)
+         */
+        radioPropValue?: {
+          /**
+           * 属性值id
+           */
+          propValueId: number;
+          /**
+           * 属性值
+           */
+          propValue: string;
+          [k: string]: unknown;
+        };
+        /**
+         * 多选属性 (根据open.item.category.config中propInputType和required判断是否必填)
+         */
+        checkBoxPropValuesList?: {
+          /**
+           * 属性值id
+           */
+          propValueId: number;
+          /**
+           * 属性值
+           */
+          propValue: string;
+          [k: string]: unknown;
+        }[];
+        /**
+         * 文本属性值 (根据open.item.category.config中propInputType和required判断是否必填，不允许传空字符串)
+         */
+        textPropValue?: string;
+        /**
+         * 时间戳属性 (根据open.item.category.config中propInputType和required判断是否必填)
+         */
+        datetimeTimestamp?: number;
+        /**
+         * 时间范围属性 (根据open.item.category.config中propInputType和required判断是否必填)
+         */
+        dateRange?: {
+          /**
+           * 起始时间（毫秒）
+           */
+          startTimeTimestamp?: number;
+          /**
+           * 结束时间（毫秒）
+           */
+          endTimeTimestamp?: number;
+          [k: string]: unknown;
+        };
+        /**
+         * 序号，open.item.category.config返回
+         */
+        sortNum: number;
+        /**
+         * 图片属性列表 (根据open.item.category.config中propInputType和required判断是否必填)
+         */
+        imagePropValues?: string[];
+        /**
+         * 属性名称
+         */
+        propName?: string;
+        /**
+         * 属性别名
+         */
+        propAlias?: string;
+        /**
+         * 1-文本 2-checkbox 3-数字 4-邮箱 5-日期 6-url地址 7-时间范围 8-单选框 9-图片
+         */
+        inputType?: number;
+        /**
+         * 1-sku属性 2-商品属性
+         */
+        propType?: number;
+        /**
+         * 单位属性值Id，open.item.category.config返回
+         */
+        unitPropValueId?: number;
+        /**
+         * 单位属性值名称
+         */
+        unitPropValueName?: string;
+        [k: string]: unknown;
+      }[];
+      /**
+       * 商品详情描述。0 < 长度 <= 1000
+       */
+      details: string;
+      /**
+       * 商品详情图，1. 最多上传20张图片
+       * 2. 单张图片大小不超过2M，支持png/jpeg/webp/bmp格式
+       */
+      detailImageUrls?: string[];
+      /**
+       * 是否分仓，默认为false
+       */
+      stockPartner?: boolean;
+      /**
+       * 商品备注最多8个字符 备注支持中文、英文、数字
+       */
+      itemRemark?: string;
+      /**
+       *  服务规则
+       */
+      serviceRule: {
+        /**
+         * 退款规则，请求内容为枚举数值，非后面文案： 1:支持7天无理由退货 4:不支持7天无理由退货 5:支持7天无理由退货(拆封后不支持) 6:支持7天无理由退货(激活后不支持) 7:支持7天无理由退货(安装后不支持) 8:支持7天无理由退货(定制类不支持) 9:支持7天无理由退货(使用后不支持) ，由open.item.category.config获得（退款规则会根据类目变化而变化）
+         */
+        refundRule: string;
+        /**
+         * 发货间隔时间，单位：秒，范围在[3,15天] 需要转换为秒 259200 为3天，deliverGoodsInteralTime和promiseDeliveryTime至少填一个且不能都填。填deliverGoodsInteralTime代码预售商品，填promiseDeliveryTime代表非预售商品。（如果需要取消请传 0 或 -1），需要注意具体预售时长会根据具体类目不同
+         */
+        deliverGoodsInteralTime?: number;
+        /**
+         * 非预售商品承诺发货时间，单位：秒，取值86400,172800,分别代表24、48小时，deliverGoodsInteralTime和promiseDeliveryTime至少填一个且不能都填。填deliverGoodsInteralTime代码预售商品，填promiseDeliveryTime代表非预售商品。（如果需要取消请传 0 或 -1）
+         */
+        promiseDeliveryTime?: number;
+        /**
+         * 是否立即上架  ,0立即上架，1不立即上架
+         */
+        immediatelyOnOfflineFlag?: number;
+        /**
+         * 发货方式 logistics：物流配送（默认） certificate：电子凭证
+         */
+        deliveryMethod?: string;
+        /**
+         * 服务承诺：freshRotRefund：坏了包退
+         * brokenRefund：破损包退
+         * allergyRefund：过敏包退
+         */
+        servicePromise: {
+          /**
+           * 坏了包退
+           */
+          freshRotRefund?: boolean;
+          /**
+           * 破损包退
+           */
+          brokenRefund?: boolean;
+          /**
+           * 过敏包退
+           */
+          allergyRefund?: boolean;
+          [k: string]: unknown;
+        };
+        /**
+         * 电子凭证不可用时间
+         */
+        unavailableTimeRule?: {
+          /**
+           * 不可用星期
+           * 1:周一、2:周二、3:周三、4:周四、5:周五、6:周六、7:周
+           */
+          weeks?: number[];
+          /**
+           * 不可用节假日
+           * 1:元旦、2:春节、3:清明节、4:劳动节、5:端午节、6:国庆节、7:中秋节
+           */
+          holidays?: number[];
+          /**
+           * 不可用时间范围，最多三组，单位毫秒，每组时间起止相互互斥
+           */
+          timeRanges?: {
+            /**
+             * 开始时间时间戳
+             * 时间为00:00:00
+             */
+            startTime: number;
+            /**
+             * 结束时间时间戳
+             * 时间为 23:59:59
+             */
+            endTime: number;
+            [k: string]: unknown;
+          }[];
+          [k: string]: unknown;
+        };
+        /**
+         *  码商，仅有deliveryMethod 为certificate：电子凭证时，此字段才有值，且需校验
+         * ks：快手平台发码 merchant：商家发码  couponLibrary:券码库发码
+         */
+        certMerchantCode?: string;
+        /**
+         * 电子凭证有效期类型，仅有deliveryMethod 为certificate：电子凭证时，此字段才有值
+         * 1：日期范围；2：仅有截止日期；3：有效天数
+         */
+        certExpireType?: number;
+        /**
+         * 开始时间，仅有deliveryMethod 为certificate：电子凭证时，certExpireType为1或2时此字段才有值
+         */
+        certStartTime?: number;
+        /**
+         * 截止时间，仅有deliveryMethod 为certificate：电子凭证时，certExpireType为1或2时此字段才有值
+         */
+        certEndTime?: number;
+        /**
+         * 有效天数，仅有deliveryMethod 为certificate：电子凭证时，certExpireType为3时此字段才有值
+         */
+        certExpDays?: number;
+        /**
+         * 订单限购类型0：未设置；1:已设置最少购买件数；2:已设置最多购买件数；3:最少最多购买件数均设置；
+         */
+        orderPurchaseLimitType?: number;
+        /**
+         * 每笔订单最少购买件数，若orderPurchaseLimitType设置为0，建议此字段同样修改为0；
+         */
+        minOrderCount?: number;
+        /**
+         * 每笔订单最多购买件数，若orderPurchaseLimitType设置为0，建议此字段同样修改为0；
+         */
+        maxOrderCount?: number;
+        /**
+         * 酒旅类目，且选择“电子凭证”，必填
+         */
+        customerInfo?: {
+          /**
+           * 1-不需要、2-需要1位出行人、3-需要全部出行人
+           */
+          customerInfoType?: string;
+          /**
+           * 如果出行人信息选择，需要1位出行人、需要全部出行人 选项,
+           * 	则展示出行人证件，且必传，1-身份证
+           *
+           */
+          customerCertificateType?: string[];
+          [k: string]: unknown;
+        };
+        /**
+         * 价保天数，不传则覆盖为0
+         */
+        priceProtectDays?: number;
+        [k: string]: unknown;
+      };
+      /**
+       * 运费模板id
+       */
+      expressTemplateId: number;
+      /**
+       * 是否定点开售，默认为false
+       */
+      saleTimeFlag?: boolean;
+      /**
+       * 定点开售时间，如果开启定点开售必填
+       */
+      timeOfSale?: number;
+      /**
+       * 支付方式：1 货到付款 2 在线支付 3 在线支付和货到付款；默认2
+       * 目前OpenAPI端只支持「在线支付」方式
+       */
+      payWay?: number;
+      /**
+       * 是否是多仓库存模式，默认是false
+       */
+      multipleStock?: boolean;
+      /**
+       * 门店ID
+       */
+      poiIds?: number[];
+      /**
+       * 商品白底图，请上传格式为png/jpeg/jpg的图片，长宽比为1:1的图片，像素480*480px以上的图片，大小小于2M
+       */
+      whiteBaseImageUrl?: string;
+      /**
+       * 商品透明图，请上传格式为png的图片，长宽比为1:1的图片，像素480*480px以上的图片，大小小于2M
+       */
+      transparentImageUrl?: string;
+      /**
+       * 商品短标题长度必须大于4且小于20个字符（2-10汉字）
+       */
+      shortTitle?: string;
+      /**
+       * 商品卖点长度必须大于8且小于24个字符（4-12汉字）
+       */
+      sellingPoint?: string;
+      /**
+       * 使用说明,非必传，约定字符限制400个中文字长度以内。空行数量10行以内。
+       */
+      instructions?: string;
+      [k: string]: unknown;
+    };
+    /**
+     * API出参
+     */
+    response: {
+      /**
+       * 主返回码
+       */
+      code?: string;
+      /**
+       * 主返回信息
+       */
+      msg?: string;
+      /**
+       * 子返回码
+       */
+      sub_code?: string;
+      /**
+       * 子返回信息
+       */
+      sub_msg?: string;
+      /**
+       * 返回码，1成功
+       */
+      result?: number;
+      /**
+       * 错误信息
+       */
+      error_msg?: string;
+      /**
+       * 新增商品返回数据
+       */
+      data?: {
+        /**
+         * 快手商品id
+         */
+        kwaiItemId: number;
+        /**
+         * 外部商品id，仅供记录外部商品和快手商品对应关系
+         */
+        relItemId: number;
+        /**
+         * skuIdList
+         */
+        skuIdMapping: {
+          /**
+           * 快手商品sku id
+           */
+          kwaiSkuId: number;
+          /**
+           * 外部商品 Sku id，仅供记录外部商品sku和快手商品sku对应关系
+           */
+          relSkuId: number;
+          /**
+           * skuNick，sku编码必须30个字符以内
+           *
+           */
+          skuNick?: string;
+          [k: string]: unknown;
+        }[];
+        [k: string]: unknown;
+      };
+      [k: string]: unknown;
+    };
+    [k: string]: unknown;
+  };
+  /**
    * 商家查询商品维度团长推广效果
    */
   "open.distribution.seller.activity.promotion.effect.item": {
@@ -17704,6 +18398,142 @@ export interface ApiDeclaration {
     [k: string]: unknown;
   };
   /**
+   * 商家可报名商品列表
+   */
+  "open.distribution.seller.activity.usable.item": {
+    /**
+     * API入参
+     */
+    request: {
+      /**
+       * 分页偏移量（limit整数倍）
+       */
+      offset?: number;
+      /**
+       * 商品ID
+       */
+      itemId?: number;
+      /**
+       * 活动ID
+       */
+      activityId: number;
+      /**
+       * 每页商品数量
+       */
+      limit: number;
+      /**
+       * 商品标题
+       */
+      itemTitle?: string;
+      [k: string]: unknown;
+    };
+    /**
+     * API出参
+     */
+    response: {
+      /**
+       * 主返回码
+       */
+      code?: string;
+      /**
+       * 主返回信息
+       */
+      msg?: string;
+      /**
+       * 子返回码
+       */
+      sub_code?: string;
+      /**
+       * 子返回信息
+       */
+      sub_msg?: string;
+      /**
+       * 返回码，1成功
+       */
+      result?: number;
+      /**
+       * 错误信息
+       */
+      error_msg?: string;
+      /**
+       * 响应信息
+       */
+      data?: {
+        /**
+         * 符合条件的商品数量
+         */
+        total?: number;
+        /**
+         * 商品列表
+         */
+        usableItemDataList?: {
+          /**
+           * 商品链接
+           */
+          itemLinkUrl?: string;
+          /**
+           * 商品ID
+           */
+          itemId?: number;
+          /**
+           * 商品图片链接
+           */
+          itemImgUrl?: string;
+          /**
+           * 商品价格(单位：分)
+           */
+          itemPrice?: number;
+          /**
+           * 禁入类目提示文案
+           */
+          disabledMsg?: string;
+          /**
+           * 商品销量
+           */
+          itemVolume?: number;
+          /**
+           * 是否禁入类目商品，1是 0不是
+           */
+          disabled?: number;
+          /**
+           * 商品标题
+           */
+          itemTitle?: string;
+          /**
+           * 商品库存
+           */
+          itemStock?: number;
+          /**
+           * 商品叶子类目名称
+           */
+          itemLeafCategoryName?: string;
+          /**
+           * 可执行操作
+           */
+          operatorList?: {
+            /**
+             * 1=小店；2=快分销
+             */
+            webUrlType?: number;
+            /**
+             * 按钮文案
+             */
+            buttonText?: string;
+            /**
+             * 操作链接
+             */
+            url?: string;
+            [k: string]: unknown;
+          }[];
+          [k: string]: unknown;
+        }[];
+        [k: string]: unknown;
+      };
+      [k: string]: unknown;
+    };
+    [k: string]: unknown;
+  };
+  /**
    * 获取分销订单列表(游标方式)
    */
   "open.seller.order.cps.list": {
@@ -17921,142 +18751,6 @@ export interface ApiDeclaration {
        * 错误码描述
        */
       error_msg?: string;
-      [k: string]: unknown;
-    };
-    [k: string]: unknown;
-  };
-  /**
-   * 商家可报名商品列表
-   */
-  "open.distribution.seller.activity.usable.item": {
-    /**
-     * API入参
-     */
-    request: {
-      /**
-       * 分页偏移量（limit整数倍）
-       */
-      offset?: number;
-      /**
-       * 商品ID
-       */
-      itemId?: number;
-      /**
-       * 活动ID
-       */
-      activityId: number;
-      /**
-       * 每页商品数量
-       */
-      limit: number;
-      /**
-       * 商品标题
-       */
-      itemTitle?: string;
-      [k: string]: unknown;
-    };
-    /**
-     * API出参
-     */
-    response: {
-      /**
-       * 主返回码
-       */
-      code?: string;
-      /**
-       * 主返回信息
-       */
-      msg?: string;
-      /**
-       * 子返回码
-       */
-      sub_code?: string;
-      /**
-       * 子返回信息
-       */
-      sub_msg?: string;
-      /**
-       * 返回码，1成功
-       */
-      result?: number;
-      /**
-       * 错误信息
-       */
-      error_msg?: string;
-      /**
-       * 响应信息
-       */
-      data?: {
-        /**
-         * 符合条件的商品数量
-         */
-        total?: number;
-        /**
-         * 商品列表
-         */
-        usableItemDataList?: {
-          /**
-           * 商品链接
-           */
-          itemLinkUrl?: string;
-          /**
-           * 商品ID
-           */
-          itemId?: number;
-          /**
-           * 商品图片链接
-           */
-          itemImgUrl?: string;
-          /**
-           * 商品价格(单位：分)
-           */
-          itemPrice?: number;
-          /**
-           * 禁入类目提示文案
-           */
-          disabledMsg?: string;
-          /**
-           * 商品销量
-           */
-          itemVolume?: number;
-          /**
-           * 是否禁入类目商品，1是 0不是
-           */
-          disabled?: number;
-          /**
-           * 商品标题
-           */
-          itemTitle?: string;
-          /**
-           * 商品库存
-           */
-          itemStock?: number;
-          /**
-           * 商品叶子类目名称
-           */
-          itemLeafCategoryName?: string;
-          /**
-           * 可执行操作
-           */
-          operatorList?: {
-            /**
-             * 1=小店；2=快分销
-             */
-            webUrlType?: number;
-            /**
-             * 按钮文案
-             */
-            buttonText?: string;
-            /**
-             * 操作链接
-             */
-            url?: string;
-            [k: string]: unknown;
-          }[];
-          [k: string]: unknown;
-        }[];
-        [k: string]: unknown;
-      };
       [k: string]: unknown;
     };
     [k: string]: unknown;
@@ -18633,13 +19327,17 @@ export interface ApiDeclaration {
     [k: string]: unknown;
   };
   /**
-   * 新增运费模板
+   * 更新运费模板
    */
-  "open.logistics.express.template.add": {
+  "open.logistics.express.template.update": {
     /**
      * API入参
      */
     request: {
+      /**
+       * 运费模板id
+       */
+      id: number;
       /**
        * 运费模板名称
        */
@@ -18677,7 +19375,7 @@ export interface ApiDeclaration {
        */
       sendTime: number;
       /**
-       * 来源：10-Android；  20-iOS；  30-PCWEB；  40-SYSTEM
+       * 传0即可；10-Android；  20-iOS；  30-PCWEB；  40-SYSTEM
        */
       sourceType: number;
       /**
@@ -18714,16 +19412,6 @@ export interface ApiDeclaration {
        * 返回码描述
        */
       error_msg?: string;
-      /**
-       * 创建结果
-       */
-      data?: {
-        /**
-         * 新增的模板id
-         */
-        id?: number;
-        [k: string]: unknown;
-      };
       [k: string]: unknown;
     };
     [k: string]: unknown;
@@ -18853,17 +19541,13 @@ export interface ApiDeclaration {
     [k: string]: unknown;
   };
   /**
-   * 更新运费模板
+   * 新增运费模板
    */
-  "open.logistics.express.template.update": {
+  "open.logistics.express.template.add": {
     /**
      * API入参
      */
     request: {
-      /**
-       * 运费模板id
-       */
-      id: number;
       /**
        * 运费模板名称
        */
@@ -18901,7 +19585,7 @@ export interface ApiDeclaration {
        */
       sendTime: number;
       /**
-       * 传0即可；10-Android；  20-iOS；  30-PCWEB；  40-SYSTEM
+       * 来源：10-Android；  20-iOS；  30-PCWEB；  40-SYSTEM
        */
       sourceType: number;
       /**
@@ -18938,22 +19622,174 @@ export interface ApiDeclaration {
        * 返回码描述
        */
       error_msg?: string;
+      /**
+       * 创建结果
+       */
+      data?: {
+        /**
+         * 新增的模板id
+         */
+        id?: number;
+        [k: string]: unknown;
+      };
       [k: string]: unknown;
     };
     [k: string]: unknown;
   };
   /**
-   * 删除优惠券
+   * 批量查询运费模板
    */
-  "open.promotion.coupon.delete": {
+  "open.logistics.express.template.list": {
     /**
      * API入参
      */
     request: {
       /**
-       * 券id
+       * 偏移量。按照模板的创建时间倒序排列，最新创建的模板offset=0，次新的offset=1，以此类推
        */
-      couponId: number;
+      offset: number;
+      /**
+       * 返回的结果中的运费模板的个数
+       */
+      limit: number;
+      /**
+       * false表示不查询运费模板的是否使用状态。所以当该值为false时，接口返回结果中的所有模板的used字段恒定为false
+       */
+      searchUsed: boolean;
+      [k: string]: unknown;
+    };
+    /**
+     * API出参
+     */
+    response: {
+      /**
+       * 主返回码
+       */
+      code?: string;
+      /**
+       * 主返回信息
+       */
+      msg?: string;
+      /**
+       * 子返回码
+       */
+      sub_code?: string;
+      /**
+       * 子返回信息
+       */
+      sub_msg?: string;
+      /**
+       * 返回码，1：成功
+       */
+      result?: number;
+      /**
+       * 返回码描述
+       */
+      error_msg?: string;
+      /**
+       * 返回数据
+       */
+      data?: {
+        /**
+         * 运费模板列表
+         */
+        expressTemplateDetailVOS?: {
+          /**
+           * 运费模板ID
+           */
+          id?: number;
+          /**
+           * 运费模板名称
+           */
+          name?: string;
+          /**
+           * 商家ID
+           */
+          sellerId?: number;
+          /**
+           * 计费类型，1-按件计费；2-按重量计费
+           */
+          calType?: number;
+          /**
+           * 省份编码（2位）
+           */
+          sendProvinceCode?: number;
+          /**
+           * 省份名称
+           */
+          sendProvinceName?: string;
+          /**
+           * 城市编码（4位）
+           */
+          sendCityCode?: number;
+          /**
+           * 城市名称
+           */
+          sendCityName?: string;
+          /**
+           * 区域编码（6位）
+           */
+          sendDistrictCode?: number;
+          /**
+           * 区域名称
+           */
+          sendDistrictName?: string;
+          /**
+           * 【已废弃】承诺发货时间
+           */
+          sendTime?: number;
+          /**
+           * 固定为false
+           */
+          used?: boolean;
+          /**
+           * 1-有效；2-已删除
+           */
+          status?: number;
+          /**
+           * 来源；10-Android；  20-iOS；  30-PCWEB；  40-SYSTEM
+           */
+          sourceType?: number;
+          /**
+           * 删除时间，单位毫秒，unix时间戳
+           */
+          deleteTime?: number;
+          /**
+           * 创建时间，单位毫秒，unix时间戳
+           */
+          createTime?: number;
+          /**
+           * 更新时间，单位毫秒，unix时间戳
+           */
+          updateTime?: number;
+          /**
+           * 运费模板信息。type：目前只有1一种；includeProvinces：包邮省（只能为省code）；excludeProvinces：不配送地区，历史数据有code（只能为省code），已迁移到codeList（支持省市区多级code），若有codeList字段，将以codeList计算运费； reasonCode：不配送原因（1-台风，2-距离，3-重量，4-国家会议，5-合作快递不配送该区域，6-合作快递该区域服务差，7-其他）； provinceFees：运费规则，历史数据有code（只能为省code），已迁移到codeList（支持省市区多级code），若有codeList字段，将以codeList计算运费； baseCount：起步件数； baseFee：起步运费（分） ；perAddCount：递增件数； perAddFee：递增运费金额（分）； includeCount：满N件包邮 ；includeFee：满N包邮（分）； includeUnit：count代表件，price代表钱
+           */
+          config?: string;
+          [k: string]: unknown;
+        }[];
+        /**
+         * 列表中的运费模板的个数
+         */
+        total?: number;
+        [k: string]: unknown;
+      };
+      [k: string]: unknown;
+    };
+    [k: string]: unknown;
+  };
+  /**
+   * 结束优惠券
+   */
+  "open.promotion.coupon.over": {
+    /**
+     * API入参
+     */
+    request: {
+      /**
+       * 券配置id
+       */
+      couponId?: number;
       [k: string]: unknown;
     };
     /**
@@ -18989,17 +19825,17 @@ export interface ApiDeclaration {
     [k: string]: unknown;
   };
   /**
-   * 结束优惠券
+   * 删除优惠券
    */
-  "open.promotion.coupon.over": {
+  "open.promotion.coupon.delete": {
     /**
      * API入参
      */
     request: {
       /**
-       * 券配置id
+       * 券id
        */
-      couponId?: number;
+      couponId: number;
       [k: string]: unknown;
     };
     /**
@@ -19156,25 +19992,29 @@ export interface ApiDeclaration {
     [k: string]: unknown;
   };
   /**
-   * 批量查询运费模板
+   * 优惠券列表
    */
-  "open.logistics.express.template.list": {
+  "open.promotion.coupon.page.list": {
     /**
      * API入参
      */
     request: {
       /**
-       * 偏移量。按照模板的创建时间倒序排列，最新创建的模板offset=0，次新的offset=1，以此类推
+       * 0-商品券，1-店铺券，15-主播红包
        */
-      offset: number;
+      couponTargetType: number;
       /**
-       * 返回的结果中的运费模板的个数
+       * 页号，从1开始
        */
-      limit: number;
+      pageNo: number;
       /**
-       * false表示不查询运费模板的是否使用状态。所以当该值为false时，接口返回结果中的所有模板的used字段恒定为false
+       * 0-全部。1-未开始，2-可领取，3-已结束
        */
-      searchUsed: boolean;
+      sellerCouponStatus: number;
+      /**
+       * 页大小
+       */
+      pageSize: number;
       [k: string]: unknown;
     };
     /**
@@ -19198,101 +20038,105 @@ export interface ApiDeclaration {
        */
       sub_msg?: string;
       /**
-       * 返回码，1：成功
-       */
-      result?: number;
-      /**
-       * 返回码描述
-       */
-      error_msg?: string;
-      /**
-       * 返回数据
+       * 券信息
        */
       data?: {
         /**
-         * 运费模板列表
+         * 券数据
          */
-        expressTemplateDetailVOS?: {
+        marketingOpenCoupon?: {
           /**
-           * 运费模板ID
+           * 使用开始时间
            */
-          id?: number;
+          validStartTime?: number;
           /**
-           * 运费模板名称
+           * 使用固定时间
            */
-          name?: string;
+          fixedValidityTime?: number;
           /**
-           * 商家ID
+           * 优惠券使用有效期类型 1-时间段(start-end) 2-固定时间fixedTime
            */
-          sellerId?: number;
+          validityType?: number;
           /**
-           * 计费类型，1-按件计费；2-按重量计费
-           */
-          calType?: number;
-          /**
-           * 省份编码（2位）
-           */
-          sendProvinceCode?: number;
-          /**
-           * 省份名称
-           */
-          sendProvinceName?: string;
-          /**
-           * 城市编码（4位）
-           */
-          sendCityCode?: number;
-          /**
-           * 城市名称
-           */
-          sendCityName?: string;
-          /**
-           * 区域编码（6位）
-           */
-          sendDistrictCode?: number;
-          /**
-           * 区域名称
-           */
-          sendDistrictName?: string;
-          /**
-           * 【已废弃】承诺发货时间
-           */
-          sendTime?: number;
-          /**
-           * 固定为false
-           */
-          used?: boolean;
-          /**
-           * 1-有效；2-已删除
-           */
-          status?: number;
-          /**
-           * 来源；10-Android；  20-iOS；  30-PCWEB；  40-SYSTEM
-           */
-          sourceType?: number;
-          /**
-           * 删除时间，单位毫秒，unix时间戳
-           */
-          deleteTime?: number;
-          /**
-           * 创建时间，单位毫秒，unix时间戳
+           * 创建时间
            */
           createTime?: number;
           /**
-           * 更新时间，单位毫秒，unix时间戳
+           * 商品id
+           */
+          itemId?: number[];
+          /**
+           * 领取开始时间
+           */
+          receiveStartTime?: number;
+          /**
+           * 每人限领
+           */
+          receivePerLimit?: number;
+          /**
+           * 优惠券门槛
+           */
+          threshold?: number;
+          /**
+           * 总库存
+           */
+          totalStock?: number;
+          /**
+           * 0-商品 1-店铺 2-类目 3-全平台通用
+           */
+          couponTargetType?: number;
+          /**
+           * 领取结束时间
+           */
+          receiveEndTime?: number;
+          /**
+           * 更新时间
            */
           updateTime?: number;
           /**
-           * 运费模板信息。type：目前只有1一种；includeProvinces：包邮省（只能为省code）；excludeProvinces：不配送地区，历史数据有code（只能为省code），已迁移到codeList（支持省市区多级code），若有codeList字段，将以codeList计算运费； reasonCode：不配送原因（1-台风，2-距离，3-重量，4-国家会议，5-合作快递不配送该区域，6-合作快递该区域服务差，7-其他）； provinceFees：运费规则，历史数据有code（只能为省code），已迁移到codeList（支持省市区多级code），若有codeList字段，将以codeList计算运费； baseCount：起步件数； baseFee：起步运费（分） ；perAddCount：递增件数； perAddFee：递增运费金额（分）； includeCount：满N件包邮 ；includeFee：满N包邮（分）； includeUnit：count代表件，price代表钱
+           * 券id
            */
-          config?: string;
+          couponId?: number;
+          /**
+           * 优惠券名称
+           */
+          name?: string;
+          /**
+           * 业务线，1-小店，2010-课堂，2020-金牛，2030-服务市场，3000-本地生活，这里只有1
+           */
+          businessLine?: number;
+          /**
+           * 使用结束时间
+           */
+          validEndTime?: number;
+          /**
+           * 优惠券金额
+           */
+          reduceAmount?: number;
+          /**
+           * 领取渠道，1-商详页
+           */
+          receiveChannel?: string;
+          /**
+           * 券状态 1-有效，2-结束，3-删除，4-过期，5-死亡（死亡状态是人工接入将已经领取的券也不可用）
+           */
+          status?: number;
           [k: string]: unknown;
         }[];
         /**
-         * 列表中的运费模板的个数
+         * 总数
          */
-        total?: number;
+        totalCount?: number;
         [k: string]: unknown;
       };
+      /**
+       * 返回码，1成功
+       */
+      result?: number;
+      /**
+       * 错误信息
+       */
+      error_msg?: string;
       [k: string]: unknown;
     };
     [k: string]: unknown;
@@ -19498,156 +20342,6 @@ export interface ApiDeclaration {
     [k: string]: unknown;
   };
   /**
-   * 优惠券列表
-   */
-  "open.promotion.coupon.page.list": {
-    /**
-     * API入参
-     */
-    request: {
-      /**
-       * 0-商品券，1-店铺券，15-主播红包
-       */
-      couponTargetType: number;
-      /**
-       * 页号，从1开始
-       */
-      pageNo: number;
-      /**
-       * 0-全部。1-未开始，2-可领取，3-已结束
-       */
-      sellerCouponStatus: number;
-      /**
-       * 页大小
-       */
-      pageSize: number;
-      [k: string]: unknown;
-    };
-    /**
-     * API出参
-     */
-    response: {
-      /**
-       * 主返回码
-       */
-      code?: string;
-      /**
-       * 主返回信息
-       */
-      msg?: string;
-      /**
-       * 子返回码
-       */
-      sub_code?: string;
-      /**
-       * 子返回信息
-       */
-      sub_msg?: string;
-      /**
-       * 券信息
-       */
-      data?: {
-        /**
-         * 券数据
-         */
-        marketingOpenCoupon?: {
-          /**
-           * 使用开始时间
-           */
-          validStartTime?: number;
-          /**
-           * 使用固定时间
-           */
-          fixedValidityTime?: number;
-          /**
-           * 优惠券使用有效期类型 1-时间段(start-end) 2-固定时间fixedTime
-           */
-          validityType?: number;
-          /**
-           * 创建时间
-           */
-          createTime?: number;
-          /**
-           * 商品id
-           */
-          itemId?: number[];
-          /**
-           * 领取开始时间
-           */
-          receiveStartTime?: number;
-          /**
-           * 每人限领
-           */
-          receivePerLimit?: number;
-          /**
-           * 优惠券门槛
-           */
-          threshold?: number;
-          /**
-           * 总库存
-           */
-          totalStock?: number;
-          /**
-           * 0-商品 1-店铺 2-类目 3-全平台通用
-           */
-          couponTargetType?: number;
-          /**
-           * 领取结束时间
-           */
-          receiveEndTime?: number;
-          /**
-           * 更新时间
-           */
-          updateTime?: number;
-          /**
-           * 券id
-           */
-          couponId?: number;
-          /**
-           * 优惠券名称
-           */
-          name?: string;
-          /**
-           * 业务线，1-小店，2010-课堂，2020-金牛，2030-服务市场，3000-本地生活，这里只有1
-           */
-          businessLine?: number;
-          /**
-           * 使用结束时间
-           */
-          validEndTime?: number;
-          /**
-           * 优惠券金额
-           */
-          reduceAmount?: number;
-          /**
-           * 领取渠道，1-商详页
-           */
-          receiveChannel?: string;
-          /**
-           * 券状态 1-有效，2-结束，3-删除，4-过期，5-死亡（死亡状态是人工接入将已经领取的券也不可用）
-           */
-          status?: number;
-          [k: string]: unknown;
-        }[];
-        /**
-         * 总数
-         */
-        totalCount?: number;
-        [k: string]: unknown;
-      };
-      /**
-       * 返回码，1成功
-       */
-      result?: number;
-      /**
-       * 错误信息
-       */
-      error_msg?: string;
-      [k: string]: unknown;
-    };
-    [k: string]: unknown;
-  };
-  /**
    * 某一张优惠券的统计信息
    */
   "open.promotion.coupon.statistic": {
@@ -19844,82 +20538,6 @@ export interface ApiDeclaration {
     [k: string]: unknown;
   };
   /**
-   * 创建店铺新人券
-   */
-  "open.promotion.shop.newbie.create": {
-    /**
-     * API入参
-     */
-    request: {
-      /**
-       * 券的作用对象类型，0-商品，1-店铺
-       */
-      couponTargetType: number;
-      /**
-       * couponTargetType是0时，指定的商品id
-       */
-      itemId?: number[];
-      /**
-       * 券面额，分
-       */
-      couponPrice: number;
-      /**
-       * 券结束时间，毫秒，要依23:59:59结尾的时间换成毫秒数
-       */
-      couponEnd: number;
-      /**
-       * 券类型，店铺新人传1
-       */
-      couponFrontType?: number;
-      /**
-       * 券门槛，分
-       */
-      couponBase: number;
-      /**
-       * 券状态，传 0
-       */
-      status?: number;
-      [k: string]: unknown;
-    };
-    /**
-     * API出参
-     */
-    response: {
-      /**
-       * 主返回码
-       */
-      code?: string;
-      /**
-       * 主返回信息
-       */
-      msg?: string;
-      /**
-       * 子返回码
-       */
-      sub_code?: string;
-      /**
-       * 返回码，1成功
-       */
-      result?: number;
-      /**
-       *  ok
-       */
-      error_mag?: string;
-      /**
-       * 券id
-       */
-      data?: {
-        /**
-         * 券配置id
-         */
-        couponConfigId: number;
-        [k: string]: unknown;
-      };
-      [k: string]: unknown;
-    };
-    [k: string]: unknown;
-  };
-  /**
    * 查看商家的优惠券数据
    */
   "open.promotion.seller.statistic": {
@@ -20084,47 +20702,41 @@ export interface ApiDeclaration {
     [k: string]: unknown;
   };
   /**
-   * 电子凭证检查电子凭证是否有效
+   * 创建店铺新人券
    */
-  "open.virtual.eticket.checkavailable": {
+  "open.promotion.shop.newbie.create": {
     /**
      * API入参
      */
     request: {
       /**
-       * 买家编号
+       * 券的作用对象类型，0-商品，1-店铺
        */
-      buyerId?: number;
+      couponTargetType: number;
       /**
-       * 电子凭证类型
+       * couponTargetType是0时，指定的商品id
        */
-      eticketType: string;
+      itemId?: number[];
       /**
-       * 电子凭证列表
+       * 券面额，分
        */
-      etickets: {
-        /**
-         * 电子凭证实体编号
-         */
-        code?: string;
-        /**
-         * 核销数量
-         */
-        num?: number;
-        /**
-         * 电子凭证虚拟卡编号
-         */
-        id?: string;
-        [k: string]: unknown;
-      }[];
+      couponPrice: number;
       /**
-       * 订单编号
+       * 券结束时间，毫秒，要依23:59:59结尾的时间换成毫秒数
        */
-      orderId?: number;
+      couponEnd: number;
       /**
-       * 卖家编号
+       * 券类型，店铺新人传1
        */
-      sellerId: number;
+      couponFrontType?: number;
+      /**
+       * 券门槛，分
+       */
+      couponBase: number;
+      /**
+       * 券状态，传 0
+       */
+      status?: number;
       [k: string]: unknown;
     };
     /**
@@ -20144,67 +20756,23 @@ export interface ApiDeclaration {
        */
       sub_code?: string;
       /**
-       * 子返回信息
-       */
-      sub_msg?: string;
-      /**
-       * 电子凭证校验结果
-       */
-      etickets?: {
-        /**
-         * 电子凭证实体卡号
-         */
-        code?: string;
-        /**
-         * 商品编号
-         */
-        itemId?: number;
-        /**
-         * 检测次数
-         */
-        num?: number;
-        /**
-         * 电子凭证虚拟卡号
-         */
-        id?: string;
-        /**
-         * 买家编号
-         */
-        buyerId?: number;
-        /**
-         * 剩余可用次数
-         */
-        leftNum?: number;
-        /**
-         * 电子凭证类型
-         */
-        eticketType?: string;
-        /**
-         * 订单号
-         */
-        orderId?: number;
-        /**
-         * 卖家编号
-         */
-        sellerId?: number;
-        /**
-         * 显示状态
-         */
-        displayStatus?: string;
-        /**
-         * 访问token
-         */
-        token?: string;
-        [k: string]: unknown;
-      }[];
-      /**
-       * 是否成功
+       * 返回码，1成功
        */
       result?: number;
       /**
-       * 错误信息
+       *  ok
        */
-      error_msg?: string;
+      error_mag?: string;
+      /**
+       * 券id
+       */
+      data?: {
+        /**
+         * 券配置id
+         */
+        couponConfigId: number;
+        [k: string]: unknown;
+      };
       [k: string]: unknown;
     };
     [k: string]: unknown;
@@ -20340,45 +20908,47 @@ export interface ApiDeclaration {
     [k: string]: unknown;
   };
   /**
-   * 回复评价
+   * 电子凭证检查电子凭证是否有效
    */
-  "open.comment.add": {
+  "open.virtual.eticket.checkavailable": {
     /**
      * API入参
      */
     request: {
       /**
-       * 业务参数
+       * 买家编号
        */
-      outInfo: {
+      buyerId?: number;
+      /**
+       * 电子凭证类型
+       */
+      eticketType: string;
+      /**
+       * 电子凭证列表
+       */
+      etickets: {
         /**
-         * 业务方SKUID
+         * 电子凭证实体编号
          */
-        outItemSkuId: number;
+        code?: string;
         /**
-         * 业务方订单编号
+         * 核销数量
          */
-        outOrderNo: string;
+        num?: number;
+        /**
+         * 电子凭证虚拟卡编号
+         */
+        id?: string;
         [k: string]: unknown;
-      };
+      }[];
       /**
-       * 回复的评论id
+       * 订单编号
        */
-      replyToCommentId: number;
+      orderId?: number;
       /**
-       * 评价内容
+       * 卖家编号
        */
-      content: string;
-      /**
-       * 1
-       */
-      option: {
-        /**
-         * 类型
-         */
-        sourceType: number;
-        [k: string]: unknown;
-      };
+      sellerId: number;
       [k: string]: unknown;
     };
     /**
@@ -20402,23 +20972,63 @@ export interface ApiDeclaration {
        */
       sub_msg?: string;
       /**
-       * 返回码
+       * 电子凭证校验结果
+       */
+      etickets?: {
+        /**
+         * 电子凭证实体卡号
+         */
+        code?: string;
+        /**
+         * 商品编号
+         */
+        itemId?: number;
+        /**
+         * 检测次数
+         */
+        num?: number;
+        /**
+         * 电子凭证虚拟卡号
+         */
+        id?: string;
+        /**
+         * 买家编号
+         */
+        buyerId?: number;
+        /**
+         * 剩余可用次数
+         */
+        leftNum?: number;
+        /**
+         * 电子凭证类型
+         */
+        eticketType?: string;
+        /**
+         * 订单号
+         */
+        orderId?: number;
+        /**
+         * 卖家编号
+         */
+        sellerId?: number;
+        /**
+         * 显示状态
+         */
+        displayStatus?: string;
+        /**
+         * 访问token
+         */
+        token?: string;
+        [k: string]: unknown;
+      }[];
+      /**
+       * 是否成功
        */
       result?: number;
       /**
-       * 返回码描述
+       * 错误信息
        */
       error_msg?: string;
-      /**
-       * 1
-       */
-      data?: {
-        /**
-         * 1
-         */
-        commentId?: number;
-        [k: string]: unknown;
-      };
       [k: string]: unknown;
     };
     [k: string]: unknown;
@@ -20666,21 +21276,45 @@ export interface ApiDeclaration {
     [k: string]: unknown;
   };
   /**
-   * 子评价查询
+   * 回复评价
    */
-  "open.subcomment.list.get": {
+  "open.comment.add": {
     /**
      * API入参
      */
     request: {
       /**
-       * 2510222635
+       * 业务参数
        */
-      rootCommentId: number;
+      outInfo: {
+        /**
+         * 业务方SKUID
+         */
+        outItemSkuId: number;
+        /**
+         * 业务方订单编号
+         */
+        outOrderNo: string;
+        [k: string]: unknown;
+      };
       /**
-       * 399565023056
+       * 回复的评论id
        */
-      itemSkuId: number;
+      replyToCommentId: number;
+      /**
+       * 评价内容
+       */
+      content: string;
+      /**
+       * 1
+       */
+      option: {
+        /**
+         * 类型
+         */
+        sourceType: number;
+        [k: string]: unknown;
+      };
       [k: string]: unknown;
     };
     /**
@@ -20712,139 +21346,15 @@ export interface ApiDeclaration {
        */
       error_msg?: string;
       /**
-       * 子评
+       * 1
        */
       data?: {
         /**
-         * 信用评分 0未评价 1好评 2中评 3差评
-         */
-        creditScore?: number;
-        /**
-         * 是否为自动评论
-         */
-        auto?: boolean;
-        /**
-         * 订单SKU级别商品详情ID
-         */
-        orderProductId?: number;
-        /**
-         * 是否曾经被回复过
-         */
-        replied?: boolean;
-        /**
-         * 举报状态
-         */
-        reportStatus?: string;
-        /**
-         * 审核状态
-         */
-        auditStatus?: string;
-        /**
-         * 被回复的评论id
-         */
-        replyToCommentId?: number;
-        /**
-         * 评论内容
-         */
-        content?: string;
-        /**
-         * 是否曾经被点赞过
-         */
-        liked?: boolean;
-        /**
-         * 评论状态
-         */
-        valid?: boolean;
-        /**
-         * 评论更新时间
-         */
-        updateTime?: number;
-        /**
-         * 规格id
-         */
-        itemSkuId?: number;
-        /**
-         * 作弊状态
-         */
-        cheatStatus?: string;
-        /**
-         * 主评论id
-         */
-        rootCommentId?: number;
-        /**
-         * 物流评分 0未评价 1一星 2二星 3三星 4四星 5五星
-         */
-        logisticsScore?: number;
-        /**
-         * 评论创建时间
-         */
-        createTime?: number;
-        /**
-         * 商品id
-         */
-        itemId?: number;
-        /**
-         * 买家秀id
-         */
-        showId?: number;
-        /**
-         * 评价图片URL
-         */
-        imageUrl?: string[];
-        /**
-         * 质量评分 0未评价 1一星 2二星 3三星 4四星 5五星
-         */
-        qualityScore?: number;
-        /**
-         * 评论订单来源
-         */
-        sourceType?: number;
-        /**
-         * 评论id
+         * 1
          */
         commentId?: number;
-        /**
-         * 投诉状态
-         */
-        complainStatus?: string;
-        /**
-         * 评价视频封面图URL
-         */
-        videoCoverImageUrl?: string[];
-        /**
-         * 服务评分 0未评价 1一星 2二星 3三星 4四星 5五星
-         */
-        serviceScore?: number;
-        /**
-         * 申诉材料补充超时时间
-         */
-        supplyExpireTime?: number;
-        /**
-         * 是否曾经被追评过
-         */
-        attached?: boolean;
-        /**
-         * 是否为匿名评论 追评展示与主评保持一致
-         */
-        anonymous?: boolean;
-        /**
-         * 是否为商家回复
-         */
-        sellerReply?: boolean;
-        /**
-         * 订单id
-         */
-        orderId?: number;
-        /**
-         * 评论追加时间
-         */
-        attachedTime?: number;
-        /**
-         * 评价视频ID
-         */
-        videoId?: number[];
         [k: string]: unknown;
-      }[];
+      };
       [k: string]: unknown;
     };
     [k: string]: unknown;
@@ -21216,6 +21726,74 @@ export interface ApiDeclaration {
     [k: string]: unknown;
   };
   /**
+   * 获取买家服务关系
+   */
+  "open.service.market.buyer.service.info": {
+    /**
+     * API入参
+     */
+    request: {
+      /**
+       * 买家openId
+       */
+      buyerOpenId: string;
+      [k: string]: unknown;
+    };
+    /**
+     * API出参
+     */
+    response: {
+      /**
+       * 主返回码
+       */
+      code?: string;
+      /**
+       * 主返回信息
+       */
+      msg?: string;
+      /**
+       * 子返回码
+       */
+      sub_code?: string;
+      /**
+       * 返回码
+       */
+      result?: number;
+      /**
+       * 买家服务关系信息
+       */
+      data?: {
+        /**
+         * 是否有生效中的服务
+         */
+        inService: boolean;
+        /**
+         * 服务开始时间
+         */
+        startTime?: number;
+        /**
+         * 是否授权
+         */
+        authorized: boolean;
+        /**
+         * 服务结束时间
+         */
+        endTime?: number;
+        /**
+         * 套餐名称
+         */
+        packageName?: string;
+        [k: string]: unknown;
+      };
+      /**
+       * 返回码描述
+       */
+      message?: string;
+      [k: string]: unknown;
+    };
+    [k: string]: unknown;
+  };
+  /**
    * 获取本地生活订单详情
    */
   "open.locallife.order.detail": {
@@ -21555,17 +22133,21 @@ export interface ApiDeclaration {
     [k: string]: unknown;
   };
   /**
-   * 获取买家服务关系
+   * 子评价查询
    */
-  "open.service.market.buyer.service.info": {
+  "open.subcomment.list.get": {
     /**
      * API入参
      */
     request: {
       /**
-       * 买家openId
+       * 2510222635
        */
-      buyerOpenId: string;
+      rootCommentId: number;
+      /**
+       * 399565023056
+       */
+      itemSkuId: number;
       [k: string]: unknown;
     };
     /**
@@ -21585,39 +22167,201 @@ export interface ApiDeclaration {
        */
       sub_code?: string;
       /**
+       * 子返回信息
+       */
+      sub_msg?: string;
+      /**
        * 返回码
        */
       result?: number;
       /**
-       * 买家服务关系信息
+       * 返回码描述
+       */
+      error_msg?: string;
+      /**
+       * 子评
        */
       data?: {
         /**
-         * 是否有生效中的服务
+         * 信用评分 0未评价 1好评 2中评 3差评
          */
-        inService: boolean;
+        creditScore?: number;
         /**
-         * 服务开始时间
+         * 是否为自动评论
          */
-        startTime?: number;
+        auto?: boolean;
         /**
-         * 是否授权
+         * 订单SKU级别商品详情ID
          */
-        authorized: boolean;
+        orderProductId?: number;
         /**
-         * 服务结束时间
+         * 是否曾经被回复过
          */
-        endTime?: number;
+        replied?: boolean;
         /**
-         * 套餐名称
+         * 举报状态
          */
-        packageName?: string;
+        reportStatus?: string;
+        /**
+         * 审核状态
+         */
+        auditStatus?: string;
+        /**
+         * 被回复的评论id
+         */
+        replyToCommentId?: number;
+        /**
+         * 评论内容
+         */
+        content?: string;
+        /**
+         * 是否曾经被点赞过
+         */
+        liked?: boolean;
+        /**
+         * 评论状态
+         */
+        valid?: boolean;
+        /**
+         * 评论更新时间
+         */
+        updateTime?: number;
+        /**
+         * 规格id
+         */
+        itemSkuId?: number;
+        /**
+         * 作弊状态
+         */
+        cheatStatus?: string;
+        /**
+         * 主评论id
+         */
+        rootCommentId?: number;
+        /**
+         * 物流评分 0未评价 1一星 2二星 3三星 4四星 5五星
+         */
+        logisticsScore?: number;
+        /**
+         * 评论创建时间
+         */
+        createTime?: number;
+        /**
+         * 商品id
+         */
+        itemId?: number;
+        /**
+         * 买家秀id
+         */
+        showId?: number;
+        /**
+         * 评价图片URL
+         */
+        imageUrl?: string[];
+        /**
+         * 质量评分 0未评价 1一星 2二星 3三星 4四星 5五星
+         */
+        qualityScore?: number;
+        /**
+         * 评论订单来源
+         */
+        sourceType?: number;
+        /**
+         * 评论id
+         */
+        commentId?: number;
+        /**
+         * 投诉状态
+         */
+        complainStatus?: string;
+        /**
+         * 评价视频封面图URL
+         */
+        videoCoverImageUrl?: string[];
+        /**
+         * 服务评分 0未评价 1一星 2二星 3三星 4四星 5五星
+         */
+        serviceScore?: number;
+        /**
+         * 申诉材料补充超时时间
+         */
+        supplyExpireTime?: number;
+        /**
+         * 是否曾经被追评过
+         */
+        attached?: boolean;
+        /**
+         * 是否为匿名评论 追评展示与主评保持一致
+         */
+        anonymous?: boolean;
+        /**
+         * 是否为商家回复
+         */
+        sellerReply?: boolean;
+        /**
+         * 订单id
+         */
+        orderId?: number;
+        /**
+         * 评论追加时间
+         */
+        attachedTime?: number;
+        /**
+         * 评价视频ID
+         */
+        videoId?: number[];
         [k: string]: unknown;
-      };
+      }[];
+      [k: string]: unknown;
+    };
+    [k: string]: unknown;
+  };
+  /**
+   * 日志批量上传接口
+   */
+  "open.security.log.batch": {
+    /**
+     * API入参
+     */
+    request: {
       /**
-       * 返回码描述
+       * 批量上传的日志方法名字标示，order、open、sql、login
        */
-      message?: string;
+      method: string;
+      /**
+       * 日志内容，字段结构对齐method对应接口的入参字段结构，每次最多100条记录，如果超过100条，请拆分成多条请求。
+       */
+      data: string;
+      [k: string]: unknown;
+    };
+    /**
+     * API出参
+     */
+    response: {
+      /**
+       * 主返回码
+       */
+      code?: string;
+      /**
+       * 主返回信息
+       */
+      msg?: string;
+      /**
+       * 子返回码
+       */
+      sub_code?: string;
+      /**
+       * 子返回信息
+       */
+      sub_msg?: string;
+      /**
+       * 返回码
+       */
+      result?: number;
+      /**
+       * 返回码说明
+       */
+      error_msg?: string;
       [k: string]: unknown;
     };
     [k: string]: unknown;
@@ -21765,56 +22509,6 @@ export interface ApiDeclaration {
     [k: string]: unknown;
   };
   /**
-   * 日志批量上传接口
-   */
-  "open.security.log.batch": {
-    /**
-     * API入参
-     */
-    request: {
-      /**
-       * 批量上传的日志方法名字标示，order、open、sql、login
-       */
-      method: string;
-      /**
-       * 日志内容，字段结构对齐method对应接口的入参字段结构，每次最多100条记录，如果超过100条，请拆分成多条请求。
-       */
-      data: string;
-      [k: string]: unknown;
-    };
-    /**
-     * API出参
-     */
-    response: {
-      /**
-       * 主返回码
-       */
-      code?: string;
-      /**
-       * 主返回信息
-       */
-      msg?: string;
-      /**
-       * 子返回码
-       */
-      sub_code?: string;
-      /**
-       * 子返回信息
-       */
-      sub_msg?: string;
-      /**
-       * 返回码
-       */
-      result?: number;
-      /**
-       * 返回码说明
-       */
-      error_msg?: string;
-      [k: string]: unknown;
-    };
-    [k: string]: unknown;
-  };
-  /**
    * 登陆日志上传接口
    */
   "open.security.log.login": {
@@ -21876,80 +22570,6 @@ export interface ApiDeclaration {
        * 返回码说明
        */
       error_msg?: string;
-      [k: string]: unknown;
-    };
-    [k: string]: unknown;
-  };
-  /**
-   * 批量解密时效密文信息
-   */
-  "open.security.instant.decrypt.batch": {
-    /**
-     * API入参
-     */
-    request: {
-      /**
-       * 批量解密list，每次请求，报文条数不超过100条。
-       */
-      decryptDataList: {
-        /**
-         * 密文信息
-         */
-        encryptedData: string;
-        [k: string]: unknown;
-      }[];
-      [k: string]: unknown;
-    };
-    /**
-     * API出参
-     */
-    response: {
-      /**
-       * 主返回码
-       */
-      code?: string;
-      /**
-       * 主返回信息
-       */
-      msg?: string;
-      /**
-       * 子返回码
-       */
-      sub_code?: string;
-      /**
-       * 子返回信息
-       */
-      sub_msg?: string;
-      /**
-       * 返回码，1成功
-       */
-      result?: number;
-      /**
-       * 错误信息
-       */
-      error_msg?: string;
-      /**
-       * 解密结果
-       */
-      data?: {
-        /**
-         * 错误码，1成功，其他失败
-         */
-        errorCode: number;
-        /**
-         * 错误信息
-         */
-        errorMsg: string;
-        /**
-         * 明文数据
-         */
-        decryptedData: string;
-        /**
-         * 密文数据
-         */
-        encryptedData: string;
-        [k: string]: unknown;
-      }[];
       [k: string]: unknown;
     };
     [k: string]: unknown;
@@ -22139,53 +22759,23 @@ export interface ApiDeclaration {
     [k: string]: unknown;
   };
   /**
-   * 开放场景订单日志上传接口
+   * 批量解密时效密文信息
    */
-  "open.security.log.open": {
+  "open.security.instant.decrypt.batch": {
     /**
      * API入参
      */
     request: {
       /**
-       * 商家在快手的唯一标识，在同一开发主体下唯一。用户标示优先使用openId字段，如没有改字段则使用sellerId字段，openId和sellerId不许均为空
+       * 批量解密list，每次请求，报文条数不超过100条。
        */
-      openId?: string;
-      /**
-       * 商家id（主子账号共用同一个商家id，替换原有url中的shopId即sellerId）
-       */
-      sellerId?: number;
-      /**
-       * ISV自建开放平台场景，没有sellerId及其openId时需填充的字段且该字段需能定位到具体用户
-       */
-      userId?: string;
-      /**
-       * 用户操作订单Id，用英文逗号分隔，每次最多100条记录。如果超过100条，请拆分成多条请求。要求传入的订单Id为快手的原始单号。orderIds和data字段不许均为空。
-       */
-      orderIds?: number[];
-      /**
-       * 数据接收方IP地址，请注意要记录用户客户端的IP，不是记录ISV自身服务器的IP。
-       */
-      clientIp: string;
-      /**
-       * 批量同步等涉及大批订单场景，orderIds字段可为空，将订单筛选条件填充到data字段中、订单总量填充到orderTotal字段中。orderIds和data字段不许均为空。
-       */
-      data?: string;
-      /**
-       * 订单总数
-       */
-      orderTotal?: number;
-      /**
-       * 客户端请求url
-       */
-      url: string;
-      /**
-       * 订单推送目的地URL
-       */
-      sendToUrl: string;
-      /**
-       * 操作时间，整型时间戳，精确到毫秒
-       */
-      time: number;
+      decryptDataList: {
+        /**
+         * 密文信息
+         */
+        encryptedData: string;
+        [k: string]: unknown;
+      }[];
       [k: string]: unknown;
     };
     /**
@@ -22209,13 +22799,35 @@ export interface ApiDeclaration {
        */
       sub_msg?: string;
       /**
-       * 返回码
+       * 返回码，1成功
        */
       result?: number;
       /**
-       * 返回码说明
+       * 错误信息
        */
       error_msg?: string;
+      /**
+       * 解密结果
+       */
+      data?: {
+        /**
+         * 错误码，1成功，其他失败
+         */
+        errorCode: number;
+        /**
+         * 错误信息
+         */
+        errorMsg: string;
+        /**
+         * 明文数据
+         */
+        decryptedData: string;
+        /**
+         * 密文数据
+         */
+        encryptedData: string;
+        [k: string]: unknown;
+      }[];
       [k: string]: unknown;
     };
     [k: string]: unknown;
@@ -22292,6 +22904,88 @@ export interface ApiDeclaration {
       result?: number;
       /**
        * 返回码描述
+       */
+      error_msg?: string;
+      [k: string]: unknown;
+    };
+    [k: string]: unknown;
+  };
+  /**
+   * 开放场景订单日志上传接口
+   */
+  "open.security.log.open": {
+    /**
+     * API入参
+     */
+    request: {
+      /**
+       * 商家在快手的唯一标识，在同一开发主体下唯一。用户标示优先使用openId字段，如没有改字段则使用sellerId字段，openId和sellerId不许均为空
+       */
+      openId?: string;
+      /**
+       * 商家id（主子账号共用同一个商家id，替换原有url中的shopId即sellerId）
+       */
+      sellerId?: number;
+      /**
+       * ISV自建开放平台场景，没有sellerId及其openId时需填充的字段且该字段需能定位到具体用户
+       */
+      userId?: string;
+      /**
+       * 用户操作订单Id，用英文逗号分隔，每次最多100条记录。如果超过100条，请拆分成多条请求。要求传入的订单Id为快手的原始单号。orderIds和data字段不许均为空。
+       */
+      orderIds?: number[];
+      /**
+       * 数据接收方IP地址，请注意要记录用户客户端的IP，不是记录ISV自身服务器的IP。
+       */
+      clientIp: string;
+      /**
+       * 批量同步等涉及大批订单场景，orderIds字段可为空，将订单筛选条件填充到data字段中、订单总量填充到orderTotal字段中。orderIds和data字段不许均为空。
+       */
+      data?: string;
+      /**
+       * 订单总数
+       */
+      orderTotal?: number;
+      /**
+       * 客户端请求url
+       */
+      url: string;
+      /**
+       * 订单推送目的地URL
+       */
+      sendToUrl: string;
+      /**
+       * 操作时间，整型时间戳，精确到毫秒
+       */
+      time: number;
+      [k: string]: unknown;
+    };
+    /**
+     * API出参
+     */
+    response: {
+      /**
+       * 主返回码
+       */
+      code?: string;
+      /**
+       * 主返回信息
+       */
+      msg?: string;
+      /**
+       * 子返回码
+       */
+      sub_code?: string;
+      /**
+       * 子返回信息
+       */
+      sub_msg?: string;
+      /**
+       * 返回码
+       */
+      result?: number;
+      /**
+       * 返回码说明
        */
       error_msg?: string;
       [k: string]: unknown;
@@ -23958,224 +24652,6 @@ export interface ApiDeclaration {
     [k: string]: unknown;
   };
   /**
-   * 查询保证金余额
-   */
-  "open.funds.center.get.depositinfo": {
-    /**
-     * API入参
-     */
-    request: {
-      /**
-       * 保证金类型 （自建保证金1，推广保证金2，跨境保证金7）
-       */
-      securityDepositType: number;
-      [k: string]: unknown;
-    };
-    /**
-     * API出参
-     */
-    response: {
-      /**
-       * 主返回码
-       */
-      code?: string;
-      /**
-       * 主返回信息
-       */
-      msg?: string;
-      /**
-       * 子返回码
-       */
-      sub_code?: string;
-      /**
-       * 子返回信息
-       */
-      sub_msg?: string;
-      /**
-       * 返回码，1成功
-       */
-      result?: number;
-      /**
-       * 错误信息
-       */
-      error_msg?: string;
-      /**
-       * 保证金余额信息
-       */
-      data?: {
-        /**
-         * 保证金余额
-         */
-        depositBalance?: number;
-        /**
-         * 保证金阈值
-         */
-        depositLowBalance?: number;
-        /**
-         * 保证金余额是否充足
-         */
-        ifDepositBalanceEnough?: boolean;
-        /**
-         * 保证金账户是否冻结
-         */
-        ifFrozen?: boolean;
-        [k: string]: unknown;
-      };
-      [k: string]: unknown;
-    };
-    [k: string]: unknown;
-  };
-  /**
-   * 现金户提现申请结果查询
-   */
-  "open.funds.center.get.withdraw.result": {
-    /**
-     * API入参
-     */
-    request: {
-      /**
-       * 业务提现号
-       */
-      withdrawNo: string;
-      /**
-       * 提现渠道 （1 小店余额 2 微信 3 支付宝 4 安心钱包）
-       */
-      accountChannel: number;
-      [k: string]: unknown;
-    };
-    /**
-     * API出参
-     */
-    response: {
-      /**
-       * 主返回码
-       */
-      code?: string;
-      /**
-       * 主返回信息
-       */
-      msg?: string;
-      /**
-       * 子返回码
-       */
-      sub_code?: string;
-      /**
-       * 子返回信息
-       */
-      sub_msg?: string;
-      /**
-       * 返回码，1成功
-       */
-      result?: number;
-      /**
-       * 错误信息
-       */
-      error_msg?: string;
-      /**
-       * 数据对象
-       */
-      data?: {
-        /**
-         * 提现金额(分)
-         */
-        withdrawMoney?: number;
-        /**
-         * 创建时间
-         */
-        createTime?: number;
-        /**
-         * 业务提现号（部分渠道不会返回这个字段）
-         */
-        withdrawNo?: string;
-        /**
-         * 提现状态
-         */
-        state?: string;
-        /**
-         * 成功时间
-         */
-        successTime?: number;
-        /**
-         * 失败原因
-         */
-        failReason?: string;
-        /**
-         * 平台提现号
-         */
-        platformWithdrawNo?: string;
-        /**
-         * 提现备注
-         */
-        withdrawDesc?: string;
-        [k: string]: unknown;
-      };
-      [k: string]: unknown;
-    };
-    [k: string]: unknown;
-  };
-  /**
-   * 现金户提现申请
-   */
-  "open.funds.center.withdraw.apply": {
-    /**
-     * API入参
-     */
-    request: {
-      /**
-       * 提现金额
-       */
-      withdrawMoney: number;
-      /**
-       * 业务提现单号
-       */
-      withdrawNo: string;
-      /**
-       * 提现备注
-       */
-      remark?: string;
-      /**
-       * 提现渠道 （1 小店余额 2 微信 3 支付宝 4 安心钱包）
-       */
-      accountChannel: number;
-      /**
-       * 二级商户号 （微信、支付宝，安心钱包 传入）
-       */
-      subMerchantId: string;
-      [k: string]: unknown;
-    };
-    /**
-     * API出参
-     */
-    response: {
-      /**
-       * 主返回码
-       */
-      code?: string;
-      /**
-       * 主返回信息
-       */
-      msg?: string;
-      /**
-       * 子返回码
-       */
-      sub_code?: string;
-      /**
-       * 子返回信息
-       */
-      sub_msg?: string;
-      /**
-       * 返回码，1成功
-       */
-      result?: number;
-      /**
-       * 错误信息
-       */
-      error_msg?: string;
-      [k: string]: unknown;
-    };
-    [k: string]: unknown;
-  };
-  /**
    * 保证金变更记录查询
    */
   "open.funds.center.get.depositrecord": {
@@ -24283,6 +24759,162 @@ export interface ApiDeclaration {
          * 变更总页码
          */
         totalPage?: number;
+        [k: string]: unknown;
+      };
+      [k: string]: unknown;
+    };
+    [k: string]: unknown;
+  };
+  /**
+   * 现金户提现申请结果查询
+   */
+  "open.funds.center.get.withdraw.result": {
+    /**
+     * API入参
+     */
+    request: {
+      /**
+       * 业务提现号
+       */
+      withdrawNo: string;
+      /**
+       * 提现渠道 （1 小店余额 2 微信 3 支付宝 4 安心钱包）
+       */
+      accountChannel: number;
+      [k: string]: unknown;
+    };
+    /**
+     * API出参
+     */
+    response: {
+      /**
+       * 主返回码
+       */
+      code?: string;
+      /**
+       * 主返回信息
+       */
+      msg?: string;
+      /**
+       * 子返回码
+       */
+      sub_code?: string;
+      /**
+       * 子返回信息
+       */
+      sub_msg?: string;
+      /**
+       * 返回码，1成功
+       */
+      result?: number;
+      /**
+       * 错误信息
+       */
+      error_msg?: string;
+      /**
+       * 数据对象
+       */
+      data?: {
+        /**
+         * 提现金额(分)
+         */
+        withdrawMoney?: number;
+        /**
+         * 创建时间
+         */
+        createTime?: number;
+        /**
+         * 业务提现号（部分渠道不会返回这个字段）
+         */
+        withdrawNo?: string;
+        /**
+         * 提现状态
+         */
+        state?: string;
+        /**
+         * 成功时间
+         */
+        successTime?: number;
+        /**
+         * 失败原因
+         */
+        failReason?: string;
+        /**
+         * 平台提现号
+         */
+        platformWithdrawNo?: string;
+        /**
+         * 提现备注
+         */
+        withdrawDesc?: string;
+        [k: string]: unknown;
+      };
+      [k: string]: unknown;
+    };
+    [k: string]: unknown;
+  };
+  /**
+   * 查询保证金余额
+   */
+  "open.funds.center.get.depositinfo": {
+    /**
+     * API入参
+     */
+    request: {
+      /**
+       * 保证金类型 （自建保证金1，推广保证金2，跨境保证金7）
+       */
+      securityDepositType: number;
+      [k: string]: unknown;
+    };
+    /**
+     * API出参
+     */
+    response: {
+      /**
+       * 主返回码
+       */
+      code?: string;
+      /**
+       * 主返回信息
+       */
+      msg?: string;
+      /**
+       * 子返回码
+       */
+      sub_code?: string;
+      /**
+       * 子返回信息
+       */
+      sub_msg?: string;
+      /**
+       * 返回码，1成功
+       */
+      result?: number;
+      /**
+       * 错误信息
+       */
+      error_msg?: string;
+      /**
+       * 保证金余额信息
+       */
+      data?: {
+        /**
+         * 保证金余额
+         */
+        depositBalance?: number;
+        /**
+         * 保证金阈值
+         */
+        depositLowBalance?: number;
+        /**
+         * 保证金余额是否充足
+         */
+        ifDepositBalanceEnough?: boolean;
+        /**
+         * 保证金账户是否冻结
+         */
+        ifFrozen?: boolean;
         [k: string]: unknown;
       };
       [k: string]: unknown;
@@ -24399,6 +25031,68 @@ export interface ApiDeclaration {
         }[];
         [k: string]: unknown;
       };
+      [k: string]: unknown;
+    };
+    [k: string]: unknown;
+  };
+  /**
+   * 现金户提现申请
+   */
+  "open.funds.center.withdraw.apply": {
+    /**
+     * API入参
+     */
+    request: {
+      /**
+       * 提现金额
+       */
+      withdrawMoney: number;
+      /**
+       * 业务提现单号
+       */
+      withdrawNo: string;
+      /**
+       * 提现备注
+       */
+      remark?: string;
+      /**
+       * 提现渠道 （1 小店余额 2 微信 3 支付宝 4 安心钱包）
+       */
+      accountChannel: number;
+      /**
+       * 二级商户号 （微信、支付宝，安心钱包 传入）
+       */
+      subMerchantId: string;
+      [k: string]: unknown;
+    };
+    /**
+     * API出参
+     */
+    response: {
+      /**
+       * 主返回码
+       */
+      code?: string;
+      /**
+       * 主返回信息
+       */
+      msg?: string;
+      /**
+       * 子返回码
+       */
+      sub_code?: string;
+      /**
+       * 子返回信息
+       */
+      sub_msg?: string;
+      /**
+       * 返回码，1成功
+       */
+      result?: number;
+      /**
+       * 错误信息
+       */
+      error_msg?: string;
       [k: string]: unknown;
     };
     [k: string]: unknown;
@@ -24932,6 +25626,72 @@ export interface ApiDeclaration {
     [k: string]: unknown;
   };
   /**
+   * 调整货品库存
+   */
+  "open.scm.inventory.adjust": {
+    /**
+     * API入参
+     */
+    request: {
+      /**
+       * 货品外部编码
+       */
+      wareOutCode: string;
+      /**
+       * 幂等键
+       */
+      idempotentId: string;
+      /**
+       * 外部仓库编码
+       */
+      warehouseOutCode: string;
+      /**
+       * 调整方向（增加/减少）
+       */
+      operationType: string;
+      /**
+       * 调整数量。如果库存不足，就回返回实际变更的值
+       */
+      adjustQuantity: number;
+      [k: string]: unknown;
+    };
+    /**
+     * API出参
+     */
+    response: {
+      /**
+       * 主返回码
+       */
+      code?: string;
+      /**
+       * 主返回信息
+       */
+      msg?: string;
+      /**
+       * 子返回码
+       */
+      sub_code?: string;
+      /**
+       * 子返回信息
+       */
+      sub_msg?: string;
+      /**
+       * 返回码，1成功
+       */
+      result?: number;
+      /**
+       * 错误信息
+       */
+      error_msg?: string;
+      /**
+       * 实际变更数量
+       */
+      adjust_quantity?: number;
+      [k: string]: unknown;
+    };
+    [k: string]: unknown;
+  };
+  /**
    * 普通账单数据
    */
   "open.funds.financial.bill.batch.detail": {
@@ -25222,33 +25982,25 @@ export interface ApiDeclaration {
     [k: string]: unknown;
   };
   /**
-   * 调整货品库存
+   * 库存全量更新接口
    */
-  "open.scm.inventory.adjust": {
+  "open.scm.inventory.update": {
     /**
      * API入参
      */
     request: {
       /**
+       * 库存数量。大于等于0
+       */
+      quantity: number;
+      /**
        * 货品外部编码
        */
       wareOutCode: string;
       /**
-       * 幂等键
-       */
-      idempotentId: string;
-      /**
-       * 外部仓库编码
+       * 仓库外部编码
        */
       warehouseOutCode: string;
-      /**
-       * 调整方向（增加/减少）
-       */
-      operationType: string;
-      /**
-       * 调整数量。如果库存不足，就回返回实际变更的值
-       */
-      adjustQuantity: number;
       [k: string]: unknown;
     };
     /**
@@ -25280,9 +26032,9 @@ export interface ApiDeclaration {
        */
       error_msg?: string;
       /**
-       * 实际变更数量
+       * 变更化后的值。库存并不一定会等于入参。因为各种原因， 比如库存已经被占用，无法收回。也有可能接口返回之前， 库存已经被其他请求变更。
        */
-      adjust_quantity?: number;
+      quantity?: number;
       [k: string]: unknown;
     };
     [k: string]: unknown;
@@ -25338,25 +26090,25 @@ export interface ApiDeclaration {
     [k: string]: unknown;
   };
   /**
-   * 库存全量更新接口
+   * 绑定运单号
    */
-  "open.scm.inventory.update": {
+  "open.scm.quality.single.bind": {
     /**
      * API入参
      */
     request: {
       /**
-       * 库存数量。大于等于0
+       * 订单号
        */
-      quantity: number;
+      orderId: string;
       /**
-       * 货品外部编码
+       * 出库运单号（物流单号）
        */
-      wareOutCode: string;
+      expressNo: string;
       /**
-       * 仓库外部编码
+       * 物流公司编码 ZTO
        */
-      warehouseOutCode: string;
+      expressCode: string;
       [k: string]: unknown;
     };
     /**
@@ -25387,10 +26139,6 @@ export interface ApiDeclaration {
        * 错误信息
        */
       error_msg?: string;
-      /**
-       * 变更化后的值。库存并不一定会等于入参。因为各种原因， 比如库存已经被占用，无法收回。也有可能接口返回之前， 库存已经被其他请求变更。
-       */
-      quantity?: number;
       [k: string]: unknown;
     };
     [k: string]: unknown;
@@ -25490,25 +26238,17 @@ export interface ApiDeclaration {
     [k: string]: unknown;
   };
   /**
-   * 绑定运单号
+   * 禁用货品
    */
-  "open.scm.quality.single.bind": {
+  "open.scm.ware.delete": {
     /**
      * API入参
      */
     request: {
       /**
-       * 订单号
+       * 外部货品编码
        */
-      orderId: string;
-      /**
-       * 出库运单号（物流单号）
-       */
-      expressNo: string;
-      /**
-       * 物流公司编码 ZTO
-       */
-      expressCode: string;
+      wareOutCode: string;
       [k: string]: unknown;
     };
     /**
@@ -25625,52 +26365,6 @@ export interface ApiDeclaration {
        * 货品ID（编码）
        */
       data?: string;
-      [k: string]: unknown;
-    };
-    [k: string]: unknown;
-  };
-  /**
-   * 禁用货品
-   */
-  "open.scm.ware.delete": {
-    /**
-     * API入参
-     */
-    request: {
-      /**
-       * 外部货品编码
-       */
-      wareOutCode: string;
-      [k: string]: unknown;
-    };
-    /**
-     * API出参
-     */
-    response: {
-      /**
-       * 主返回码
-       */
-      code?: string;
-      /**
-       * 主返回信息
-       */
-      msg?: string;
-      /**
-       * 子返回码
-       */
-      sub_code?: string;
-      /**
-       * 子返回信息
-       */
-      sub_msg?: string;
-      /**
-       * 返回码，1成功
-       */
-      result?: number;
-      /**
-       * 错误信息
-       */
-      error_msg?: string;
       [k: string]: unknown;
     };
     [k: string]: unknown;
@@ -26650,6 +27344,172 @@ export interface ApiDeclaration {
     [k: string]: unknown;
   };
   /**
+   * 查询短信发送结果
+   */
+  "open.sms.send.result": {
+    /**
+     * API入参
+     */
+    request: {
+      /**
+       * 消息id
+       */
+      messageId?: number;
+      /**
+       * 模板id
+       */
+      templateId?: number;
+      /**
+       * 签名id
+       */
+      signId?: number;
+      /**
+       * 手机号，既可以是明文也可以是密文(平台接口返回的手机密文)
+       */
+      mobile?: string;
+      /**
+       * 短信状态：1未回执 2发送成功 3发送失败
+       */
+      status?: number;
+      /**
+       * 开始时间(只能查最近3个月的记录)
+       */
+      startTime: number;
+      /**
+       * 结束时间（开始时间与结束时间间隔不能大于7天）
+       */
+      endTime: number;
+      /**
+       * 页数
+       */
+      pageNum: number;
+      /**
+       * 每页多少条，最大50
+       */
+      pageSize: number;
+      [k: string]: unknown;
+    };
+    /**
+     * API出参
+     */
+    response: {
+      /**
+       * 主返回码
+       */
+      code?: string;
+      /**
+       * 主返回信息
+       */
+      msg?: string;
+      /**
+       * 子返回码
+       */
+      sub_code?: string;
+      /**
+       * 子返回信息
+       */
+      sub_msg?: string;
+      /**
+       * 返回码，1成功
+       */
+      result?: number;
+      /**
+       * 错误信息
+       */
+      error_msg?: string;
+      /**
+       * 短信结果列表
+       */
+      smsResultDataList?: {
+        /**
+         * 消息id
+         */
+        messageId: number;
+        /**
+         * 短信内容
+         */
+        smsContent: string;
+        /**
+         * 发送时间
+         */
+        sendTime: number;
+        /**
+         * 1未回执 2发送成功 3发送失败
+         */
+        status: number;
+        /**
+         * 计费条数，如果短信过长，会分多次计费
+         */
+        count: number;
+        [k: string]: unknown;
+      }[];
+      /**
+       * 总数
+       */
+      total?: number;
+      [k: string]: unknown;
+    };
+    [k: string]: unknown;
+  };
+  /**
+   * 短信签名申请接口
+   */
+  "open.sms.sign.apply.create": {
+    /**
+     * API入参
+     */
+    request: {
+      /**
+       * 申请的短信签名
+       */
+      sign: string;
+      [k: string]: unknown;
+    };
+    /**
+     * API出参
+     */
+    response: {
+      /**
+       * 主返回码
+       */
+      code?: string;
+      /**
+       * 主返回信息
+       */
+      msg?: string;
+      /**
+       * 子返回码
+       */
+      sub_code?: string;
+      /**
+       * 子返回信息
+       */
+      sub_msg?: string;
+      /**
+       * 返回码，1成功
+       */
+      result?: number;
+      /**
+       * 错误信息
+       */
+      error_msg?: string;
+      /**
+       * 申请的短信签名
+       */
+      sign?: string;
+      /**
+       * 审核状态， 1审核中，2已通过 3已拒绝
+       */
+      status?: number;
+      /**
+       * 签名申请单id
+       */
+      signId?: number;
+      [k: string]: unknown;
+    };
+    [k: string]: unknown;
+  };
+  /**
    * 短信批量发送接口
    */
   "open.sms.batch.send": {
@@ -26782,17 +27642,71 @@ export interface ApiDeclaration {
     [k: string]: unknown;
   };
   /**
-   * 短信签名申请接口
+   * 短信模板删除
    */
-  "open.sms.sign.apply.create": {
+  "open.sms.template.delete": {
     /**
      * API入参
      */
     request: {
       /**
-       * 申请的短信签名
+       * 模板id
        */
-      sign: string;
+      templateId: number;
+      [k: string]: unknown;
+    };
+    /**
+     * API出参
+     */
+    response: {
+      /**
+       * 主返回码
+       */
+      code?: string;
+      /**
+       * 主返回信息
+       */
+      msg?: string;
+      /**
+       * 子返回码
+       */
+      sub_code?: string;
+      /**
+       * 子返回信息
+       */
+      sub_msg?: string;
+      /**
+       * 返回码，1成功
+       */
+      result?: number;
+      /**
+       * 错误信息
+       */
+      error_msg?: string;
+      [k: string]: unknown;
+    };
+    [k: string]: unknown;
+  };
+  /**
+   * 短信模板申请
+   */
+  "open.sms.template.apply.create": {
+    /**
+     * API入参
+     */
+    request: {
+      /**
+       * 模板名称
+       */
+      templateName: string;
+      /**
+       * 模板内容
+       */
+      templateContent: string;
+      /**
+       * 模板类型 1 推广类 2 通知类
+       */
+      templateType: number;
       [k: string]: unknown;
     };
     /**
@@ -26824,17 +27738,9 @@ export interface ApiDeclaration {
        */
       error_msg?: string;
       /**
-       * 申请的短信签名
+       * 模板id
        */
-      sign?: string;
-      /**
-       * 审核状态， 1审核中，2已通过 3已拒绝
-       */
-      status?: number;
-      /**
-       * 签名申请单id
-       */
-      signId?: number;
+      templateId?: number;
       [k: string]: unknown;
     };
     [k: string]: unknown;
@@ -26919,264 +27825,6 @@ export interface ApiDeclaration {
         approvalDesc?: string;
         [k: string]: unknown;
       }[];
-      [k: string]: unknown;
-    };
-    [k: string]: unknown;
-  };
-  /**
-   * 查询短信发送结果
-   */
-  "open.sms.send.result": {
-    /**
-     * API入参
-     */
-    request: {
-      /**
-       * 消息id
-       */
-      messageId?: number;
-      /**
-       * 模板id
-       */
-      templateId?: number;
-      /**
-       * 签名id
-       */
-      signId?: number;
-      /**
-       * 手机号，既可以是明文也可以是密文(平台接口返回的手机密文)
-       */
-      mobile?: string;
-      /**
-       * 短信状态：1未回执 2发送成功 3发送失败
-       */
-      status?: number;
-      /**
-       * 开始时间(只能查最近3个月的记录)
-       */
-      startTime: number;
-      /**
-       * 结束时间（开始时间与结束时间间隔不能大于7天）
-       */
-      endTime: number;
-      /**
-       * 页数
-       */
-      pageNum: number;
-      /**
-       * 每页多少条，最大50
-       */
-      pageSize: number;
-      [k: string]: unknown;
-    };
-    /**
-     * API出参
-     */
-    response: {
-      /**
-       * 主返回码
-       */
-      code?: string;
-      /**
-       * 主返回信息
-       */
-      msg?: string;
-      /**
-       * 子返回码
-       */
-      sub_code?: string;
-      /**
-       * 子返回信息
-       */
-      sub_msg?: string;
-      /**
-       * 返回码，1成功
-       */
-      result?: number;
-      /**
-       * 错误信息
-       */
-      error_msg?: string;
-      /**
-       * 短信结果列表
-       */
-      smsResultDataList?: {
-        /**
-         * 消息id
-         */
-        messageId: number;
-        /**
-         * 短信内容
-         */
-        smsContent: string;
-        /**
-         * 发送时间
-         */
-        sendTime: number;
-        /**
-         * 1未回执 2发送成功 3发送失败
-         */
-        status: number;
-        /**
-         * 计费条数，如果短信过长，会分多次计费
-         */
-        count: number;
-        [k: string]: unknown;
-      }[];
-      /**
-       * 总数
-       */
-      total?: number;
-      [k: string]: unknown;
-    };
-    [k: string]: unknown;
-  };
-  /**
-   * 短信模板申请
-   */
-  "open.sms.template.apply.create": {
-    /**
-     * API入参
-     */
-    request: {
-      /**
-       * 模板名称
-       */
-      templateName: string;
-      /**
-       * 模板内容
-       */
-      templateContent: string;
-      /**
-       * 模板类型 1 推广类 2 通知类
-       */
-      templateType: number;
-      [k: string]: unknown;
-    };
-    /**
-     * API出参
-     */
-    response: {
-      /**
-       * 主返回码
-       */
-      code?: string;
-      /**
-       * 主返回信息
-       */
-      msg?: string;
-      /**
-       * 子返回码
-       */
-      sub_code?: string;
-      /**
-       * 子返回信息
-       */
-      sub_msg?: string;
-      /**
-       * 返回码，1成功
-       */
-      result?: number;
-      /**
-       * 错误信息
-       */
-      error_msg?: string;
-      /**
-       * 模板id
-       */
-      templateId?: number;
-      [k: string]: unknown;
-    };
-    [k: string]: unknown;
-  };
-  /**
-   * 短信模板删除
-   */
-  "open.sms.template.delete": {
-    /**
-     * API入参
-     */
-    request: {
-      /**
-       * 模板id
-       */
-      templateId: number;
-      [k: string]: unknown;
-    };
-    /**
-     * API出参
-     */
-    response: {
-      /**
-       * 主返回码
-       */
-      code?: string;
-      /**
-       * 主返回信息
-       */
-      msg?: string;
-      /**
-       * 子返回码
-       */
-      sub_code?: string;
-      /**
-       * 子返回信息
-       */
-      sub_msg?: string;
-      /**
-       * 返回码，1成功
-       */
-      result?: number;
-      /**
-       * 错误信息
-       */
-      error_msg?: string;
-      [k: string]: unknown;
-    };
-    [k: string]: unknown;
-  };
-  /**
-   * 删除视频
-   */
-  "open.photo.delete": {
-    /**
-     * API入参
-     */
-    request: {
-      /**
-       * 视频Id
-       */
-      photoId?: string;
-      [k: string]: unknown;
-    };
-    /**
-     * API出参
-     */
-    response: {
-      /**
-       * 主返回码
-       */
-      code?: string;
-      /**
-       * 主返回信息
-       */
-      msg?: string;
-      /**
-       * 子返回码
-       */
-      sub_code?: string;
-      /**
-       * 子返回信息
-       */
-      sub_msg?: string;
-      /**
-       * 返回码
-       */
-      result?: number;
-      /**
-       * 错误信息
-       */
-      error_msg?: string;
       [k: string]: unknown;
     };
     [k: string]: unknown;
@@ -27275,6 +27923,52 @@ export interface ApiDeclaration {
     [k: string]: unknown;
   };
   /**
+   * 删除视频
+   */
+  "open.photo.delete": {
+    /**
+     * API入参
+     */
+    request: {
+      /**
+       * 视频Id
+       */
+      photoId?: string;
+      [k: string]: unknown;
+    };
+    /**
+     * API出参
+     */
+    response: {
+      /**
+       * 主返回码
+       */
+      code?: string;
+      /**
+       * 主返回信息
+       */
+      msg?: string;
+      /**
+       * 子返回码
+       */
+      sub_code?: string;
+      /**
+       * 子返回信息
+       */
+      sub_msg?: string;
+      /**
+       * 返回码
+       */
+      result?: number;
+      /**
+       * 错误信息
+       */
+      error_msg?: string;
+      [k: string]: unknown;
+    };
+    [k: string]: unknown;
+  };
+  /**
    * 查询视频数量接口
    */
   "open.photo.count": {
@@ -27334,6 +28028,62 @@ export interface ApiDeclaration {
         allCount?: number;
         [k: string]: unknown;
       };
+      [k: string]: unknown;
+    };
+    [k: string]: unknown;
+  };
+  /**
+   * 新增应用ip白名单
+   */
+  "open.appIpWhiteListAdd": {
+    /**
+     * API入参
+     */
+    request: {
+      /**
+       * 白名单集合
+       */
+      whiteListIPS: {
+        /**
+         * ip，也支持ip段
+         */
+        ip: string;
+        /**
+         * 状态，1:启用，2:停用
+         */
+        status: number;
+        [k: string]: unknown;
+      }[];
+      [k: string]: unknown;
+    };
+    /**
+     * API出参
+     */
+    response: {
+      /**
+       * 主返回码
+       */
+      code?: string;
+      /**
+       * 主返回信息
+       */
+      msg?: string;
+      /**
+       * 子返回码
+       */
+      sub_code?: string;
+      /**
+       * 子返回信息
+       */
+      sub_msg?: string;
+      /**
+       * 返回码，1成功
+       */
+      result?: number;
+      /**
+       * 错误信息
+       */
+      error_msg?: string;
       [k: string]: unknown;
     };
     [k: string]: unknown;
@@ -27515,6 +28265,62 @@ export interface ApiDeclaration {
     [k: string]: unknown;
   };
   /**
+   * 创建视频
+   */
+  "open.photo.start.upload": {
+    /**
+     * API入参
+     */
+    request?: {
+      [k: string]: unknown;
+    };
+    /**
+     * API出参
+     */
+    response: {
+      /**
+       * 主返回码
+       */
+      code?: string;
+      /**
+       * 主返回信息
+       */
+      msg?: string;
+      /**
+       * 子返回码
+       */
+      sub_code?: string;
+      /**
+       * 子返回信息
+       */
+      sub_msg?: string;
+      /**
+       * 返回码
+       */
+      result?: number;
+      /**
+       * 错误信息
+       */
+      error_msg?: string;
+      /**
+       * 返回数据
+       */
+      data?: {
+        /**
+         * 上传网关的域名
+         */
+        endpoint?: string;
+        /**
+         * 上传令牌
+         */
+        uploadToken?: string;
+        [k: string]: unknown;
+      };
+      [k: string]: unknown;
+    };
+    [k: string]: unknown;
+  };
+  /**
    * 查询用户视频列表
    */
   "open.photo.list": {
@@ -27606,62 +28412,6 @@ export interface ApiDeclaration {
           pending?: boolean;
           [k: string]: unknown;
         }[];
-        [k: string]: unknown;
-      };
-      [k: string]: unknown;
-    };
-    [k: string]: unknown;
-  };
-  /**
-   * 创建视频
-   */
-  "open.photo.start.upload": {
-    /**
-     * API入参
-     */
-    request?: {
-      [k: string]: unknown;
-    };
-    /**
-     * API出参
-     */
-    response: {
-      /**
-       * 主返回码
-       */
-      code?: string;
-      /**
-       * 主返回信息
-       */
-      msg?: string;
-      /**
-       * 子返回码
-       */
-      sub_code?: string;
-      /**
-       * 子返回信息
-       */
-      sub_msg?: string;
-      /**
-       * 返回码
-       */
-      result?: number;
-      /**
-       * 错误信息
-       */
-      error_msg?: string;
-      /**
-       * 返回数据
-       */
-      data?: {
-        /**
-         * 上传网关的域名
-         */
-        endpoint?: string;
-        /**
-         * 上传令牌
-         */
-        uploadToken?: string;
         [k: string]: unknown;
       };
       [k: string]: unknown;
@@ -27839,6 +28589,66 @@ export interface ApiDeclaration {
     [k: string]: unknown;
   };
   /**
+   * 用户观看时长是否符合阈值
+   */
+  "open.live.shop.watch.time.match": {
+    /**
+     * API入参
+     */
+    request: {
+      /**
+       * 用户id
+       */
+      userOpenId: string;
+      /**
+       * 阈值(单位:秒)
+       */
+      threshold: number;
+      [k: string]: unknown;
+    };
+    /**
+     * API出参
+     */
+    response: {
+      /**
+       * 主返回码
+       */
+      code?: string;
+      /**
+       * 主返回信息
+       */
+      msg?: string;
+      /**
+       * 子返回码
+       */
+      sub_code?: string;
+      /**
+       * 子返回信息
+       */
+      sub_msg?: string;
+      /**
+       * 返回码，1成功
+       */
+      result?: number;
+      /**
+       * 错误信息
+       */
+      error_msg?: string;
+      /**
+       * 是否达到阈值
+       */
+      data?: {
+        /**
+         * 是否达到阈值
+         */
+        match: boolean;
+        [k: string]: unknown;
+      };
+      [k: string]: unknown;
+    };
+    [k: string]: unknown;
+  };
+  /**
    * 代发订单电子面单取消
    */
   "open.dropshipping.ebill.cancel": {
@@ -27955,66 +28765,6 @@ export interface ApiDeclaration {
     [k: string]: unknown;
   };
   /**
-   * 用户观看时长是否符合阈值
-   */
-  "open.live.shop.watch.time.match": {
-    /**
-     * API入参
-     */
-    request: {
-      /**
-       * 用户id
-       */
-      userOpenId: string;
-      /**
-       * 阈值(单位:秒)
-       */
-      threshold: number;
-      [k: string]: unknown;
-    };
-    /**
-     * API出参
-     */
-    response: {
-      /**
-       * 主返回码
-       */
-      code?: string;
-      /**
-       * 主返回信息
-       */
-      msg?: string;
-      /**
-       * 子返回码
-       */
-      sub_code?: string;
-      /**
-       * 子返回信息
-       */
-      sub_msg?: string;
-      /**
-       * 返回码，1成功
-       */
-      result?: number;
-      /**
-       * 错误信息
-       */
-      error_msg?: string;
-      /**
-       * 是否达到阈值
-       */
-      data?: {
-        /**
-         * 是否达到阈值
-         */
-        match: boolean;
-        [k: string]: unknown;
-      };
-      [k: string]: unknown;
-    };
-    [k: string]: unknown;
-  };
-  /**
    * 代发订单更新运单号
    */
   "open.dropshipping.order.logistics.update": {
@@ -28060,6 +28810,58 @@ export interface ApiDeclaration {
        * 子返回信息
        */
       sub_msg?: string;
+      /**
+       * 返回码，1成功
+       */
+      result?: number;
+      /**
+       * 错误信息
+       */
+      error_msg?: string;
+      [k: string]: unknown;
+    };
+    [k: string]: unknown;
+  };
+  /**
+   * 代发用户查询身份类型
+   */
+  "open.dropshipping.role.query": {
+    /**
+     * API入参
+     */
+    request?: {
+      [k: string]: unknown;
+    };
+    /**
+     * API出参
+     */
+    response: {
+      /**
+       * 主返回码
+       */
+      code?: string;
+      /**
+       * 主返回信息
+       */
+      msg?: string;
+      /**
+       * 子返回码
+       */
+      sub_code?: string;
+      /**
+       * 子返回信息
+       */
+      sub_msg?: string;
+      /**
+       * 身份类型
+       */
+      data?: {
+        /**
+         * 身份类型[0:未知身份] [1:商家] [2:厂家]
+         */
+        roleType: number;
+        [k: string]: unknown;
+      };
       /**
        * 返回码，1成功
        */
@@ -28155,7 +28957,7 @@ export interface ApiDeclaration {
            */
           expressCompanyCode?: string;
           [k: string]: unknown;
-        };
+        }[];
         /**
          * 订单承诺最晚发货时间（毫秒）
          */
@@ -28281,58 +29083,6 @@ export interface ApiDeclaration {
     [k: string]: unknown;
   };
   /**
-   * 代发用户查询身份类型
-   */
-  "open.dropshipping.role.query": {
-    /**
-     * API入参
-     */
-    request?: {
-      [k: string]: unknown;
-    };
-    /**
-     * API出参
-     */
-    response: {
-      /**
-       * 主返回码
-       */
-      code?: string;
-      /**
-       * 主返回信息
-       */
-      msg?: string;
-      /**
-       * 子返回码
-       */
-      sub_code?: string;
-      /**
-       * 子返回信息
-       */
-      sub_msg?: string;
-      /**
-       * 身份类型
-       */
-      data?: {
-        /**
-         * 身份类型[0:未知身份] [1:商家] [2:厂家]
-         */
-        roleType: number;
-        [k: string]: unknown;
-      };
-      /**
-       * 返回码，1成功
-       */
-      result?: number;
-      /**
-       * 错误信息
-       */
-      error_msg?: string;
-      [k: string]: unknown;
-    };
-    [k: string]: unknown;
-  };
-  /**
    * 获取代发订单列表
    */
   "open.dropshipping.order.list": {
@@ -28444,7 +29194,7 @@ export interface ApiDeclaration {
              */
             expressCompanyCode?: string;
             [k: string]: unknown;
-          };
+          }[];
           /**
            * 订单承诺最晚发货时间（毫秒）
            */

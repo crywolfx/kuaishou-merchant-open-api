@@ -1,11 +1,12 @@
-import { signMethods } from "@/common/sign";
-import { formatParams, isFunction, params2FormData, pathReplace, sortParams } from "@/common/utils";
-import service from "@/common/request";
-import { ClientConstructorDTO } from "@/dto/constructor.dto";
-import { ApiResponse, SignMethod, ApiDeclaration } from "@/common/interface";
-import { ValidateClass, Required, Validate } from "@/decorator/validate.decorator";
+import { signMethods } from '@/common/sign';
+import { formatParams, isFunction, params2FormData, pathReplace, sortParams } from '@/common/utils';
+import service from '@/common/request';
+import { ClientConstructorDTO } from '@/dto/constructor.dto';
+import { ApiResponse, SignMethod, ApiDeclaration, Method } from '@/common/interface';
+import { ValidateClass, Required, Validate } from '@/decorator/validate.decorator';
 import { ExecuteBaseDTO } from '@/dto/execute.dto';
-import { SignDTO } from "@/dto/sign.dto";
+import { SignDTO } from '@/dto/sign.dto';
+import defaultMethod from '@/common/constant/api.default.method';
 
 @ValidateClass()
 class KsMerchantClient {
@@ -41,7 +42,7 @@ class KsMerchantClient {
   public execute<T extends keyof ApiDeclaration>(@Required { api, method, version = 1 }: ExecuteBaseDTO<T>, orgParams?: ApiDeclaration[T]['request']) {
     const { params = {}, file = {} } = formatParams(orgParams) || {};
     const isUpload = Object.keys(file).length > 0;
-    method = method || (isUpload ? 'POST' : 'GET');
+    method = method || (defaultMethod[api] as Method) ||  (isUpload ? 'POST' : 'GET');
     const sortedParams = sortParams(params);
     const paramsString = JSON.stringify(sortedParams);
     const requestUrl = this.generateApiUrl(api);

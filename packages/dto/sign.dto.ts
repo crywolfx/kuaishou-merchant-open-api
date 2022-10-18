@@ -1,6 +1,6 @@
-import { SignMethod } from "@/common/interface";
-import { EqualsList } from "@/decorator/validate.check.decorator";
-import { IsNotEmpty, IsNumber, IsString } from "class-validator";
+import { SignMethod } from '@/common/interface';
+import { EqualsList } from '@/decorator/validate.check.decorator';
+import { IsNotEmpty, IsNumber, IsString } from 'class-validator';
 
 export class SignDTO {
   @IsString()

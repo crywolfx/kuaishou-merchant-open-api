@@ -1,6 +1,6 @@
-import { Method } from "@/common/interface";
-import { EqualsList } from "@/decorator/validate.check.decorator";
-import { IsNumber, IsOptional, IsString } from "class-validator";
+import { Method } from '@/common/interface';
+import { EqualsList } from '@/decorator/validate.check.decorator';
+import { IsNumber, IsOptional, IsString } from 'class-validator';
 
 export class ExecuteBaseDTO<T> {
   @IsString()

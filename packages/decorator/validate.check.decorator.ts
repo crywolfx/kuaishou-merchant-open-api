@@ -1,4 +1,4 @@
-import { buildMessage, registerDecorator, ValidationOptions } from "class-validator";
+import { buildMessage, registerDecorator, ValidationOptions } from 'class-validator';
 
 export function EqualsList(comparison: any[], validationOptions?: ValidationOptions) {
   return function (object: unknown, propertyName: string) {
