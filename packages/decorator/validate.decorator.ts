@@ -13,7 +13,7 @@ export function Required(target, propertyKey: string | symbol, parameterIndex: n
 }
 
 export const throwError = (param: string, index: number, message?: string) => {
-  const msg = `Failed for validating parameter: ${param} of the index: ${index} ${message ? ', ' + message : ''}`;
+  const msg = `Failed for validating parameter: ${param} of the index: ${index}${message ? ', ' + message : ''}`;
   throw Error(msg)
 }
 

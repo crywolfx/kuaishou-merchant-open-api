@@ -15,6 +15,10 @@ export class ClientConstructorDTO {
 
   @IsNotEmpty()
   @IsString()
+  readonly appSecret: string;
+
+  @IsNotEmpty()
+  @IsString()
   readonly signSecret: string;
 
   @Matches(urlReg, {
@@ -28,7 +32,7 @@ export class ClientConstructorDTO {
   @IsOptional()
   readonly signMethod?: SignMethod;
 
-  @IsNotEmpty()
   @IsString()
-  readonly accessToken: string;
+  @IsOptional()
+  readonly accessToken?: string;
 }

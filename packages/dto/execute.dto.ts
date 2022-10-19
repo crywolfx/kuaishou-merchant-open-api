@@ -13,4 +13,8 @@ export class ExecuteBaseDTO<T> {
   @IsNumber()
   @IsOptional()
   readonly version?: number;
+
+  @IsString()
+  @IsOptional()
+  readonly accessToken?: string;
 }
