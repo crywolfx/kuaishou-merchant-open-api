@@ -15,6 +15,8 @@ const version = package.version;
 
 const uploader = new Uploader({ dirName: '/open-api' });
 
+const isFunction = (val) => Object.prototype.toString.call(val) === '[object Function]'
+
 const runSpawn = (...command) => {
   return new Promise((resolve, reject) => {
     const ls = spawn(...command);
@@ -102,8 +104,8 @@ const createReadLine = (questionList = [], {
             }
           },
           fallback: (callback) => {
-            callback && callback();
-            onFallback && onFallback();
+            isFunction(callback) && callback();
+            isFunction(onFallback) && onFallback();
             return _readLineInterface.close();
           }
         });
@@ -193,7 +195,7 @@ createReadLine([
         needCreate,
         'y',
         () => {
-          generateDeclaration().then(() => {
+          generateDeclaration.start().then(() => {
             start(newVersion).then(done).catch(fallback)
           }).catch(() => {
             log.error('declaration生成失败');
