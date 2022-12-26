@@ -30,7 +30,7 @@ export class ClientConstructorDTO {
 
   @EqualsList([SignMethod.HMAC_SHA256, SignMethod.MD5])
   @IsOptional()
-  readonly signMethod?: SignMethod;
+  readonly signMethod?: 'HMAC_SHA256' | 'MD5';
 
   @IsString()
   @IsOptional()

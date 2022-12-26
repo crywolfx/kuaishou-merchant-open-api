@@ -17,7 +17,7 @@ export class SignDTO {
 
   @EqualsList([SignMethod.HMAC_SHA256, SignMethod.MD5])
   @IsNotEmpty()
-  signMethod: SignMethod;
+  signMethod: 'HMAC_SHA256' | 'MD5';
 
   @IsNumber()
   @IsNotEmpty()

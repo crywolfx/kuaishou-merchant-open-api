@@ -3,7 +3,7 @@ import { formatParams, isFunction, params2FormData, pathReplace, sortParams } fr
 import service from '@/common/request';
 import { ClientConstructorDTO } from '@/dto/constructor.dto';
 import { ApiResponse, SignMethod, ApiDeclaration, Method } from '@/common/interface';
-import { ValidateClass, Required, Validate, throwError } from '@/decorator/validate.decorator';
+import { ValidateClass, Required, Validate } from '@/decorator/validate.decorator';
 import { ExecuteBaseDTO } from '@/dto/execute.dto';
 import { SignDTO } from '@/dto/sign.dto';
 import defaultMethod from '@/common/constant/api.default.method';
@@ -45,7 +45,7 @@ class KsMerchantClient {
    * @default MD5
    * @memberof KsMerchantClient
    */
-  public signMethod: SignMethod = SignMethod.MD5;
+  public signMethod: 'HMAC_SHA256' | 'MD5' = SignMethod.MD5;
 
   /**
    * 临时访问令牌，作为调用授权API时的入参，过期时间为accessTokenExpiresIn值，授权用户、app和权限组范围唯一决定一个access_token值
