@@ -10,6 +10,7 @@
     "watch": "rollup -c -w",
     "build": "yarn build:npm && yarn build:dist",
     "build:npm": "BUILD_NPM=true yarn build:cjs && BUILD_NPM=true yarn build:esm && yarn build:types",
+    "build:npm-dist": "BUILD_NPM=true yarn build:cjs && BUILD_NPM=true yarn build:esm && yarn build:types --outDir lib &&  yarn build:types --outDir es",
     "build:dist": "BUILD_NPM=false yarn build:cjs-dist && BUILD_NPM=false yarn build:esm-dist",
     "build:types": "tsc --declaration --emitDeclarationOnly --noEmit false --outDir types",
     "build:cjs": "rimraf ./lib && NODE_ENV=production BABEL_ENV=cjs rollup -c",
