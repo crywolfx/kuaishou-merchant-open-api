@@ -22,7 +22,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git@git.corp.kuaishou.com:plateco-dev-fe/kuaishou-merchant-open-api.git"
+    "url": "git@github.com:crywolfx/kuaishou-merchant-open-api.git"
   },
   "keywords": [
     "kuaishou",

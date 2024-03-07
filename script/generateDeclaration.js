@@ -6,6 +6,8 @@ const { compile } = require('json-schema-to-typescript');
 const colors = require('colors/safe');
 const log = require('./log');
 
+const BATCH = 2;
+
 const service = axios.create({
   baseURL: 'https://open.kwaixiaodian.com',
   headers: {
@@ -179,8 +181,9 @@ class GenerateDeclaration {
             log.info(`开始获取结构体${paramTypeWithoutArray}`);
             if (!structureLoadedMap[structureId]) {
               structureLoadedMap[structureId] = true;
-              let propertiesInfo = await this.formatParams(this.getSturcture({ id: structureId }).catch(() => {
+              let propertiesInfo = await this.formatParams(this.getSturcture({ id: structureId }).catch((error) => {
                 log.error(`结构体${paramTypeWithoutArray}获取失败`);
+                log.error(JSON.stringify(error));
                 return Promise.resolve([]);
               }), structureLoadedMap);
               log.success(`结构体${paramTypeWithoutArray}获取成功`);
@@ -234,7 +237,7 @@ class GenerateDeclaration {
     const params = apiList.map((item) => ({ name: item.name, version: item.version }));
     this.total = params.length;
     log.success(`共${this.total}个API`);
-    return asyncPoolAll(4, params, this.getApiInfo.bind(this));
+    return asyncPoolAll(BATCH, params, this.getApiInfo.bind(this));
   }
 
   async declaration (apiListInfo = []) {
@@ -274,7 +277,7 @@ class GenerateDeclaration {
     writeFileSync(path.join(__dirname, '../packages/common/interface/api.declaration.ts'), declarationList.join(''));
     writeFileSync(path.join(__dirname, '../packages/common/constant/api.default.method.ts'), `export default ${JSON.stringify(this.API_DEFAULT_METHOD)}`);
     log.success('declaration写入成功');
-    console.log(`一共${colors.yellow(this.total + '')}个API, 成功${colors.green(this.currentCount)}个, 失败${colors.red(this.total - this.currentCount)}`);
+    console.log(`一共${colors.yellow(this.total + '')}个API, 请求并发数${BATCH}, 成功${colors.green(this.currentCount)}个, 失败${colors.red(this.total - this.currentCount)}`);
   }
 
   async start () {

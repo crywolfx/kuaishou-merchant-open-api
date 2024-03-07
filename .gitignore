@@ -16,6 +16,7 @@
 /lib*
 /es*
 /release/*
+/script/upload.js
 
 # misc
 .DS_Store

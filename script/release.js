@@ -1,5 +1,5 @@
 #!/usr/bin/env node
-const { writeFileSync, createReadStream } = require('fs');
+const { writeFileSync } = require('fs');
 const { spawn } = require('child_process');
 const readline = require('readline');
 const AdmZip = require('adm-zip');
@@ -7,13 +7,10 @@ const semver = require('semver');
 const colors = require('colors/safe');
 const path = require('path');
 const package = require('../package.json');
-const Uploader = require('./upload');
 const log = require('./log');
 const generateDeclaration = require('./generateDeclaration');
 
 const version = package.version;
-
-const uploader = new Uploader({ dirName: '/open-api' });
 
 const isFunction = (val) => Object.prototype.toString.call(val) === '[object Function]'
 
@@ -46,7 +43,7 @@ const runSpawn = (...command) => {
 
 const createReadLine = (questionList = [], {
   readLineInterface,
-  isSub = false, 
+  isSub = false,
   resolve,
   onFallback,
 } = {}) => {
@@ -149,14 +146,6 @@ const buildAllRelease = (newVersion) => {
   buildRelease(newVersion, 'esm');
 }
 
-const uploadFile = (version) => {
-  const cjsFile = createReadStream(getReleasePath(version, 'cjs'));
-  const esmFile = createReadStream(getReleasePath(version, 'esm'));
-  if (!cjsFile || !esmFile) return Promise.reject();
-  const cjsDirName = `openApi_v${version}_cjs.zip`;
-  const esmDirName = `openApi_v${version}_esm.zip`;
-  return Promise.all([uploader.upload({ file: cjsFile, dirName: cjsDirName }), uploader.upload({ file: esmFile, dirName: esmDirName })]);
-};
 
 
 let newVersion = version;
@@ -212,35 +201,6 @@ createReadLine([
         },
       );
     }
-  },
-  {
-    question: colors.yellow('是否上传cdn? [y]: '),
-    callback: (needUpload = 'y', { done, retry }) => {
-      checkReadLine(
-        needUpload,
-        'y',
-        () => {
-          uploadFile(newVersion)
-            .then((res) => {
-              const [r1, r2] = res || [];
-              if (r1.cdnUrl && r2.cdnUrl) {
-                log.success(`上传成功: \n cjs: ${r1.cdnUrl} \n esm: ${r2.cdnUrl}`);
-              } else {
-                log.error(`上传失败: ${JSON.stringify(res)}`);
-              }
-            })
-            .finally(done);
-        },
-        () => {
-          log.info('取消上传');
-          done();
-        },
-        () => {
-          log.warn('输入不正确');
-          retry();
-        },
-      );
-    },
   },
   {
     question: colors.yellow('是否打包npm? [y]: '),
